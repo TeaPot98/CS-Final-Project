@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/HUD.uss?fileID=7433441132597879392&amp;guid=bbdbda947039f124a862f4470db57f7c&amp;type=3#HUD"/>
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement style="flex-grow: 1; position: absolute; left: 0; bottom: 0;">
+            <ui:Label text="N" name="Gear" class="hudText" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="1000" name="RPM" class="hudText"/>
+            <ui:Label text="100km/h" name="Speed" class="hudText"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

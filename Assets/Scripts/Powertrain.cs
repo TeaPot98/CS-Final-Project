@@ -38,7 +38,9 @@ public class Powertrain : MonoBehaviour
 
 		wheels.ForEach(wheel =>
 		{
-			if (!wheel.IsDriving) return;
+			if (!wheel.IsDriving || !wheel.IsGrounded) return;
+
+			Debug.Log("Applying force");
 
 			_rb.AddForceAtPosition(wheel.transform.forward * wheelForce, wheel.transform.position, ForceMode.Force);
 		});
