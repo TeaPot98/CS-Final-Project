@@ -21,4 +21,18 @@ public class EngineSO : ScriptableObject
 
 		return _curveParams;
 	}
+
+	private float _rpm = 1000f;
+
+	public float GetTorque(float throttle)
+	{
+		_rpm = Utils.RemapToRange(throttle, 0f, 1f, 1000f, maxRpm);
+		return Utils.ComputeTorque(_rpm,
+			GetTorqueCurveParams());
+	}
+
+	public float GetRpm()
+	{
+		return _rpm;
+	}
 }

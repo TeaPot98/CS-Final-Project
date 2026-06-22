@@ -11,8 +11,8 @@ public class Wheel : MonoBehaviour
 
 	public bool IsGrounded = false;
 
-	private float _suspensionRestDist = 5f;
-	private float _suspensionTravel = 2f;
+	private float _suspensionRestDist = 1f;
+	private float _suspensionTravel = 0.5f;
 	private float _springStrength = 7000f;
 
 	private float _springDamper = 250f;
@@ -31,7 +31,7 @@ public class Wheel : MonoBehaviour
 
 	private Transform _carTransform;
 
-	private float _tireRadius;
+	public float TireRadius;
 	private Transform _tireTransform;
 	private Vector3 _tireTransformPosition;
 	private Renderer _tireMeshRenderer;
@@ -48,7 +48,7 @@ public class Wheel : MonoBehaviour
 		_tireTransform = GetComponent<Transform>();
 		_tireTransformPosition = _tireTransform.position;
 
-		_tireRadius = 0.5f * _tireMeshRenderer.bounds.size.y;
+		TireRadius = 0.5f * _tireMeshRenderer.bounds.size.y;
 		// _tireMass = _carManager.tireMass;
 		// _tireGripFactor = _carManager.tireGripFactor;
 		// _maxRotationAngle = _carManager.maxRotationAngle;
@@ -95,7 +95,7 @@ public class Wheel : MonoBehaviour
 		RaycastHit tireRay;
 		bool rayDidHit = Physics.Raycast(ray, out tireRay, _suspensionRestDist + _suspensionTravel);
 
-		Debug.Log("Ray did hit: " + rayDidHit);
+		// Debug.Log("Ray did hit: " + rayDidHit);
 
 		IsGrounded = rayDidHit;
 
@@ -124,10 +124,10 @@ public class Wheel : MonoBehaviour
 
 		if (rayDidHit)
 			wheelModel.transform.localPosition =
-				new Vector3(0f, -tireRay.distance + _tireRadius, 0f);
+				new Vector3(0f, -tireRay.distance + TireRadius, 0f);
 		else
 			// Reset the wheel mesh position to the suspension rest distance
 			wheelModel.transform.localPosition =
-				new Vector3(0f, -_suspensionRestDist + _tireRadius, 0f);
+				new Vector3(0f, -_suspensionRestDist + TireRadius, 0f);
 	}
 }

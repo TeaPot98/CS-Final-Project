@@ -10,4 +10,14 @@ public class TransmissionSO : ScriptableObject
 	public float R = -3.2f;
 	public float N = 0f;
 	public List<float> gears = new() { 2.5f, 1.61f, 1.1f, 0.81f, 0.68f };
+
+	public float GetTorque(float engineTorque, int gear)
+	{
+		return Utils.ComputeTransmissionTorque(engineTorque, gear, this);
+	}
+
+	public float GetRpm(float engineRpm, int gear)
+	{
+		return Utils.ComputeTransmissionTorque(engineRpm, gear, this);
+	}
 }

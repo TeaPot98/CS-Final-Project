@@ -43,6 +43,22 @@ public static class Utils
 		return inputTorque * (1 / transmission.gears[gear - 1]) * transmission.differentialRatio;
 	}
 
+	public static float ComputeEngineDeltaRpm(float torqueCurveMtp, float torqueCurveOut, float throttleInput,
+		float engineBrakingForceMtp,
+		float engineFrictionMtp, float expectedRpm, float currentRpm)
+	{
+		return torqueCurveMtp * torqueCurveOut * throttleInput + engineBrakingForceMtp * (expectedRpm - currentRpm) -
+		       engineFrictionMtp * currentRpm;
+	}
+
+	public static float ComputeWheelDeltaAngularVelocity(float torqueCurveMtp, float torqueCurveOut,
+		float brakingForceMtp, float roadFrictionMtp, float brakeInput, float expectedAngularVelocity,
+		float currentAngularVelocity)
+	{
+		return torqueCurveMtp * torqueCurveOut * (expectedAngularVelocity + currentAngularVelocity) -
+		       brakingForceMtp * brakeInput - roadFrictionMtp * currentAngularVelocity;
+	}
+
 	public static float RemapToRange(float input, float min, float max, float newMin, float newMax)
 	{
 		float t = Mathf.InverseLerp(min, max, input);

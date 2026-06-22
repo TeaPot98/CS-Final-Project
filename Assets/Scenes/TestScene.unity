@@ -232,6 +232,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &234780743 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1965430313140975023, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 8346828588904387444}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &563760864
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,115 +469,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &943098961
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 943098963}
-  - component: {fileID: 943098962}
-  - component: {fileID: 943098964}
-  - component: {fileID: 943098965}
-  m_Layer: 0
-  m_Name: Car Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &943098962
+--- !u!114 &721787700 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 6523215174151876486, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 8346828588904387444}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 943098961}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
-  Priority:
-    Enabled: 0
-    m_Value: 0
-  OutputChannel: 1
-  StandbyUpdate: 2
-  m_StreamingVersion: 20241001
-  m_LegacyPriority: 0
-  Target:
-    TrackingTarget: {fileID: 8346828588904387445}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
-  Lens:
-    FieldOfView: 60.000004
-    OrthographicSize: 5
-    NearClipPlane: 0.3
-    FarClipPlane: 1000
-    Dutch: 0
-    ModeOverride: 0
-    PhysicalProperties:
-      GateFit: 2
-      SensorSize: {x: 21.946, y: 16.002}
-      LensShift: {x: 0, y: 0}
-      FocusDistance: 10
-      Iso: 200
-      ShutterSpeed: 0.005
-      Aperture: 16
-      BladeCount: 5
-      Curvature: {x: 2, y: 11}
-      BarrelClipping: 0.25
-      Anamorphism: 0
-  BlendHint: 0
---- !u!4 &943098963
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 943098961}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.23270331, y: 0, z: 0, w: 0.97254777}
-  m_LocalPosition: {x: -0.27311, y: 27.1, z: -53.47511}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &943098964
+  m_EditorClassIdentifier: Assembly-CSharp::Wheel
+--- !u!114 &968441124 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7433315412377764535, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 8346828588904387444}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 943098961}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
-  TrackerSettings:
-    BindingMode: 4
-    PositionDamping: {x: 1, y: 1, z: 1}
-    AngularDampingMode: 0
-    RotationDamping: {x: 1, y: 1, z: 1}
-    QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 26.7, z: -52.6}
---- !u!114 &943098965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 943098961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLookAt
-  LookAtOffset: {x: 0, y: 0, z: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &1087307656
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,13 +578,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1087307656}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.23270331, y: 0, z: 0, w: 0.97254777}
-  m_LocalPosition: {x: -0.27311, y: 27.1, z: -53.47511}
+  m_LocalRotation: {x: 0.17918609, y: 0, z: 0, w: 0.9838152}
+  m_LocalPosition: {x: -0.27311, y: 2.8000002, z: -7.24511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10.6, y: 0, z: 0}
 --- !u!114 &1087307660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,6 +729,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ada51a9b1bde0a41ba3e8694786504c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  document: {fileID: 1195327019}
+  car: {fileID: 8346828588904387446}
 --- !u!1 &1397581992
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,6 +858,126 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1461298859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1461298862}
+  - component: {fileID: 1461298861}
+  - component: {fileID: 1461298864}
+  - component: {fileID: 1461298863}
+  m_Layer: 0
+  m_Name: Car Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1461298861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461298859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 8346828588904387445}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 5
+    NearClipPlane: 0.3
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!4 &1461298862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461298859}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.17918609, y: 0, z: 0, w: 0.9838152}
+  m_LocalPosition: {x: -0.27311, y: 2.8000002, z: -7.24511}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1461298863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461298859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLookAt
+  LookAtOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &1461298864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461298859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
+  TrackerSettings:
+    BindingMode: 4
+    PositionDamping: {x: 1, y: 1, z: 1}
+    AngularDampingMode: 0
+    RotationDamping: {x: 1, y: 1, z: 1}
+    QuaternionDamping: 1
+  FollowOffset: {x: 0, y: 2.4, z: -6.37}
+--- !u!114 &1683079214 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4368703503615979410, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 8346828588904387444}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &1703696730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,6 +1216,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Test Car
       objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: wheels.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: 'wheels.Array.data[0]'
+      value: 
+      objectReference: {fileID: 234780743}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: 'wheels.Array.data[1]'
+      value: 
+      objectReference: {fileID: 968441124}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: 'wheels.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1683079214}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: 'wheels.Array.data[3]'
+      value: 
+      objectReference: {fileID: 721787700}
     - target: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.27311
@@ -1220,6 +1286,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
   m_PrefabInstance: {fileID: 8346828588904387444}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8346828588904387446 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 8346828588904387444}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3332c3159811f6d4db8bda2bef17a25a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Car
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1231,6 +1308,6 @@ SceneRoots:
   - {fileID: 1791595718}
   - {fileID: 717520325}
   - {fileID: 1703696734}
-  - {fileID: 943098963}
   - {fileID: 8346828588904387444}
   - {fileID: 1195327020}
+  - {fileID: 1461298862}
