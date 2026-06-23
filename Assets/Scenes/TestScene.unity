@@ -232,17 +232,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &234780743 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1965430313140975023, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-  m_PrefabInstance: {fileID: 8346828588904387444}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &563760864
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,28 +458,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &721787700 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6523215174151876486, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-  m_PrefabInstance: {fileID: 8346828588904387444}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wheel
---- !u!114 &968441124 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7433315412377764535, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-  m_PrefabInstance: {fileID: 8346828588904387444}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &1087307656
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,17 +934,6 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 2.4, z: -6.37}
---- !u!114 &1683079214 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4368703503615979410, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-  m_PrefabInstance: {fileID: 8346828588904387444}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &1703696730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,26 +1172,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Test Car
       objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: wheels.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: 'wheels.Array.data[0]'
-      value: 
-      objectReference: {fileID: 234780743}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: 'wheels.Array.data[1]'
-      value: 
-      objectReference: {fileID: 968441124}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: 'wheels.Array.data[2]'
-      value: 
-      objectReference: {fileID: 1683079214}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: 'wheels.Array.data[3]'
-      value: 
-      objectReference: {fileID: 721787700}
     - target: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.27311

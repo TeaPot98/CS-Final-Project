@@ -34,13 +34,24 @@ public static class Utils
 
 	public static float ComputeTransmissionTorque(float inputTorque, int gear, TransmissionSO transmission)
 	{
-		if (gear <= -1) return inputTorque * (1 / transmission.R) * transmission.differentialRatio;
+		if (gear <= -1) return inputTorque * transmission.R * transmission.differentialRatio;
 		if (gear == 0) return 0;
 
 		if (gear > transmission.gears.Count)
-			return inputTorque * (1 / transmission.gears[-1]) * transmission.differentialRatio;
+			return inputTorque * transmission.gears[^1] * transmission.differentialRatio;
 
-		return inputTorque * (1 / transmission.gears[gear - 1]) * transmission.differentialRatio;
+		return inputTorque * transmission.gears[gear - 1] * transmission.differentialRatio;
+	}
+
+	public static float ComputeWheelAngularVelocityAtEngineRpm(float engineRpm, int gear, TransmissionSO transmission)
+	{
+		if (gear <= -1) return engineRpm / (transmission.R * transmission.differentialRatio);
+		if (gear == 0) return 0.1f;
+
+		if (gear > transmission.gears.Count)
+			return engineRpm / (transmission.gears[^1] * transmission.differentialRatio);
+
+		return engineRpm / (transmission.gears[gear - 1] * transmission.differentialRatio);
 	}
 
 	public static float ComputeEngineDeltaRpm(float torqueCurveMtp, float torqueCurveOut, float throttleInput,
@@ -59,9 +70,33 @@ public static class Utils
 		       brakingForceMtp * brakeInput - roadFrictionMtp * currentAngularVelocity;
 	}
 
+	public static float ComputeExpectedRpmAtWheelAngularVelocity(float wheelAngularVelocity, TransmissionSO transmission,
+		int gear)
+	{
+		float wheelRpm = FromAngularVelocityToRpm(wheelAngularVelocity);
+
+		if (gear <= -1) return wheelRpm * transmission.R * transmission.differentialRatio;
+		if (gear == 0) return 0.1f;
+
+		if (gear > transmission.gears.Count)
+			return wheelRpm * transmission.gears[^1] * transmission.differentialRatio;
+
+		return wheelRpm * transmission.gears[gear - 1] * transmission.differentialRatio;
+	}
+
 	public static float RemapToRange(float input, float min, float max, float newMin, float newMax)
 	{
 		float t = Mathf.InverseLerp(min, max, input);
 		return Mathf.Lerp(newMin, newMax, t);
+	}
+
+	public static float FromAngularVelocityToRpm(float angularVelocity)
+	{
+		return angularVelocity * 60f / (2f * (float)Math.PI);
+	}
+
+	public static float FromRpmToAngularVelocity(float rpm)
+	{
+		return rpm * 2f * (float)Math.PI / 60f;
 	}
 }

@@ -21,8 +21,8 @@ public class Car : MonoBehaviour
 	private float _brake = 0f;
 	private float _steering = 0f;
 
-	private float prevRpm = 1000f;
-	private float prevWheelAngularVelocity = 0f;
+	private float currentRpm = 1000f;
+	private float currentWheelAngularVelocity = 0f;
 
 
 	private void Start()
@@ -35,16 +35,23 @@ public class Car : MonoBehaviour
 		float engineTorque = engine.GetTorque(_throttle);
 		float transmissionTorque = transmission.GetTorque(engineTorque, _gear);
 
-		float deltaRpm = Utils.ComputeEngineDeltaRpm(1f, engineTorque, _throttle, 1f, 1f, engine.GetRpm(), prevRpm);
+		float deltaRpm = Utils.ComputeEngineDeltaRpm(1f, engineTorque, _throttle, 1f, 0.1f,
+			Utils.ComputeExpectedRpmAtWheelAngularVelocity(currentWheelAngularVelocity, transmission, _gear), currentRpm);
 
-		float expectedWheelAngularVelocity = transmission.GetRpm(engine.GetRpm(), _gear) * 2f * (float)Math.PI / 60f;
-		float deltaWheelAngularVelocity = Utils.ComputeWheelDeltaAngularVelocity(1f, engineTorque, 1f, 1f, _brake,
-			expectedWheelAngularVelocity, prevWheelAngularVelocity);
+		float expectedWheelAngularVelocity =
+			Utils.ComputeWheelAngularVelocityAtEngineRpm(currentRpm, _gear, transmission);
+		float deltaWheelAngularVelocity = Utils.ComputeWheelDeltaAngularVelocity(1f, engineTorque, 1f, 0.1f, _brake,
+			expectedWheelAngularVelocity, currentWheelAngularVelocity);
+
+		if (deltaRpm > 1f) currentRpm += deltaRpm / 2f;
+		if (deltaWheelAngularVelocity > 0.1f) currentWheelAngularVelocity += deltaWheelAngularVelocity / 2;
 
 		Debug.Log("D RPM: " + deltaRpm);
 		Debug.Log("D AV: " + deltaWheelAngularVelocity);
+		// Debug.Log("Engine Torque: " + engineTorque);
+		// Debug.Log("Wheel Torque: " + transmissionTorque);
 
-		RpmLabel = (int)engine.GetRpm() + " RPM";
+		RpmLabel = (int)currentRpm + " RPM";
 
 		float wheelForce = transmissionTorque / GetTireRadius();
 
