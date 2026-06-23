@@ -1274,6 +1274,7 @@ MonoBehaviour:
   - {fileID: 6523215174151876486}
   engine: {fileID: 11400000, guid: b83a7e6c7f11b35459852acc4a5e2ea1, type: 2}
   transmission: {fileID: 11400000, guid: 8a5a82f3955f5694686a2ec67a072ff0, type: 2}
+  suspension: {fileID: 11400000, guid: 278af3e4c4328d7459d0d98f79e384f3, type: 2}
   GearLabel: N
   RpmLabel: 1000 RPM
   SpeedLabel: 0 km/h

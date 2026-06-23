@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,7 @@ public class Car : MonoBehaviour
 	public List<Wheel> wheels;
 	public EngineSO engine;
 	public TransmissionSO transmission;
+	public SuspensionSO suspension;
 
 	public string GearLabel = "N";
 	public string RpmLabel = "1000 RPM";
@@ -32,48 +34,75 @@ public class Car : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		float engineTorque = engine.GetTorque(_throttle);
-		float transmissionTorque = transmission.GetTorque(engineTorque, _gear);
+		float dt = Time.fixedDeltaTime;
 
-		float deltaRpm = Utils.ComputeEngineDeltaRpm(1f, engineTorque, _throttle, 1f, 0.1f,
-			Utils.ComputeExpectedRpmAtWheelAngularVelocity(currentWheelAngularVelocity, transmission, _gear), currentRpm);
-
-		float expectedWheelAngularVelocity =
-			Utils.ComputeWheelAngularVelocityAtEngineRpm(currentRpm, _gear, transmission);
-		float deltaWheelAngularVelocity = Utils.ComputeWheelDeltaAngularVelocity(1f, engineTorque, 1f, 0.1f, _brake,
-			expectedWheelAngularVelocity, currentWheelAngularVelocity);
-
-		if (deltaRpm > 1f) currentRpm += deltaRpm / 2f;
-		if (deltaWheelAngularVelocity > 0.1f) currentWheelAngularVelocity += deltaWheelAngularVelocity / 2;
-
-		Debug.Log("D RPM: " + deltaRpm);
-		Debug.Log("D AV: " + deltaWheelAngularVelocity);
-		// Debug.Log("Engine Torque: " + engineTorque);
-		// Debug.Log("Wheel Torque: " + transmissionTorque);
-
-		RpmLabel = (int)currentRpm + " RPM";
-
-		float wheelForce = transmissionTorque / GetTireRadius();
-
-		Debug.Log(wheelForce);
-
-		wheels.ForEach(wheel =>
+		int drivenWheelCount = wheels.Count(wheel => wheel.IsDriving && wheel.IsGrounded);
+		if (drivenWheelCount == 0)
 		{
-			if (!wheel.IsDriving || !wheel.IsGrounded) return;
+			UpdateLabels();
+			return;
+		}
 
-			// Debug.Log("Applying force");
+		float tireRadius = GetTireRadius();
+		float forwardSpeed = Vector3.Dot(_rb.linearVelocity, transform.forward);
 
-			_rb.AddForceAtPosition(wheel.transform.forward * wheelForce, wheel.transform.position, ForceMode.Force);
+		currentWheelAngularVelocity = forwardSpeed / tireRadius;
 
-			Debug.DrawRay(wheel.transform.position, wheel.transform.forward * wheelForce / 1000f, Color.green);
-		});
+		if (_gear == 0)
+		{
+			// float engineTorque = engine.GetTorque(_throttle);
+			//
+			// currentRpm += Utils.ComputeEngineFreeDeltaRpm(
+			//     currentRpm,
+			//     engineTorque,
+			//     _throttle,
+			//     dt
+			// );
+			//
+			// currentRpm = Mathf.Clamp(currentRpm, engine.IdleRpm, engine.MaxRpm);
+			//
+			// ApplyBrakeForce(drivenWheelCount);
+			// UpdateLabels();
+			// return;
+		}
 
-		_speed = _rb.linearVelocity.magnitude;
-		SpeedLabel = (int)(_speed * 3600f / 1000f) + " km/h";
+		float expectedEngineRpm = Mathf.Abs(
+			Utils.ComputeExpectedRpmAtWheelAngularVelocity(
+				currentWheelAngularVelocity,
+				transmission,
+				_gear
+			)
+		);
 
-		// Debug.Log("Raw Torque: " + engineTorque);
-		// Debug.Log("Transmission Torque: " + transmissionTorque);
-		// Debug.Log("Wheel Force: " + wheelForce);
+		currentRpm = Mathf.Max(engine.idleRpm, expectedEngineRpm);
+
+		float engineTorque = engine.GetTorque(currentRpm) * _throttle;
+		float wheelTorque = transmission.GetTorque(engineTorque, _gear);
+
+		float torquePerWheel = wheelTorque / drivenWheelCount;
+		float forcePerWheel = torquePerWheel / tireRadius;
+
+		foreach (Wheel wheel in wheels)
+		{
+			if (!wheel.IsDriving || !wheel.IsGrounded)
+				continue;
+
+			Vector3 force = wheel.transform.forward * forcePerWheel;
+
+			_rb.AddForceAtPosition(
+				force,
+				wheel.transform.position,
+				ForceMode.Force
+			);
+
+			Debug.DrawRay(
+				wheel.transform.position,
+				force / 1000f,
+				Color.green
+			);
+		}
+
+		UpdateLabels();
 	}
 
 
@@ -117,5 +146,13 @@ public class Car : MonoBehaviour
 		if (wheels.Count == 0) return 0.3f;
 
 		return wheels[0].TireRadius;
+	}
+
+	private void UpdateLabels()
+	{
+		_speed = _rb.linearVelocity.magnitude;
+
+		RpmLabel = $"{(int)currentRpm} RPM";
+		SpeedLabel = $"{(int)(_speed * 3.6f)} km/h";
 	}
 }

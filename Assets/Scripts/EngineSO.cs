@@ -4,8 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Engine", menuName = "Items/Powertrain/Engine")]
 public class EngineSO : ScriptableObject
 {
-	public float Power;
+	public float power;
 	public float maxRpm = 7000f;
+	public float idleRpm = 1000f;
 
 	public float curveBaselineY = 100f;
 	public float peakMagnitude = 700f;
@@ -22,17 +23,10 @@ public class EngineSO : ScriptableObject
 		return _curveParams;
 	}
 
-	private float _rpm = 1000f;
 
-	public float GetTorque(float throttle)
+	public float GetTorque(float rpm)
 	{
-		_rpm = Utils.RemapToRange(throttle, 0f, 1f, 1000f, maxRpm);
-		return Utils.ComputeTorque(_rpm,
+		return Utils.ComputeTorque(rpm,
 			GetTorqueCurveParams());
-	}
-
-	public float GetRpm()
-	{
-		return _rpm;
 	}
 }

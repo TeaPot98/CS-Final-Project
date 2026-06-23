@@ -9,13 +9,16 @@ public class Wheel : MonoBehaviour
 	public GameObject tireMesh;
 	public GameObject carObject;
 
+	private Car _car;
+	private SuspensionSO _suspension;
+
 	public bool IsGrounded = false;
 
-	private float _suspensionRestDist = 1f;
-	private float _suspensionTravel = 0.5f;
-	private float _springStrength = 7000f;
-
-	private float _springDamper = 250f;
+	// private float _suespension.suspensionRestDist = 1f;
+	// private float _suspensionTravel = 0.5f;
+	// private float _springStrength = 7000f;
+	//
+	// private float _springDamper = 250f;
 	// private float _tireGripFactor = 1f;
 	// private float _tireMass = 10f;
 	// private float _carTopSpeed = 1000f;
@@ -42,6 +45,8 @@ public class Wheel : MonoBehaviour
 		// _carManager = GetComponentInParent<CarManager>();
 		_carRigidBody = carObject.GetComponent<Rigidbody>();
 		_carTransform = carObject.GetComponent<Transform>();
+		_car = carObject.GetComponent<Car>();
+		_suspension = _car.suspension;
 
 		_tireMeshRenderer = tireMesh.GetComponent<Renderer>();
 
@@ -53,7 +58,7 @@ public class Wheel : MonoBehaviour
 		// _tireGripFactor = _carManager.tireGripFactor;
 		// _maxRotationAngle = _carManager.maxRotationAngle;
 		//   
-		// _suspensionRestDist = _carManager.suspensionRestDist;
+		// _suespension.suspensionRestDist = _carManager.suspensionRestDist;
 		// _suspensionTravel = _carManager.suspensionTravel;
 		// _springStrength = _carManager.springStrength;
 		// _springDamper = _carManager.springDamper;
@@ -76,7 +81,7 @@ public class Wheel : MonoBehaviour
 		// _tireGripFactor = _carManager.tireGripFactor;
 		// _maxRotationAngle = _carManager.maxRotationAngle;
 		//   
-		// _suspensionRestDist = _carManager.suspensionRestDist;
+		// _suespension.suspensionRestDist = _carManager.suspensionRestDist;
 		// _springStrength = _carManager.springStrength;
 		// _springDamper = _carManager.springDamper;
 
@@ -93,7 +98,7 @@ public class Wheel : MonoBehaviour
 
 		Ray ray = new(_tireTransformPosition, -_tireTransform.up);
 		RaycastHit tireRay;
-		bool rayDidHit = Physics.Raycast(ray, out tireRay, _suspensionRestDist + _suspensionTravel);
+		bool rayDidHit = Physics.Raycast(ray, out tireRay, _suspension.suspensionRestDist + _suspension.suspensionTravel);
 
 		// Debug.Log("Ray did hit: " + rayDidHit);
 
@@ -106,7 +111,7 @@ public class Wheel : MonoBehaviour
 			Vector3 springDir = _tireTransform.up;
 
 			// calculate offset from the raycast
-			float offset = _suspensionRestDist - tireRay.distance;
+			float offset = _suspension.suspensionRestDist - tireRay.distance;
 
 			// calculate velocity along the spring direction
 			// note that springDir is a unit vector, so this returns the magnitude of tireWorldVel
@@ -114,7 +119,7 @@ public class Wheel : MonoBehaviour
 			float vel = Vector3.Dot(springDir, tireWorldVel);
 
 			// calculate the magnitude of the dampened spring force
-			float force = offset * _springStrength - vel * _springDamper;
+			float force = offset * _suspension.springStrength - vel * _suspension.springDamper;
 
 			// apply the force at the location of this tire
 			// in the direction of the suspension
@@ -128,6 +133,6 @@ public class Wheel : MonoBehaviour
 		else
 			// Reset the wheel mesh position to the suspension rest distance
 			wheelModel.transform.localPosition =
-				new Vector3(0f, -_suspensionRestDist + TireRadius, 0f);
+				new Vector3(0f, -_suspension.suspensionRestDist + TireRadius, 0f);
 	}
 }
