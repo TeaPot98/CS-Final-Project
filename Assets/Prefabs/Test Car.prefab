@@ -628,10 +628,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
   IsDriving: 1
+  CanSteer: 0
   wheelModel: {fileID: 670348681055462073}
   tireMesh: {fileID: 6931939715692987481}
   carObject: {fileID: 1960365366696690037}
   IsGrounded: 0
+  forceVector: {x: 0, y: 0, z: 0}
+  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &580732881996678210
 GameObject:
@@ -1275,6 +1278,7 @@ MonoBehaviour:
   engine: {fileID: 11400000, guid: b83a7e6c7f11b35459852acc4a5e2ea1, type: 2}
   transmission: {fileID: 11400000, guid: 8a5a82f3955f5694686a2ec67a072ff0, type: 2}
   suspension: {fileID: 11400000, guid: 278af3e4c4328d7459d0d98f79e384f3, type: 2}
+  maxSteeringAngle: 30
   GearLabel: N
   RpmLabel: 1000 RPM
   SpeedLabel: 0 km/h
@@ -2130,10 +2134,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
   IsDriving: 0
+  CanSteer: 1
   wheelModel: {fileID: 580732881996678210}
   tireMesh: {fileID: 3111068617828566383}
   carObject: {fileID: 1960365366696690037}
   IsGrounded: 0
+  forceVector: {x: 0, y: 0, z: 0}
+  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &4414015909044909801
 GameObject:
@@ -3205,10 +3212,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
   IsDriving: 1
+  CanSteer: 0
   wheelModel: {fileID: 7915669825662725387}
   tireMesh: {fileID: 7254937454493399281}
   carObject: {fileID: 1960365366696690037}
   IsGrounded: 0
+  forceVector: {x: 0, y: 0, z: 0}
+  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &5665738776634013119
 GameObject:
@@ -3886,10 +3896,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
   IsDriving: 0
+  CanSteer: 1
   wheelModel: {fileID: 1447374364536250998}
   tireMesh: {fileID: 352805670484849122}
   carObject: {fileID: 1960365366696690037}
   IsGrounded: 0
+  forceVector: {x: 0, y: 0, z: 0}
+  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &7502234972995529011
 GameObject:

@@ -11,6 +11,8 @@ public class Car : MonoBehaviour
 	public TransmissionSO transmission;
 	public SuspensionSO suspension;
 
+	public float maxSteeringAngle = 30f;
+
 	public string GearLabel = "N";
 	public string RpmLabel = "1000 RPM";
 	public string SpeedLabel = "0 km/h";
@@ -84,22 +86,33 @@ public class Car : MonoBehaviour
 
 		foreach (Wheel wheel in wheels)
 		{
-			if (!wheel.IsDriving || !wheel.IsGrounded)
-				continue;
+			if (wheel.CanSteer)
+			{
+				// Calculate the rotation angle based on input
+				float steeringRotationAngle = Utils.RemapToRange(_steering, -1f, 1f, -maxSteeringAngle, maxSteeringAngle);
 
-			Vector3 force = wheel.transform.forward * forcePerWheel;
+				Debug.Log("Steering Rotation Angle: " + steeringRotationAngle);
 
-			_rb.AddForceAtPosition(
-				force,
-				wheel.transform.position,
-				ForceMode.Force
-			);
+				// Set the steering rotation of the wheel (transform and mesh) around its local up axis
+				wheel.transform.localRotation = Quaternion.Euler(0.0f, steeringRotationAngle, 0.0f);
+			}
 
-			Debug.DrawRay(
-				wheel.transform.position,
-				force / 1000f,
-				Color.green
-			);
+			if (wheel.IsDriving && wheel.IsGrounded)
+			{
+				Vector3 force = wheel.forceVector * forcePerWheel;
+
+				_rb.AddForceAtPosition(
+					force,
+					wheel.contactPoint,
+					ForceMode.Force
+				);
+
+				Debug.DrawRay(
+					wheel.contactPoint,
+					force / 1000f,
+					Color.green
+				);
+			}
 		}
 
 		UpdateLabels();

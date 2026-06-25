@@ -4,6 +4,7 @@ using UnityEngine;
 public class Wheel : MonoBehaviour
 {
 	public bool IsDriving = false;
+	public bool CanSteer = false;
 
 	public GameObject wheelModel;
 	public GameObject tireMesh;
@@ -13,6 +14,8 @@ public class Wheel : MonoBehaviour
 	private SuspensionSO _suspension;
 
 	public bool IsGrounded = false;
+	public Vector3 forceVector;
+	public Vector3 contactPoint;
 
 	// private float _suespension.suspensionRestDist = 1f;
 	// private float _suspensionTravel = 0.5f;
@@ -124,6 +127,10 @@ public class Wheel : MonoBehaviour
 			// apply the force at the location of this tire
 			// in the direction of the suspension
 			_carRigidBody.AddForceAtPosition(springDir * force, _tireTransformPosition);
+
+			forceVector = Vector3.ProjectOnPlane(_tireTransform.forward, tireRay.normal).normalized;
+			contactPoint = tireRay.point;
+
 			Debug.DrawRay(_tireTransformPosition, springDir * force, Color.red);
 		}
 

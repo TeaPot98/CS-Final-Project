@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69efb114b577b5f44b83fd873df7a469, type: 3}
   m_Name: Test Suspension
   m_EditorClassIdentifier: Assembly-CSharp::SuspensionSO
-  suspensionRestDist: 0.9
+  suspensionRestDist: 0.3
   suspensionTravel: 0.3
-  springStrength: 7000
-  springDamper: 1000
+  springStrength: 100000
+  springDamper: 10000
