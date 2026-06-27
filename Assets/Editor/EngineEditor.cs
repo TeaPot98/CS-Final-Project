@@ -5,9 +5,8 @@ using UnityEngine;
 public class EngineEditor : Editor
 {
 	private const int TickCount = 5;
+
 	private const int SamplesCount = 60;
-	private const float MinX = 0f;
-	private const float MaxX = 10000f;
 
 	public override void OnInspectorGUI()
 	{
@@ -40,7 +39,7 @@ public class EngineEditor : Editor
 		for (int i = 0; i < SamplesCount; i++)
 		{
 			float t = i / (float)(SamplesCount - 1);
-			float x = Mathf.Lerp(MinX, MaxX, t);
+			float x = Mathf.Lerp(asset.idleRpm, asset.maxRpm, t);
 			float y = Utils.ComputeTorque(x, asset.GetTorqueCurveParams());
 
 			ys[i] = y;
@@ -65,7 +64,7 @@ public class EngineEditor : Editor
 			points[i] = new Vector3(px, py, 0f);
 		}
 
-		DrawTicks(graphRect, MinX, MaxX, minY, maxY);
+		DrawTicks(graphRect, asset.idleRpm, asset.maxRpm, minY, maxY);
 
 		Handles.BeginGUI();
 		Handles.color = Color.cyan;
