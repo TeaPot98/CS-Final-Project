@@ -25,7 +25,12 @@ public class Car : MonoBehaviour
 	private float _brake = 0f;
 	private float _steering = 0f;
 
-	private float currentRpm = 1000f;
+	public float _brakingForce = 30000f;
+
+	public float tireGripFactor = 0.9f;
+	public float tireMass = 10f;
+
+	private float currentRpm = 30000f;
 	private float currentWheelAngularVelocity = 0f;
 
 
@@ -76,13 +81,15 @@ public class Car : MonoBehaviour
 			)
 		);
 
-		currentRpm = Mathf.Max(engine.idleRpm, expectedEngineRpm);
+		currentRpm = Mathf.Clamp(expectedEngineRpm, engine.idleRpm, engine.maxRpm);
 
 		float engineTorque = engine.GetTorque(currentRpm) * _throttle;
 		float wheelTorque = transmission.GetTorque(engineTorque, _gear);
 
 		float torquePerWheel = wheelTorque / drivenWheelCount;
 		float forcePerWheel = torquePerWheel / tireRadius;
+
+		if (_brake != 0f && _speed < 0.1f) forcePerWheel = -_brakingForce;
 
 		foreach (Wheel wheel in wheels)
 		{
@@ -95,6 +102,34 @@ public class Car : MonoBehaviour
 
 				// Set the steering rotation of the wheel (transform and mesh) around its local up axis
 				wheel.transform.localRotation = Quaternion.Euler(0.0f, steeringRotationAngle, 0.0f);
+			}
+
+			if (wheel.IsGrounded)
+			{
+				// world-space direction of the steering force
+				Vector3 steeringDir = wheel.transform.right;
+
+				Vector3 tireWorldVel = _rb.GetPointVelocity(wheel.transform.position);
+
+				// what it's the tire's velocity in the steering direction ?
+				// note that steeringDir is a unit vector, so this returns the magnitude of tireWorldVel
+				// as projected onto steeringDir
+				float steeringVel = Vector3.Dot(steeringDir, tireWorldVel);
+
+				// the change in velocity that we're looking for is -steeringVel * gripFactor
+				// gripFactor is in range 0-1, 0 means no grip, 1 means full grip
+				float desiredVelChange = -steeringVel * tireGripFactor;
+
+				// turn change in velocity into an acceleration (acceleration = change in vel / time)
+				// this will produce the acceleration necessary to change the velocity by desiredVelChange in 1 physics step
+				float desiredAccel = desiredVelChange / Time.fixedDeltaTime;
+
+				Vector3 steeringForce = tireMass * desiredAccel * steeringDir;
+
+				// Force = Mass * Acceleration, so multiply by the mass of the tire and apply as a force
+				_rb.AddForceAtPosition(steeringForce, wheel.transform.position);
+
+				Debug.DrawRay(wheel.transform.position, steeringForce, Color.green);
 			}
 
 			if (wheel.IsDriving && wheel.IsGrounded)

@@ -117,7 +117,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 47004791924027859}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 875d7d89b6f062a4c966086bab3f8521, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1282,6 +1282,9 @@ MonoBehaviour:
   GearLabel: N
   RpmLabel: 1000 RPM
   SpeedLabel: 0 km/h
+  _brakingForce: 10000
+  tireGripFactor: 0.9
+  tireMass: 100
 --- !u!54 &5864273460818158975
 Rigidbody:
   m_ObjectHideFlags: 0
