@@ -99,4 +99,16 @@ public static class Utils
 	{
 		return rpm * 2f * (float)Math.PI / 60f;
 	}
+
+	public static float ComputeLongitudinalTireForce(float slipRatio, float a = 9.625f, float b = 31.0f, float p = 2.375f)
+	{
+		// Brian Beckman's Magic Trick
+		return (b * slipRatio) / (1 + Mathf.Pow(Mathf.Abs(a * slipRatio), p));
+	}
+	
+	public static float ComputeLateralTireForce(float slipAngle, float a = 9.625f, float b = 31.0f, float p = 2.375f)
+	{
+		// Brian Beckman's Magic Trick
+		return (b * slipAngle) / (1 + Mathf.Pow(Mathf.Abs(a * slipAngle), p));
+	}
 }

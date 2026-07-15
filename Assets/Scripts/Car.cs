@@ -126,6 +126,13 @@ public class Car : MonoBehaviour
 
 				Vector3 steeringForce = tireMass * desiredAccel * steeringDir;
 
+				float slipAngle = Vector3.SignedAngle(wheel.transform.forward, tireWorldVel, wheel.transform.up);
+				float lateralForce = Utils.ComputeLateralTireForce(slipAngle);
+				float longitudinalForce = Utils.ComputeLongitudinalTireForce(1f);
+
+				Vector3 totalTireForce = lateralForce * Mathf.Sign(slipAngle) * wheel.transform.right +
+				                         longitudinalForce * wheel.transform.forward;
+				
 				// Force = Mass * Acceleration, so multiply by the mass of the tire and apply as a force
 				_rb.AddForceAtPosition(steeringForce, wheel.transform.position);
 
