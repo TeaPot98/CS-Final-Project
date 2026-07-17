@@ -6,5 +6,11 @@
             <ui:Label text="1000" name="RPM" class="hudText"/>
             <ui:Label text="100km/h" name="Speed" class="hudText"/>
         </ui:VisualElement>
+        <ui:VisualElement name="wheel-debug-container" style="flex-grow: 1; top: 0; right: 0; position: absolute; flex-direction: row; flex-wrap: wrap;">
+            <ui:Label text="3000" name="FL" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="3000" name="FR" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="3000" name="RL" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="3000" name="RR" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

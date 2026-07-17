@@ -632,6 +632,7 @@ MonoBehaviour:
   wheelModel: {fileID: 670348681055462073}
   tireMesh: {fileID: 6931939715692987481}
   carObject: {fileID: 1960365366696690037}
+  tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   IsGrounded: 0
   forceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
@@ -1270,11 +1271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3332c3159811f6d4db8bda2bef17a25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Car
-  wheels:
-  - {fileID: 1965430313140975023}
-  - {fileID: 7433315412377764535}
-  - {fileID: 4368703503615979410}
-  - {fileID: 6523215174151876486}
+  wheelFL: {fileID: 1965430313140975023}
+  wheelFR: {fileID: 7433315412377764535}
+  wheelRL: {fileID: 4368703503615979410}
+  wheelRR: {fileID: 6523215174151876486}
   engine: {fileID: 11400000, guid: b83a7e6c7f11b35459852acc4a5e2ea1, type: 2}
   transmission: {fileID: 11400000, guid: 8a5a82f3955f5694686a2ec67a072ff0, type: 2}
   suspension: {fileID: 11400000, guid: 278af3e4c4328d7459d0d98f79e384f3, type: 2}
@@ -2141,6 +2141,7 @@ MonoBehaviour:
   wheelModel: {fileID: 580732881996678210}
   tireMesh: {fileID: 3111068617828566383}
   carObject: {fileID: 1960365366696690037}
+  tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   IsGrounded: 0
   forceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
@@ -3219,6 +3220,7 @@ MonoBehaviour:
   wheelModel: {fileID: 7915669825662725387}
   tireMesh: {fileID: 7254937454493399281}
   carObject: {fileID: 1960365366696690037}
+  tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   IsGrounded: 0
   forceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
@@ -3903,6 +3905,7 @@ MonoBehaviour:
   wheelModel: {fileID: 1447374364536250998}
   tireMesh: {fileID: 352805670484849122}
   carObject: {fileID: 1960365366696690037}
+  tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   IsGrounded: 0
   forceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
