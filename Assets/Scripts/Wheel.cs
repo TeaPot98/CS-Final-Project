@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Wheel : MonoBehaviour
 {
-    public bool IsDriving = false;
-    public bool CanSteer = false;
+    public bool isDriving;
+    public bool canSteer;
+
+    public float Rpm { get; set; }
+    public float AngularVelocity { get; set; }
 
     public GameObject wheelModel;
     public GameObject tireMesh;
@@ -14,7 +17,7 @@ public class Wheel : MonoBehaviour
     private Car _car;
     private SuspensionSO _suspension;
 
-    public bool IsGrounded = false;
+    public bool IsGrounded { get; private set; }
     public Vector3 forceVector;
     public Vector3 contactPoint;
 
@@ -58,6 +61,7 @@ public class Wheel : MonoBehaviour
         _tireTransformPosition = _tireTransform.position;
 
         TireRadius = 0.5f * _tireMeshRenderer.bounds.size.y;
+
         // _tireMass = _carManager.tireMass;
         // _tireGripFactor = _carManager.tireGripFactor;
         // _maxRotationAngle = _carManager.maxRotationAngle;
@@ -97,12 +101,12 @@ public class Wheel : MonoBehaviour
         // normalized car speed
         // float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / _carTopSpeed);
 
-        var tireWorldVel = _carRigidBody.GetPointVelocity(_tireTransformPosition);
+        Vector3 tireWorldVel = _carRigidBody.GetPointVelocity(_tireTransformPosition);
         _tireTransformPosition = _tireTransform.position;
 
         Ray ray = new(_tireTransformPosition, -_tireTransform.up);
         RaycastHit tireRay;
-        var rayDidHit =
+        bool rayDidHit =
             Physics.Raycast(ray, out tireRay, _suspension.suspensionRestDist + _suspension.suspensionTravel);
 
         // Debug.Log("Ray did hit: " + rayDidHit);
@@ -113,18 +117,18 @@ public class Wheel : MonoBehaviour
         if (rayDidHit)
         {
             // world-space direction of the spring force
-            var springDir = _tireTransform.up;
+            Vector3 springDir = _tireTransform.up;
 
             // calculate offset from the raycast
-            var offset = _suspension.suspensionRestDist - tireRay.distance;
+            float offset = _suspension.suspensionRestDist - tireRay.distance;
 
             // calculate velocity along the spring direction
             // note that springDir is a unit vector, so this returns the magnitude of tireWorldVel
             // as projected onto springDir
-            var vel = Vector3.Dot(springDir, tireWorldVel);
+            float vel = Vector3.Dot(springDir, tireWorldVel);
 
             // calculate the magnitude of the dampened spring force
-            var force = offset * _suspension.springStrength - vel * _suspension.springDamper;
+            float force = offset * _suspension.springStrength - vel * _suspension.springDamper;
 
             // apply the force at the location of this tire
             // in the direction of the suspension
@@ -134,12 +138,14 @@ public class Wheel : MonoBehaviour
             contactPoint = tireRay.point;
 
             Debug.DrawRay(_tireTransformPosition, springDir * force, Color.red);
+            Debug.DrawRay(tireRay.point, forceVector * 2, Color.dodgerBlue);
         }
 
         if (rayDidHit)
             wheelModel.transform.localPosition =
                 new Vector3(0f, -tireRay.distance + TireRadius, 0f);
         else
+
             // Reset the wheel mesh position to the suspension rest distance
             wheelModel.transform.localPosition =
                 new Vector3(0f, -_suspension.suspensionRestDist + TireRadius, 0f);
