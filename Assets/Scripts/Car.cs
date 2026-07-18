@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +22,11 @@ public class Car : MonoBehaviour
     public string RpmLabel = "1000 RPM";
     public string SpeedLabel = "0 km/h";
 
+    public string FLWheelRpm = "0";
+    public string FRWheelRpm = "0";
+    public string RLWheelRpm = "0";
+    public string RRWheelRpm = "0";
+
     private Rigidbody _rb;
 
     private int _gear = 0;
@@ -34,7 +40,7 @@ public class Car : MonoBehaviour
     public float tireGripFactor = 0.9f;
     public float tireMass = 10f;
 
-    private float currentRpm = 3000f;
+    private float currentEngineRpm = 3000f;
     private float currentWheelAngularVelocity = 0f;
 
 
@@ -46,62 +52,28 @@ public class Car : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var dt = Time.fixedDeltaTime;
+        float dt = Time.fixedDeltaTime;
 
-        var drivenWheelCount = _wheels.Count(wheel => wheel.IsDriving && wheel.IsGrounded);
+        int drivenWheelCount = _wheels.Count(wheel => wheel.IsDriving && wheel.IsGrounded);
         if (drivenWheelCount == 0)
         {
             UpdateLabels();
             return;
         }
 
-        var tireRadius = GetTireRadius();
-        var forwardSpeed = Vector3.Dot(_rb.linearVelocity, transform.forward);
 
-        currentWheelAngularVelocity = forwardSpeed / tireRadius;
-
-        if (_gear == 0)
+        foreach (Wheel wheel in _wheels)
         {
-            // float engineTorque = engine.GetTorque(_throttle);
-            //
-            // currentRpm += Utils.ComputeEngineFreeDeltaRpm(
-            //     currentRpm,
-            //     engineTorque,
-            //     _throttle,
-            //     dt
-            // );
-            //
-            // currentRpm = Mathf.Clamp(currentRpm, engine.IdleRpm, engine.MaxRpm);
-            //
-            // ApplyBrakeForce(drivenWheelCount);
-            // UpdateLabels();
-            // return;
-        }
+            Vector3 wheelWorldVelocity = _rb.GetPointVelocity(wheel.transform.position);
+            float wheelLinearVelocity = Vector3.Dot(wheelWorldVelocity, wheel.transform.forward);
 
-        var expectedEngineRpm = Mathf.Abs(
-            Utils.ComputeExpectedRpmAtWheelAngularVelocity(
-                currentWheelAngularVelocity,
-                transmission,
-                _gear
-            )
-        );
+            float rollingWheelAngularVelocity = wheelLinearVelocity / wheel.TireRadius;
 
-        currentRpm = Mathf.Clamp(expectedEngineRpm, engine.idleRpm, engine.maxRpm);
-
-        var engineTorque = engine.GetTorque(currentRpm) * _throttle;
-        var wheelTorque = transmission.GetTorque(engineTorque, _gear);
-
-        var torquePerWheel = wheelTorque / drivenWheelCount;
-        var forcePerWheel = torquePerWheel / tireRadius;
-
-        if (_brake != 0f && _speed < 0.1f) forcePerWheel = -_brakingForce;
-
-        foreach (var wheel in _wheels)
-        {
             if (wheel.CanSteer)
             {
                 // Calculate the rotation angle based on input
-                var steeringRotationAngle = Utils.RemapToRange(_steering, -1f, 1f, -maxSteeringAngle, maxSteeringAngle);
+                float steeringRotationAngle =
+                    Utils.RemapToRange(_steering, -1f, 1f, -maxSteeringAngle, maxSteeringAngle);
 
                 Debug.Log("Steering Rotation Angle: " + steeringRotationAngle);
 
@@ -112,31 +84,39 @@ public class Car : MonoBehaviour
             if (wheel.IsGrounded)
             {
                 // world-space direction of the steering force
-                var steeringDir = wheel.transform.right;
+                Vector3 steeringDir = wheel.transform.right;
 
-                var tireWorldVel = _rb.GetPointVelocity(wheel.transform.position);
+
+                if (wheel.IsDriving)
+                {
+                }
+
+                // TODO: Check if it's necessary to implement loaded tire radius
+                float loadedTireRadius = wheel.TireRadius;
+                float slipRatio = rollingWheelAngularVelocity * loadedTireRadius / wheelLinearVelocity - 1;
+
 
                 // what it's the tire's velocity in the steering direction ?
-                // note that steeringDir is a unit vector, so this returns the magnitude of tireWorldVel
+                // note that steeringDir is a unit vector, so this returns the magnitude of wheelWorldVelocity
                 // as projected onto steeringDir
-                var steeringVel = Vector3.Dot(steeringDir, tireWorldVel);
+                float steeringVel = Vector3.Dot(steeringDir, wheelWorldVelocity);
 
                 // the change in velocity that we're looking for is -steeringVel * gripFactor
                 // gripFactor is in range 0-1, 0 means no grip, 1 means full grip
-                var desiredVelChange = -steeringVel * tireGripFactor;
+                float desiredVelChange = -steeringVel * tireGripFactor;
 
                 // turn change in velocity into an acceleration (acceleration = change in vel / time)
                 // this will produce the acceleration necessary to change the velocity by desiredVelChange in 1 physics step
-                var desiredAccel = desiredVelChange / Time.fixedDeltaTime;
+                float desiredAccel = desiredVelChange / Time.fixedDeltaTime;
 
-                var steeringForce = tireMass * desiredAccel * steeringDir;
+                Vector3 steeringForce = tireMass * desiredAccel * steeringDir;
 
-                var slipAngle = Vector3.SignedAngle(wheel.transform.forward, tireWorldVel, wheel.transform.up);
-                var lateralForce = Utils.ComputeLateralTireForce(slipAngle);
-                var longitudinalForce = Utils.ComputeLongitudinalTireForce(1f);
+                float slipAngle = Vector3.SignedAngle(wheel.transform.forward, wheelWorldVelocity, wheel.transform.up);
+                float lateralForce = Utils.ComputeLateralTireForce(slipAngle);
+                float longitudinalForce = Utils.ComputeLongitudinalTireForce(1f);
 
-                var totalTireForce = lateralForce * Mathf.Sign(slipAngle) * wheel.transform.right +
-                                     longitudinalForce * wheel.transform.forward;
+                Vector3 totalTireForce = lateralForce * Mathf.Sign(slipAngle) * wheel.transform.right +
+                                         longitudinalForce * wheel.transform.forward;
 
                 // Force = Mass * Acceleration, so multiply by the mass of the tire and apply as a force
                 _rb.AddForceAtPosition(steeringForce, wheel.transform.position);
@@ -146,12 +126,57 @@ public class Car : MonoBehaviour
 
             if (wheel.IsDriving && wheel.IsGrounded)
             {
+                // Vector3 wheelWorldVelocity = _rb.GetPointVelocity(wheel.transform.position);
+                // float wheelLinearVelocity = Vector3.Dot(wheelWorldVelocity, wheel.transform.forward);
+                //
+                // float angularVelocity = wheelLinearVelocity / wheel.TireRadius;
+
+
+                if (_gear == 0)
+                {
+                    // float engineTorque = engine.GetTorque(_throttle);
+                    //
+                    // currentEngineRpm += Utils.ComputeEngineFreeDeltaRpm(
+                    //     currentEngineRpm,
+                    //     engineTorque,
+                    //     _throttle,
+                    //     dt
+                    // );
+                    //
+                    // currentEngineRpm = Mathf.Clamp(currentEngineRpm, engine.IdleRpm, engine.MaxRpm);
+                    //
+                    // ApplyBrakeForce(drivenWheelCount);
+                    // UpdateLabels();
+                    // return;
+                }
+
+                float expectedEngineRpm = Mathf.Abs(
+                    Utils.ComputeExpectedRpmAtWheelAngularVelocity(
+                        currentWheelAngularVelocity,
+                        transmission,
+                        _gear
+                    )
+                );
+
+                currentEngineRpm = Mathf.Clamp(expectedEngineRpm, engine.idleRpm, engine.maxRpm);
+
+                // currentWheelAngularVelocity = 0f;
+                float engineTorque = engine.GetTorque(currentEngineRpm) * _throttle;
+                float wheelTorque = transmission.GetTorque(engineTorque, _gear);
+
+                // TODO: Check if the division is matching the real torque
+                float torquePerWheel = wheelTorque / drivenWheelCount;
+                float forcePerWheel = torquePerWheel / wheel.TireRadius;
+
+                if (_brake != 0f && _speed < 0.1f) forcePerWheel = -_brakingForce;
+
                 // TODO: Dunamically compute tire load
-                var tireLoad = _rb.mass / 4;
+                float tireLoad = _rb.mass / 4;
+
                 // TODO: Compute slip ratio
-                var forceValue =
+                float forceValue =
                     Utils.ComputePacejkaMagicFormula(0.1f, tireLoad, wheel.tire.GetPacejkaMagicFormulaParams());
-                var force = wheel.forceVector * forceValue;
+                Vector3 force = wheel.forceVector * forceValue;
 
                 _rb.AddForceAtPosition(
                     force,
@@ -188,7 +213,7 @@ public class Car : MonoBehaviour
 
     private void OnGearShift(InputValue v)
     {
-        var value = (int)v.Get<float>();
+        int value = (int)v.Get<float>();
 
         if (_gear == -1 && value == -1) return;
         if (_gear == transmission.gears.Count && value == 1) return;
@@ -206,6 +231,8 @@ public class Car : MonoBehaviour
         Debug.Log("Gear Shift: " + _gear);
     }
 
+    // private void HandleTire
+
     private float GetTireRadius()
     {
         if (_wheels.Count == 0) return 0.3f;
@@ -217,7 +244,7 @@ public class Car : MonoBehaviour
     {
         _speed = _rb.linearVelocity.magnitude;
 
-        RpmLabel = $"{(int)currentRpm} RPM";
+        RpmLabel = $"{(int)currentEngineRpm} RPM";
         SpeedLabel = $"{(int)(_speed * 3.6f)} km/h";
     }
 }
