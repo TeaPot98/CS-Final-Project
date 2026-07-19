@@ -12,6 +12,7 @@ public class HUD : MonoBehaviour
     private VisualElement _container;
     private VisualElement _carStatsContainer;
     private VisualElement _wheelStatsContainer;
+    private VisualElement _userInputContainer;
 
     private void Start()
     {
@@ -29,6 +30,8 @@ public class HUD : MonoBehaviour
         _container = _root.Query<VisualElement>("container");
         _carStatsContainer = _container.Query<VisualElement>("car-stats-container");
         _wheelStatsContainer = _container.Query<VisualElement>("wheel-debug-container");
+        _userInputContainer = _container.Query<VisualElement>("user-input-container");
+
 
         Label gearText = _carStatsContainer.Query<Label>("Gear");
         Label rpmText = _carStatsContainer.Query<Label>("RPM");
@@ -39,6 +42,10 @@ public class HUD : MonoBehaviour
         Label rlWheelText = _wheelStatsContainer.Query<Label>("RL");
         Label rrWheelText = _wheelStatsContainer.Query<Label>("RR");
 
+        Label throttleText = _userInputContainer.Query<Label>("throttle");
+        Label brakeText = _userInputContainer.Query<Label>("braking");
+        Label steeringText = _userInputContainer.Query<Label>("steering");
+
 
         BindToLabel(gearText, car, nameof(car.GearLabel));
         BindToLabel(rpmText, car, nameof(car.RpmLabel));
@@ -48,6 +55,10 @@ public class HUD : MonoBehaviour
         BindToLabel(frWheelText, car, nameof(car.FRWheelRpm));
         BindToLabel(rlWheelText, car, nameof(car.RLWheelRpm));
         BindToLabel(rrWheelText, car, nameof(car.RRWheelRpm));
+
+        BindToLabel(throttleText, car, nameof(car.Throttle));
+        BindToLabel(brakeText, car, nameof(car.Brake));
+        BindToLabel(steeringText, car, nameof(car.Steering));
 
         yield return null;
     }

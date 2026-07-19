@@ -65,24 +65,36 @@ public static class Utils
 
     public static float ComputeTransmissionTorque(float inputTorque, int gear, TransmissionSO transmission)
     {
-        if (gear <= -1) return inputTorque * transmission.R * transmission.differentialRatio;
+        if (gear <= -1)
+            return inputTorque * transmission.R * transmission.differentialRatio *
+                   transmission.transmissionEfficiency;
         if (gear == 0) return 0;
 
         if (gear > transmission.gears.Count)
-            return inputTorque * transmission.gears[^1] * transmission.differentialRatio;
+            return inputTorque * transmission.gears[^1] * transmission.differentialRatio *
+                   transmission.transmissionEfficiency;
 
-        return inputTorque * transmission.gears[gear - 1] * transmission.differentialRatio;
+        return inputTorque * transmission.gears[gear - 1] * transmission.differentialRatio *
+               transmission.transmissionEfficiency;
+    }
+
+    public static float GetTotalGearRatio(int gear, TransmissionSO transmission)
+    {
+        if (gear <= -1) return transmission.R * transmission.differentialRatio;
+        if (gear == 0) return 0f;
+
+        if (gear > transmission.gears.Count)
+            return transmission.gears[^1] * transmission.differentialRatio;
+
+        return transmission.gears[gear - 1] * transmission.differentialRatio;
     }
 
     public static float ComputeWheelAngularVelocityAtEngineRpm(float engineRpm, int gear, TransmissionSO transmission)
     {
-        if (gear <= -1) return engineRpm / (transmission.R * transmission.differentialRatio);
-        if (gear == 0) return 0.1f;
+        float gearRatio = GetTotalGearRatio(gear, transmission);
+        if (Mathf.Approximately(gearRatio, 0f)) return 0f;
 
-        if (gear > transmission.gears.Count)
-            return engineRpm / (transmission.gears[^1] * transmission.differentialRatio);
-
-        return engineRpm / (transmission.gears[gear - 1] * transmission.differentialRatio);
+        return FromRpmToAngularVelocity(engineRpm / gearRatio);
     }
 
     public static float ComputeEngineDeltaRpm(float torqueCurveMtp, float torqueCurveOut, float throttleInput,
@@ -105,20 +117,15 @@ public static class Utils
         TransmissionSO transmission,
         int gear)
     {
-        var wheelRpm = FromAngularVelocityToRpm(wheelAngularVelocity);
+        float gearRatio = GetTotalGearRatio(gear, transmission);
+        if (Mathf.Approximately(gearRatio, 0f)) return 0f;
 
-        if (gear <= -1) return wheelRpm * transmission.R * transmission.differentialRatio;
-        if (gear == 0) return 0.1f;
-
-        if (gear > transmission.gears.Count)
-            return wheelRpm * transmission.gears[^1] * transmission.differentialRatio;
-
-        return wheelRpm * transmission.gears[gear - 1] * transmission.differentialRatio;
+        return FromAngularVelocityToRpm(wheelAngularVelocity) * gearRatio;
     }
 
     public static float RemapToRange(float input, float min, float max, float newMin, float newMax)
     {
-        var t = Mathf.InverseLerp(min, max, input);
+        float t = Mathf.InverseLerp(min, max, input);
         return Mathf.Lerp(newMin, newMax, t);
     }
 
@@ -147,14 +154,14 @@ public static class Utils
 
     public static float ComputePacejkaMagicFormula(float slipRatio, float tireLoad, PacejkaMagicFormulaParams p)
     {
-        var mu_p = p.B_1 * tireLoad + p.B_2;
-        var C = p.B_0;
+        float mu_p = p.B_1 * tireLoad + p.B_2;
+        float C = p.B_0;
 
-        var B = (p.B_3 * tireLoad + p.B_4) * Mathf.Exp(-p.B_5 * tireLoad) / (C * mu_p);
-        var D = mu_p * tireLoad;
-        var E = p.B_6 * Mathf.Pow(tireLoad, 2) + p.B_7 * tireLoad + p.B_8;
+        float B = (p.B_3 * tireLoad + p.B_4) * Mathf.Exp(-p.B_5 * tireLoad) / (C * mu_p);
+        float D = mu_p * tireLoad;
+        float E = p.B_6 * Mathf.Pow(tireLoad, 2) + p.B_7 * tireLoad + p.B_8;
 
-        var S = 100 * slipRatio + p.B_9 * tireLoad + p.B_10;
+        float S = 100 * slipRatio + p.B_9 * tireLoad + p.B_10;
 
         return D * Mathf.Sin(C * Mathf.Atan(B * S + E * (Mathf.Atan(B * S) - B * S)));
     }

@@ -18,6 +18,9 @@ public class TransmissionSO : ScriptableObject
 
 	public float GetRpm(float engineRpm, int gear)
 	{
-		return Utils.ComputeTransmissionTorque(engineRpm, gear, this);
+		float gearRatio = Utils.GetTotalGearRatio(gear, this);
+		if (Mathf.Approximately(gearRatio, 0f)) return 0f;
+
+		return engineRpm / gearRatio;
 	}
 }

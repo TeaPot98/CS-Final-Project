@@ -12,5 +12,10 @@
             <ui:Label text="3000" name="RL" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
             <ui:Label text="3000" name="RR" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
         </ui:VisualElement>
+        <ui:VisualElement name="user-input-container" style="flex-grow: 1; top: 0; right: auto; position: absolute; flex-direction: row; flex-wrap: wrap; left: 0;">
+            <ui:Label text="3000" name="throttle" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="3000" name="braking" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="3000" name="steering" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
