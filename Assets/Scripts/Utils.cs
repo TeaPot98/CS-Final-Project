@@ -105,11 +105,11 @@ public static class Utils
                engineFrictionMtp * currentRpm;
     }
 
-    public static float ComputeWheelDeltaAngularVelocity(float torqueCurveMtp, float torqueCurveOut,
+    public static float ComputeWheelDeltaAngularVelocity(float torqueCurveMtp, float torqueCurveOut, float throttle,
         float brakingForceMtp, float roadFrictionMtp, float brakeInput, float expectedAngularVelocity,
         float currentAngularVelocity)
     {
-        return torqueCurveMtp * torqueCurveOut * (expectedAngularVelocity + currentAngularVelocity) -
+        return torqueCurveMtp * torqueCurveOut * throttle * (expectedAngularVelocity - currentAngularVelocity) -
                brakingForceMtp * brakeInput - roadFrictionMtp * currentAngularVelocity;
     }
 

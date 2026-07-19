@@ -17,18 +17,18 @@ public class ChartUtils
             rect.height - 28
         );
 
-        var points = new Vector3[SamplesCount];
+        Vector3[] points = new Vector3[SamplesCount];
 
-        var minY = float.PositiveInfinity;
-        var maxY = float.NegativeInfinity;
+        float minY = float.PositiveInfinity;
+        float maxY = float.NegativeInfinity;
 
-        var ys = new float[SamplesCount];
+        float[] ys = new float[SamplesCount];
 
-        for (var i = 0; i < SamplesCount; i++)
+        for (int i = 0; i < SamplesCount; i++)
         {
-            var t = i / (float)(SamplesCount - 1);
-            var x = Mathf.Lerp(minX, maxX, t);
-            var y = fn(x);
+            float t = i / (float)(SamplesCount - 1);
+            float x = Mathf.Lerp(minX, maxX, t);
+            float y = fn(x);
 
             ys[i] = y;
             minY = Mathf.Min(minY, y);
@@ -41,13 +41,13 @@ public class ChartUtils
             maxY += 1f;
         }
 
-        for (var i = 0; i < SamplesCount; i++)
+        for (int i = 0; i < SamplesCount; i++)
         {
-            var t = i / (float)(SamplesCount - 1);
-            var normalizedY = Mathf.InverseLerp(minY, maxY, ys[i]);
+            float t = i / (float)(SamplesCount - 1);
+            float normalizedY = Mathf.InverseLerp(minY, maxY, ys[i]);
 
-            var px = Mathf.Lerp(graphRect.xMin, graphRect.xMax, t);
-            var py = Mathf.Lerp(graphRect.yMax, graphRect.yMin, normalizedY);
+            float px = Mathf.Lerp(graphRect.xMin, graphRect.xMax, t);
+            float py = Mathf.Lerp(graphRect.yMax, graphRect.yMin, normalizedY);
 
             points[i] = new Vector3(px, py, 0f);
         }
@@ -78,12 +78,12 @@ public class ChartUtils
 
         Handles.color = new Color(1f, 1f, 1f, 0.25f);
 
-        for (var i = 0; i < TickCount; i++)
+        for (int i = 0; i < TickCount; i++)
         {
-            var t = i / (float)(TickCount - 1);
+            float t = i / (float)(TickCount - 1);
 
-            var x = Mathf.Lerp(graphRect.xMin, graphRect.xMax, t);
-            var xValue = Mathf.Lerp(minX, maxX, t);
+            float x = Mathf.Lerp(graphRect.xMin, graphRect.xMax, t);
+            float xValue = Mathf.Lerp(minX, maxX, t);
 
             Handles.DrawLine(
                 new Vector3(x, graphRect.yMax),
@@ -96,8 +96,8 @@ public class ChartUtils
                 labelStyle
             );
 
-            var y = Mathf.Lerp(graphRect.yMax, graphRect.yMin, t);
-            var yValue = Mathf.Lerp(minY, maxY, t);
+            float y = Mathf.Lerp(graphRect.yMax, graphRect.yMin, t);
+            float yValue = Mathf.Lerp(minY, maxY, t);
 
             Handles.DrawLine(
                 new Vector3(graphRect.xMin - 4, y),

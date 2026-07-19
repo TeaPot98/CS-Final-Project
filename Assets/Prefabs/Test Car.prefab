@@ -1288,6 +1288,13 @@ MonoBehaviour:
   _brakingForce: 10000
   tireGripFactor: 0.9
   tireMass: 100
+  engineInertia: 0.35
+  drivenWheelInertia: 1.2
+  clutchStiffness: 12
+  engineFriction: 0.15
+  wheelRollingResistance: 0.08
+  wheelBrakeTorque: 2500
+  minSlipSpeed: 0.5
 --- !u!54 &5864273460818158975
 Rigidbody:
   m_ObjectHideFlags: 0
