@@ -15,7 +15,7 @@ MonoBehaviour:
   power: 0
   maxRpm: 8000
   idleRpm: 1000
-  curveBaselineY: 300
+  curveBaselineY: 200
   peakMagnitude: 100
   endsSlope: 1.2
   peakXPosition: 6000

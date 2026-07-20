@@ -52,6 +52,46 @@ public class PacejkaMagicFormulaParams
     }
 }
 
+
+public class PacejkaLateralMagicFormulaParams
+{
+    public readonly float A_0;
+    public readonly float A_1;
+    public readonly float A_2;
+    public readonly float A_3;
+    public readonly float A_4;
+    public readonly float A_5;
+    public readonly float A_6;
+    public readonly float A_7;
+    public readonly float A_8;
+    public readonly float A_9;
+    public readonly float A_10;
+    public readonly float A_11;
+    public readonly float A_12;
+    public readonly float A_13;
+    public readonly float A_14;
+
+    public PacejkaLateralMagicFormulaParams(float a_0, float a_1, float a_2, float a_3, float a_4, float a_5, float a_6,
+        float a_7, float a_8, float a_9, float a_10, float a_11, float a_12, float a_13, float a_14)
+    {
+        A_0 = a_0;
+        A_1 = a_1;
+        A_2 = a_2;
+        A_3 = a_3;
+        A_4 = a_4;
+        A_5 = a_5;
+        A_6 = a_6;
+        A_7 = a_7;
+        A_8 = a_8;
+        A_9 = a_9;
+        A_10 = a_10;
+        A_11 = a_11;
+        A_12 = a_12;
+        A_13 = a_13;
+        A_14 = a_14;
+    }
+}
+
 public static class Utils
 {
     public static float ComputeTorque(float rpm, TorqueCurveParams curveParams)
@@ -164,5 +204,21 @@ public static class Utils
         float S = 100 * slipRatio + p.B_9 * tireLoad + p.B_10;
 
         return D * Mathf.Sin(C * Mathf.Atan(B * S + E * (Mathf.Atan(B * S) - B * S)));
+    }
+
+    public static float ComputeLateralPacejkaMagicFormula(float slipAngle, float tireLoad, float camberAngle,
+        PacejkaLateralMagicFormulaParams p)
+    {
+        float mu_yp = p.A_1 * tireLoad + p.A_2;
+
+        float D = mu_yp * tireLoad;
+        float B = p.A_3 * Mathf.Sin(2 * Mathf.Atan(tireLoad / p.A_4)) * (1 - p.A_5 * Mathf.Abs(camberAngle)) /
+                  (p.A_0 * D);
+        float E = p.A_6 * tireLoad + p.A_7;
+
+        float S = 100 * slipAngle + p.A_8 * camberAngle + p.A_9 * tireLoad + p.A_10;
+        float S_v = tireLoad * ((p.A_11 * tireLoad + p.A_12) * camberAngle + p.A_12) + p.A_13;
+
+        return D * Mathf.Sin(p.A_0 * Mathf.Atan(B * S + E * (Mathf.Atan(B * S) - B * S))) + S_v;
     }
 }

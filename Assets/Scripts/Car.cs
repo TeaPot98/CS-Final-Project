@@ -76,6 +76,7 @@ public class Car : MonoBehaviour
         float dt = Time.fixedDeltaTime;
 
         List<Wheel> drivenWheels = _wheels.Where(wheel => wheel.isDriving && wheel.IsGrounded).ToList();
+
         bool hasGroundedDrivenWheels = drivenWheels.Count > 0;
 
         float maxEngineTorque = engine.GetTorque(_currentEngineRpm);
@@ -93,6 +94,48 @@ public class Car : MonoBehaviour
             float wheelLinearVelocity = Vector3.Dot(wheel.transform.forward, wheelWorldVelocity);
 
             float rollingWheelAngularVelocity = GetRollingWheelAngularVelocity(wheel, wheelLinearVelocity);
+
+            if (!wheel.isDriving && wheel.IsGrounded)
+            {
+                float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
+                float maxWheelAngularVelocity = GetMaxWheelAngularVelocity(gearRatio);
+                float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity);
+                float rollingResistanceTorque = wheelRollingResistance * wheel.AngularVelocity;
+                float wheelAngularAcceleration = -brakeTorque - rollingResistanceTorque;
+
+                wheel.AngularVelocity = rollingWheelAngularVelocity + wheelAngularAcceleration * dt;
+                wheel.AngularVelocity =
+                    ClampWheelAngularVelocity(wheel.AngularVelocity, maxWheelAngularVelocity);
+
+                // TODO: Check if it's necessary to implement loaded tire radius
+                float loadedTireRadius = wheel.TireRadius;
+                float wheelSurfaceSpeed = wheel.AngularVelocity * loadedTireRadius;
+
+                float slipRatio = (wheelSurfaceSpeed - wheelLinearVelocity) /
+                                  Mathf.Max(Mathf.Abs(wheelLinearVelocity), minSlipSpeed);
+                slipRatio = Mathf.Clamp(slipRatio, -1f, 1f);
+
+                // TODO: Dynamically compute tire load
+                float tireLoad = _rb.mass / 4;
+
+                // Debug.Log("Slip Ratio: " + slipRatio + "; Angular Velocity: " + wheel.AngularVelocity);
+
+                float forceValue =
+                    Utils.ComputePacejkaMagicFormula(slipRatio, tireLoad, wheel.tire.GetPacejkaMagicFormulaParams());
+                Vector3 force = Time.fixedDeltaTime * forceValue * wheel.forceVector;
+
+                _rb.AddForceAtPosition(
+                    force,
+                    wheel.contactPoint,
+                    ForceMode.Force
+                );
+
+                Debug.DrawRay(
+                    wheel.contactPoint,
+                    force / 1000f,
+                    Color.deepPink
+                );
+            }
 
             if (wheel.canSteer)
             {
@@ -112,12 +155,6 @@ public class Car : MonoBehaviour
                 Vector3 steeringDir = wheel.transform.right;
 
 
-                // TODO: Check if it's necessary to implement loaded tire radius
-                float loadedTireRadius = wheel.TireRadius;
-                float slipRatio = (rollingWheelAngularVelocity * loadedTireRadius - wheelLinearVelocity) /
-                                  Mathf.Max(Mathf.Abs(wheelLinearVelocity), minSlipSpeed);
-
-
                 // what it's the tire's velocity in the steering direction ?
                 // note that steeringDir is a unit vector, so this returns the magnitude of wheelWorldVelocity
                 // as projected onto steeringDir
@@ -133,15 +170,29 @@ public class Car : MonoBehaviour
 
                 Vector3 steeringForce = tireMass * desiredAccel * steeringDir;
 
-                float slipAngle = Vector3.SignedAngle(wheel.transform.forward, wheelWorldVelocity, wheel.transform.up);
-                float lateralForce = Utils.ComputeLateralTireForce(slipAngle);
+                Vector3 clampedWheelWorldVelocity =
+                    wheelWorldVelocity.magnitude < 1f ? wheel.transform.forward : wheelWorldVelocity;
+                float slipAngle = Vector3.SignedAngle(wheel.transform.forward, clampedWheelWorldVelocity,
+                    wheel.transform.up);
+
+                Debug.Log("Slip Angle: " + slipAngle);
+
+                // float lateralForce = Utils.ComputeLateralTireForce(slipAngle);
                 float longitudinalForce = Utils.ComputeLongitudinalTireForce(1f);
 
-                Vector3 totalTireForce = lateralForce * Mathf.Sign(slipAngle) * wheel.transform.right +
-                                         longitudinalForce * wheel.transform.forward;
+                // Vector3 totalTireForce = lateralForce * Mathf.Sign(slipAngle) * wheel.transform.right +
+                //                          longitudinalForce * wheel.transform.forward;
+
+                // TODO: Dynamically compute tire load
+                float tireLoad = _rb.mass / 4f;
+
+                float lateralForceMagnitude = Utils.ComputeLateralPacejkaMagicFormula(slipAngle, tireLoad, 0f,
+                    wheel.tire.GetPacejkaLateralMagicFormulaParams());
+
+                Vector3 lateralForce = lateralForceMagnitude * Mathf.Sign(slipAngle) * wheel.transform.right;
 
                 // Force = Mass * Acceleration, so multiply by the mass of the tire and apply as a force
-                _rb.AddForceAtPosition(steeringForce, wheel.transform.position);
+                _rb.AddForceAtPosition(lateralForce, wheel.transform.position);
 
                 Debug.DrawRay(wheel.transform.position, steeringForce, Color.green);
             }
@@ -155,16 +206,6 @@ public class Car : MonoBehaviour
 
             if (wheel.isDriving && wheel.IsGrounded)
             {
-                // Vector3 wheelWorldVelocity = _rb.GetPointVelocity(wheel.transform.position);
-                // float wheelLinearVelocity = Vector3.Dot(wheelWorldVelocity, wheel.transform.forward);
-                //
-                // float angularVelocity = wheelLinearVelocity / wheel.TireRadius;
-
-
-                // float brakeAngularVelocityDelta = wheelBrakeTorque / Mathf.Max(drivenWheelInertia, 0.001f) * Brake * dt;
-                // wheel.AngularVelocity = Mathf.MoveTowards(wheel.AngularVelocity, 0f, brakeAngularVelocityDelta);
-
-
                 // TODO: Check if it's necessary to implement loaded tire radius
                 float loadedTireRadius = wheel.TireRadius;
                 float wheelSurfaceSpeed = wheel.AngularVelocity * loadedTireRadius;
@@ -172,25 +213,11 @@ public class Car : MonoBehaviour
                                   Mathf.Max(Mathf.Abs(wheelLinearVelocity), minSlipSpeed);
                 slipRatio = Mathf.Clamp(slipRatio, -1f, 1f);
 
-                // float slipRatio = (wheel.AngularVelocity * loadedTireRadius - wheelLinearVelocity) /
-                //                   Mathf.Max(Mathf.Abs(wheelLinearVelocity), 0.1f);
-
-                // currentWheelAngularVelocity = 0f;
-                // float engineTorque = engine.GetTorque(_currentEngineRpm) * Throttle;
-                // float wheelTorque = transmission.GetTorque(engineTorque, _gear);
-
-                // TODO: Check if the division is matching the real torque
-                // float torquePerWheel = wheelTorque / drivenWheelCount;
-                // float forcePerWheel = torquePerWheel / wheel.TireRadius;
-
-                // if (Brake != 0f && _speed < 0.1f) forcePerWheel = -_brakingForce;
-
                 // TODO: Dynamically compute tire load
                 float tireLoad = _rb.mass / 4;
 
-                Debug.Log("Slip Ratio: " + slipRatio + "; Angular Velocity: " + wheel.AngularVelocity);
+                // Debug.Log("Slip Ratio: " + slipRatio + "; Angular Velocity: " + wheel.AngularVelocity);
 
-                // TODO: Compute slip ratio
                 float forceValue =
                     Utils.ComputePacejkaMagicFormula(slipRatio, tireLoad, wheel.tire.GetPacejkaMagicFormulaParams());
                 Vector3 force = Time.fixedDeltaTime * forceValue * wheel.forceVector;
@@ -239,6 +266,7 @@ public class Car : MonoBehaviour
             wheel.AngularVelocity += wheelAngularAcceleration * dt;
             wheel.AngularVelocity = ClampWheelAngularVelocity(wheel.AngularVelocity, maxWheelAngularVelocity);
         }
+
 
         SyncEngineRpmToDrivenWheels(drivenWheels, gearRatio);
     }
