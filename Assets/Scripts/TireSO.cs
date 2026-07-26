@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tire", menuName = "Items/Tire")]
 public class TireSO : ScriptableObject
 {
-    public float b_0 = 1.65f;
+    [Header("Longitudinal Parameters")] public float b_0 = 1.65f;
     public float b_1;
     public float b_2 = 1688f;
     public float b_3;
@@ -15,7 +15,9 @@ public class TireSO : ScriptableObject
     public float b_9;
     public float b_10;
 
+    [Space(10)] [Header("Lateral Parameters")]
     public float a_0 = 1.799f;
+
     public float a_1;
     public float a_2 = 1688f;
     public float a_3 = 4140f;
@@ -52,5 +54,6 @@ public class TireSO : ScriptableObject
     private void OnValidate()
     {
         _magicFormulaParams = null;
+        _lateralMagicFormulaParams = null;
     }
 }
