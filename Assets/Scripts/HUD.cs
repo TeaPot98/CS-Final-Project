@@ -32,29 +32,55 @@ public class HUD : MonoBehaviour
         _wheelStatsContainer = _container.Query<VisualElement>("wheel-debug-container");
         _userInputContainer = _container.Query<VisualElement>("user-input-container");
 
+        VisualElement flWheelContainer = _wheelStatsContainer.Query<VisualElement>("FL");
+        VisualElement frWheelContainer = _wheelStatsContainer.Query<VisualElement>("FR");
+        VisualElement rlWheelContainer = _wheelStatsContainer.Query<VisualElement>("RL");
+        VisualElement rrWheelContainer = _wheelStatsContainer.Query<VisualElement>("RR");
 
         Label gearText = _carStatsContainer.Query<Label>("Gear");
+        Label gearRatioText = _carStatsContainer.Query<Label>("GearRatio");
         Label rpmText = _carStatsContainer.Query<Label>("RPM");
         Label speedText = _carStatsContainer.Query<Label>("Speed");
 
-        Label flWheelText = _wheelStatsContainer.Query<Label>("FL");
-        Label frWheelText = _wheelStatsContainer.Query<Label>("FR");
-        Label rlWheelText = _wheelStatsContainer.Query<Label>("RL");
-        Label rrWheelText = _wheelStatsContainer.Query<Label>("RR");
+        Label flWheelRpmText = flWheelContainer.Query<Label>("RPM");
+        Label frWheelRpmText = frWheelContainer.Query<Label>("RPM");
+        Label rlWheelRpmText = rlWheelContainer.Query<Label>("RPM");
+        Label rrWheelRpmText = rrWheelContainer.Query<Label>("RPM");
+
+        Label flWheelSlipAngleText = flWheelContainer.Query<Label>("SlipAngle");
+        Label frWheelSlipAngleText = frWheelContainer.Query<Label>("SlipAngle");
+        Label rlWheelSlipAngleText = rlWheelContainer.Query<Label>("SlipAngle");
+        Label rrWheelSlipAngleText = rrWheelContainer.Query<Label>("SlipAngle");
+
+        Label flWheelSlipRatioText = flWheelContainer.Query<Label>("SlipRatio");
+        Label frWheelSlipRatioText = frWheelContainer.Query<Label>("SlipRatio");
+        Label rlWheelSlipRatioText = rlWheelContainer.Query<Label>("SlipRatio");
+        Label rrWheelSlipRatioText = rrWheelContainer.Query<Label>("SlipRatio");
 
         Label throttleText = _userInputContainer.Query<Label>("throttle");
         Label brakeText = _userInputContainer.Query<Label>("braking");
         Label steeringText = _userInputContainer.Query<Label>("steering");
 
 
-        BindToLabel(gearText, car, nameof(car.GearLabel));
-        BindToLabel(rpmText, car, nameof(car.RpmLabel));
-        BindToLabel(speedText, car, nameof(car.SpeedLabel));
+        BindToLabel(gearText, car, nameof(Car.GearLabel));
+        BindToLabel(gearRatioText, car, nameof(Car.GearRatioLabel));
+        BindToLabel(rpmText, car, nameof(Car.RpmLabel));
+        BindToLabel(speedText, car, nameof(Car.SpeedLabel));
 
-        BindToLabel(flWheelText, car, nameof(car.FLWheelRpm));
-        BindToLabel(frWheelText, car, nameof(car.FRWheelRpm));
-        BindToLabel(rlWheelText, car, nameof(car.RLWheelRpm));
-        BindToLabel(rrWheelText, car, nameof(car.RRWheelRpm));
+        BindToLabel(flWheelRpmText, car, nameof(Car.FLWheelRpm));
+        BindToLabel(frWheelRpmText, car, nameof(Car.FRWheelRpm));
+        BindToLabel(rlWheelRpmText, car, nameof(Car.RLWheelRpm));
+        BindToLabel(rrWheelRpmText, car, nameof(Car.RRWheelRpm));
+
+        BindToLabel(flWheelSlipAngleText, car, nameof(Car.FLSlipAngle));
+        BindToLabel(frWheelSlipAngleText, car, nameof(Car.FRSlipAngle));
+        BindToLabel(rlWheelSlipAngleText, car, nameof(Car.RLSlipAngle));
+        BindToLabel(rrWheelSlipAngleText, car, nameof(Car.RRSlipAngle));
+
+        BindToLabel(flWheelSlipRatioText, car, nameof(Car.FLSlipRatio));
+        BindToLabel(frWheelSlipRatioText, car, nameof(Car.FRSlipRatio));
+        BindToLabel(rlWheelSlipRatioText, car, nameof(Car.RLSlipRatio));
+        BindToLabel(rrWheelSlipRatioText, car, nameof(Car.RRSlipRatio));
 
         BindToLabel(throttleText, car, nameof(car.Throttle));
         BindToLabel(brakeText, car, nameof(car.Brake));

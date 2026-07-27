@@ -37,7 +37,7 @@ public class TireEditor : Editor
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
 
                 // TODO: Implement dynamic tire load
-                ChartUtils.DrawEquationPreview(-0.5f, 0.5f, rect,
+                ChartUtils.DrawEquationPreview(-20f, 20f, rect,
                     (x) => Utils.ComputeLateralPacejkaMagicFormula(x, 5f, 0f,
                         asset.GetPacejkaLateralMagicFormulaParams()));
             }

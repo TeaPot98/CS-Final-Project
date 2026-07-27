@@ -6,8 +6,9 @@ public class Wheel : MonoBehaviour
     public bool isDriving;
     public bool canSteer;
 
-    public float Rpm { get; set; }
     public float AngularVelocity { get; set; }
+    public float SlipAngle { get; set; }
+    public float SlipRatio { get; set; }
 
     public GameObject wheelModel;
     public GameObject tireMesh;
@@ -18,7 +19,8 @@ public class Wheel : MonoBehaviour
     private SuspensionSO _suspension;
 
     public bool IsGrounded { get; private set; }
-    public Vector3 forceVector;
+    public Vector3 longitudinalForceVector;
+    public Vector3 lateralForceVector;
     public Vector3 contactPoint;
 
     // private float _suespension.suspensionRestDist = 1f;
@@ -134,11 +136,11 @@ public class Wheel : MonoBehaviour
             // in the direction of the suspension
             _carRigidBody.AddForceAtPosition(springDir * force, _tireTransformPosition);
 
-            forceVector = Vector3.ProjectOnPlane(_tireTransform.forward, tireRay.normal).normalized;
+            longitudinalForceVector = Vector3.ProjectOnPlane(_tireTransform.forward, tireRay.normal).normalized;
+            lateralForceVector = Vector3.ProjectOnPlane(_tireTransform.right, tireRay.normal).normalized;
             contactPoint = tireRay.point;
 
-            Debug.DrawRay(_tireTransformPosition, springDir * force, Color.red);
-            Debug.DrawRay(tireRay.point, forceVector * 2, Color.dodgerBlue);
+            Debug.DrawRay(_tireTransformPosition, springDir * force, Color.dodgerBlue);
         }
 
         if (rayDidHit)

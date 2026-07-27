@@ -3,14 +3,35 @@
     <ui:VisualElement name="container" style="flex-grow: 1;">
         <ui:VisualElement name="car-stats-container" style="flex-grow: 1; position: absolute; left: 0; bottom: 0;">
             <ui:Label text="N" name="Gear" class="hudText" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:Label text="0" name="GearRatio" class="hudText" style="position: relative; left: auto; bottom: auto;"/>
             <ui:Label text="1000" name="RPM" class="hudText"/>
             <ui:Label text="100km/h" name="Speed" class="hudText"/>
         </ui:VisualElement>
         <ui:VisualElement name="wheel-debug-container" style="flex-grow: 1; top: 0; right: 0; position: absolute; flex-direction: row; flex-wrap: wrap;">
-            <ui:Label text="3000" name="FL" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
-            <ui:Label text="3000" name="FR" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
-            <ui:Label text="3000" name="RL" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
-            <ui:Label text="3000" name="RR" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            <ui:VisualElement name="FL" style="flex-grow: 1;">
+                <ui:Label text="FL" name="Label" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="RPM" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipAngle" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipRatio" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="FR" style="flex-grow: 1;">
+                <ui:Label text="FR" name="Label" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="RPM" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipAngle" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipRatio" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="RL" style="flex-grow: 1;">
+                <ui:Label text="RL" name="Label" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="RPM" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipAngle" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipRatio" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="RR" style="flex-grow: 1;">
+                <ui:Label text="RR" name="Label" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="RPM" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipAngle" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+                <ui:Label text="3000" name="SlipRatio" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="user-input-container" style="flex-grow: 1; top: 0; right: auto; position: absolute; flex-direction: row; flex-wrap: wrap; left: 0;">
             <ui:Label text="3000" name="throttle" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>

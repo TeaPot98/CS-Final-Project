@@ -216,7 +216,7 @@ public static class Utils
                   (p.A_0 * D);
         float E = p.A_6 * tireLoad + p.A_7;
 
-        float S = 100 * slipAngle + p.A_8 * camberAngle + p.A_9 * tireLoad + p.A_10;
+        float S = slipAngle + p.A_8 * camberAngle + p.A_9 * tireLoad + p.A_10;
         float S_v = tireLoad * ((p.A_11 * tireLoad + p.A_12) * camberAngle + p.A_12) + p.A_13;
 
         return D * Mathf.Sin(p.A_0 * Mathf.Atan(B * S + E * (Mathf.Atan(B * S) - B * S))) + S_v;
