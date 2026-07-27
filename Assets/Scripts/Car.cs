@@ -67,6 +67,8 @@ public class Car : MonoBehaviour
     public float wheelBrakeTorque = 2500f;
     public float minSlipSpeed = 0.5f;
 
+    private float lowSpeedBlendStart = 4.0f; // m/s
+    private float lowSpeedBlendEnd = 0.5f; // m/s
 
     private void Start()
     {
@@ -164,6 +166,13 @@ public class Car : MonoBehaviour
                     float lateralForce =
                         wheel.SlipAngle * Utils.ComputeLateralPacejkaMagicFormula(combinedParam, tireLoad, 0f,
                             wheel.tire.GetPacejkaLateralMagicFormulaParams()) / combinedParam;
+
+
+                    float speedForBlend = Mathf.Abs(wheelLinearVelocity);
+                    float lowSpeedFade = Mathf.SmoothStep(0f, 1f,
+                        Mathf.InverseLerp(lowSpeedBlendEnd, lowSpeedBlendStart, speedForBlend));
+
+                    lateralForce *= lowSpeedFade;
 
                     Debug.Log("Lon Force: " + longitudinalForce);
                     Debug.Log("Lat Force: " + lateralForce);
