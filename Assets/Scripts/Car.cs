@@ -93,7 +93,7 @@ public class Car : MonoBehaviour
         bool hasGroundedDrivenWheels = drivenWheels.Count > 0;
 
         float maxEngineTorque = engine.GetTorque(_currentEngineRpm);
-        float engineTorque = maxEngineTorque * Throttle;
+        float engineTorque = maxEngineTorque * Mathf.Max(Throttle, 0.03f);
 
         if (_gear == 0 || !hasGroundedDrivenWheels)
             UpdateFreeEngine(dt);
@@ -174,8 +174,8 @@ public class Car : MonoBehaviour
 
                     lateralForce *= lowSpeedFade;
 
-                    Debug.Log("Lon Force: " + longitudinalForce);
-                    Debug.Log("Lat Force: " + lateralForce);
+                    // Debug.Log("Lon Force: " + longitudinalForce);
+                    // Debug.Log("Lat Force: " + lateralForce);
 
                     totalForce = longitudinalForce * wheel.longitudinalForceVector -
                                  lateralForce * wheel.lateralForceVector;
@@ -214,13 +214,35 @@ public class Car : MonoBehaviour
             return;
         }
 
+        float averageWheelAngularVelocity = 0f;
+        foreach (Wheel wheel in drivenWheels)
+            averageWheelAngularVelocity += wheel.AngularVelocity;
+        averageWheelAngularVelocity /= drivenWheels.Count;
+
+        float crawlSpeedWheelAngularVelocity =
+            Utils.ComputeWheelAngularVelocityAtEngineRpm(engine.idleRpm, _gear, transmission);
+
+        float engineFrictionFade = Mathf.SmoothStep(0f, 1f,
+            Mathf.InverseLerp(engine.idleRpm + 50f, engine.idleRpm + 250f, _currentEngineRpm));
+        float crawlTorqueMultiplier = Mathf.Approximately(Brake, 0f)
+            ? Mathf.SmoothStep(0f, 1f,
+                Mathf.InverseLerp(crawlSpeedWheelAngularVelocity, 0f, averageWheelAngularVelocity))
+            : 0f;
+
+        float crawlTorque = engine.GetTorque(engine.idleRpm) * crawlTorqueMultiplier;
+
+
         float maxWheelAngularVelocity = GetMaxWheelAngularVelocity(gearRatio);
         float engineAngularVelocity = Utils.FromRpmToAngularVelocity(_currentEngineRpm);
-        float engineFrictionTorque = engineFriction * engineAngularVelocity;
-        float drivelineTorque = (engineTorque - engineFrictionTorque) * gearRatio * transmission.transmissionEfficiency;
+        float engineFrictionTorque = engineFriction * engineAngularVelocity * engineFrictionFade;
+        float drivelineTorque = (engineTorque + crawlTorque - engineFrictionTorque) * gearRatio *
+                                transmission.transmissionEfficiency;
         float torquePerWheel = drivelineTorque / drivenWheels.Count;
         float reflectedEngineInertia = engineInertia * gearRatio * gearRatio / drivenWheels.Count;
         float wheelInertia = Mathf.Max(drivenWheelInertia + reflectedEngineInertia, 0.001f);
+
+        Debug.Log("Driveline torque: " + drivelineTorque + "; engineFrictionTorque: " + engineFrictionTorque);
+
 
         foreach (Wheel wheel in drivenWheels)
         {
