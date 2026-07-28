@@ -23,7 +23,6 @@ public class Car : MonoBehaviour
     public TransmissionSO transmission;
     public SuspensionSO suspension;
 
-    public float maxSteeringAngle = 30f;
 
     public string GearLabel = "N";
     public string GearRatioLabel = "Gear Ratio: 0";
@@ -66,6 +65,10 @@ public class Car : MonoBehaviour
     public float wheelRollingResistance = 0.08f;
     public float wheelBrakeTorque = 2500f;
     public float minSlipSpeed = 0.5f;
+
+    // public float maxSteeringAngle = 30f;
+    [Header("Speed-Sensitive Steering")]
+    public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
 
     private float lowSpeedBlendStart = 4.0f; // m/s
     private float lowSpeedBlendEnd = 0.5f; // m/s
@@ -141,6 +144,8 @@ public class Car : MonoBehaviour
 
             if (wheel.canSteer)
             {
+                float maxSteeringAngle = maxSteeringAngleBySpeed.Evaluate(wheelWorldVelocity.magnitude);
+
                 // Calculate the rotation angle based on input
                 float steeringRotationAngle =
                     Utils.RemapToRange(Steering, -1f, 1f, -maxSteeringAngle, maxSteeringAngle);

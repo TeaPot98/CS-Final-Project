@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffee2b7242a9baa44a49a0429d0c24b1, type: 3}
   m_Name: Test Tire
   m_EditorClassIdentifier: Assembly-CSharp::TireSO
+  referenceTireLoad: 3.3
+  maxSlipAngle: 3.2911396
   b_0: 1.65
   b_1: 0
   b_2: 1688

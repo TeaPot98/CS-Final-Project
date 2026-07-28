@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tire", menuName = "Items/Tire")]
 public class TireSO : ScriptableObject
 {
+    public float referenceTireLoad = 3.3f;
+    public float maxSlipAngle = 0f;
+
     [Header("Longitudinal Parameters")] public float b_0 = 1.65f;
     public float b_1;
     public float b_2 = 1688f;

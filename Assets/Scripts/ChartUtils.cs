@@ -6,9 +6,9 @@ using UnityEngine;
 public class ChartUtils
 {
     private const int TickCount = 5;
-    private const int SamplesCount = 60;
+    private const int SamplesCount = 80;
 
-    public static void DrawEquationPreview(float minX, float maxX, Rect rect, Func<float, float> fn)
+    public static float DrawEquationPreview(float minX, float maxX, Rect rect, Func<float, float> fn)
     {
         Rect graphRect = new(
             rect.x + 60,
@@ -21,6 +21,7 @@ public class ChartUtils
 
         float minY = float.PositiveInfinity;
         float maxY = float.NegativeInfinity;
+        float peakX = minX;
 
         float[] ys = new float[SamplesCount];
 
@@ -32,6 +33,7 @@ public class ChartUtils
 
             ys[i] = y;
             minY = Mathf.Min(minY, y);
+            peakX = y >= maxY ? x : peakX;
             maxY = Mathf.Max(maxY, y);
         }
 
@@ -58,6 +60,8 @@ public class ChartUtils
         Handles.color = Color.cyan;
         Handles.DrawAAPolyLine(2f, points);
         Handles.EndGUI();
+
+        return peakX;
     }
 
     private static void DrawTicks(

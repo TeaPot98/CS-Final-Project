@@ -633,7 +633,8 @@ MonoBehaviour:
   tireMesh: {fileID: 6931939715692987481}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  forceVector: {x: 0, y: 0, z: 0}
+  longitudinalForceVector: {x: 0, y: 0, z: 0}
+  lateralForceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &580732881996678210
@@ -1277,24 +1278,58 @@ MonoBehaviour:
   engine: {fileID: 11400000, guid: b83a7e6c7f11b35459852acc4a5e2ea1, type: 2}
   transmission: {fileID: 11400000, guid: 8a5a82f3955f5694686a2ec67a072ff0, type: 2}
   suspension: {fileID: 11400000, guid: 278af3e4c4328d7459d0d98f79e384f3, type: 2}
-  maxSteeringAngle: 30
   GearLabel: N
+  GearRatioLabel: 'Gear Ratio: 0'
   RpmLabel: 1000 RPM
   SpeedLabel: 0 km/h
   FLWheelRpm: 0
   FRWheelRpm: 0
   RLWheelRpm: 0
   RRWheelRpm: 0
+  FLSlipAngle: 0
+  FRSlipAngle: 0
+  RLSlipAngle: 0
+  RRSlipAngle: 0
+  FLSlipRatio: 0
+  FRSlipRatio: 0
+  RLSlipRatio: 0
+  RRSlipRatio: 0
+  Throttle: 0
+  Brake: 0
+  Steering: 0
   _brakingForce: 10000
   tireGripFactor: 0.9
   tireMass: 100
   engineInertia: 0.35
   drivenWheelInertia: 1.2
-  clutchStiffness: 12
   engineFriction: 0.15
   wheelRollingResistance: 0.08
   wheelBrakeTorque: 2500
   minSlipSpeed: 0.5
+  maxSteeringAngleBySpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 30
+      inSlope: 0
+      outSlope: -0.25
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 100
+      value: 5
+      inSlope: -0.25
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!54 &5864273460818158975
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2152,7 +2187,8 @@ MonoBehaviour:
   tireMesh: {fileID: 3111068617828566383}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  forceVector: {x: 0, y: 0, z: 0}
+  longitudinalForceVector: {x: 0, y: 0, z: 0}
+  lateralForceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &4414015909044909801
@@ -3230,7 +3266,8 @@ MonoBehaviour:
   tireMesh: {fileID: 7254937454493399281}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  forceVector: {x: 0, y: 0, z: 0}
+  longitudinalForceVector: {x: 0, y: 0, z: 0}
+  lateralForceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &5665738776634013119
@@ -3914,7 +3951,8 @@ MonoBehaviour:
   tireMesh: {fileID: 352805670484849122}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  forceVector: {x: 0, y: 0, z: 0}
+  longitudinalForceVector: {x: 0, y: 0, z: 0}
+  lateralForceVector: {x: 0, y: 0, z: 0}
   contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &7502234972995529011
