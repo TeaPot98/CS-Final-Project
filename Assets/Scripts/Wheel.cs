@@ -82,6 +82,13 @@ public class Wheel : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!Mathf.Approximately(AngularVelocity, 0f))
+        {
+            Quaternion deltaRotation =
+                Quaternion.AngleAxis(AngularVelocity * Mathf.Rad2Deg, wheelModel.transform.right);
+
+            wheelModel.transform.rotation = deltaRotation * wheelModel.transform.rotation;
+        }
     }
 
     private void FixedUpdate()
