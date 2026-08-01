@@ -44,6 +44,8 @@ public class Car : MonoBehaviour
     public string RLSlipRatio = "0";
     public string RRSlipRatio = "0";
 
+    public string DsgLabel = "";
+
     private Rigidbody _rb;
 
     private int _gear = 0;
@@ -109,7 +111,6 @@ public class Car : MonoBehaviour
             float wheelLinearVelocity = Vector3.Dot(wheel.transform.forward, wheelWorldVelocity);
 
             float rollingWheelAngularVelocity = GetRollingWheelAngularVelocity(wheel, wheelLinearVelocity);
-
 
             float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
             float maxWheelAngularVelocity = GetMaxWheelAngularVelocity(gearRatio);
@@ -257,16 +258,24 @@ public class Car : MonoBehaviour
         float reflectedEngineInertia = engineInertia * gearRatio * gearRatio / drivenWheels.Count;
         float wheelInertia = Mathf.Max(drivenWheelInertia + reflectedEngineInertia, 0.001f);
 
+
         // Debug.Log("Driveline torque: " + drivelineTorque + "; engineFrictionTorque: " + engineFrictionTorque +
         // ";\n crawlTorque: " + crawlTorque + "; engineTorque: " + engineTorque);
 
 
         foreach (Wheel wheel in drivenWheels)
         {
+            const float targetSlip = 0.1f;
+            const float kp = 10f;
+            float slipError = wheel.SlipRatio - targetSlip;
+            float torqueScale = Mathf.Clamp01(1f - kp * slipError);
+
+            float wheelTorque = torquePerWheel * torqueScale;
+
             float brakeTorque = ComputeBrakeTorque(wheel.AngularVelocity);
             float rollingResistanceTorque = wheelRollingResistance * wheel.AngularVelocity;
             float wheelAngularAcceleration =
-                (torquePerWheel - brakeTorque - rollingResistanceTorque) / wheelInertia;
+                (wheelTorque - brakeTorque - rollingResistanceTorque) / wheelInertia;
 
             wheel.AngularVelocity += wheelAngularAcceleration * dt;
             wheel.AngularVelocity = ClampWheelAngularVelocity(wheel.AngularVelocity, maxWheelAngularVelocity);
