@@ -103,6 +103,16 @@ public static class Utils
                        curveParams.PeakMagnitude);
     }
 
+    public static float ComputePower(float rpm, float torque)
+    {
+        return torque * FromRpmToAngularVelocity(rpm);
+    }
+
+    public static float ComputeHorsePower(float power)
+    {
+        return power / 735.5f;
+    }
+
     public static float ComputeTransmissionTorque(float inputTorque, int gear, TransmissionSO transmission)
     {
         if (gear <= -1)

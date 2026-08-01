@@ -1,10 +1,10 @@
 using System;
+using Unity.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Engine", menuName = "Items/Powertrain/Engine")]
 public class EngineSO : ScriptableObject
 {
-    public float power;
     public float maxRpm = 7000f;
     public float idleRpm = 1000f;
 
@@ -13,6 +13,8 @@ public class EngineSO : ScriptableObject
     public float endsSlope = 1.2f;
     public float peakXPosition = 6000f;
     public float endsSlope2 = 4000f;
+    [Space(10)] public float power;
+    public float horsepower;
 
     private TorqueCurveParams _curveParams;
 

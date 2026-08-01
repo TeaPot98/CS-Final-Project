@@ -116,12 +116,13 @@ public class Car : MonoBehaviour
             float brakeTorque = ComputeBrakeTorque(wheel.AngularVelocity);
             float rollingResistanceTorque = wheelRollingResistance * wheel.AngularVelocity;
             float wheelAngularAcceleration =
-                (-brakeTorque - rollingResistanceTorque) / Mathf.Max(drivenWheelInertia, 0.001f);
+                -brakeTorque / Mathf.Max(drivenWheelInertia, 0.001f);
 
             if (wheel.IsGrounded && !wheel.isDriving)
             {
                 Debug.Log("wheelAngularAcceleration: " + wheelAngularAcceleration + ";\n rollingResistanceTorque: " +
                           rollingResistanceTorque);
+                Debug.Log("rollingWheelAngularVelocity: " + rollingWheelAngularVelocity);
 
                 wheel.AngularVelocity = rollingWheelAngularVelocity >= 0f
                     ? Mathf.Clamp(rollingWheelAngularVelocity + wheelAngularAcceleration * dt,

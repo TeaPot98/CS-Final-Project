@@ -21,6 +21,8 @@ public class TireEditor : Editor
             {
                 TireSO asset = (TireSO)target;
 
+                EditorGUILayout.Space(10);
+
                 Rect rect = GUILayoutUtility.GetRect(200, 120);
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
 
@@ -33,6 +35,8 @@ public class TireEditor : Editor
             if (prop.name == "a_14")
             {
                 TireSO asset = (TireSO)target;
+
+                EditorGUILayout.Space(10);
 
                 Rect rect = GUILayoutUtility.GetRect(200, 120);
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
