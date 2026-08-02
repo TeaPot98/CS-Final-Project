@@ -221,6 +221,76 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Camera",
+            "id": "0fabfd85-6440-4c1f-8084-b6861be65ef2",
+            "actions": [
+                {
+                    "name": "Horizontal Axis",
+                    "type": "Value",
+                    "id": "4dd57a59-7d04-46f7-b56f-62a744dcc0b5",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "VerticalAxis",
+                    "type": "Value",
+                    "id": "38e2e009-e7ee-4517-8306-7ac9e4de8844",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c4fa3a93-a679-4c2e-8fb0-b8559ac2c10c",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal Axis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c3e6d99-2f7e-49de-a50a-8a8bbf5a3050",
+                    "path": "<Gamepad>/rightStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal Axis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9afcbdd-b0a7-4303-a89f-f38f59d5e873",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "VerticalAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e7b3298-e21a-4f61-86d9-cdc1dc47e47b",
+                    "path": "<Gamepad>/rightStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "VerticalAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

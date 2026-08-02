@@ -19,9 +19,9 @@ public class Wheel : MonoBehaviour
     private SuspensionSO _suspension;
 
     public bool IsGrounded { get; private set; }
-    public Vector3 longitudinalForceVector;
-    public Vector3 lateralForceVector;
-    public Vector3 contactPoint;
+    public Vector3 LongitudinalForceDir { get; private set; }
+    public Vector3 LateralForceDir { get; private set; }
+    public Vector3 ContactPoint { get; private set; }
 
     // private float _suespension.suspensionRestDist = 1f;
     // private float _suspensionTravel = 0.5f;
@@ -143,9 +143,9 @@ public class Wheel : MonoBehaviour
             // in the direction of the suspension
             _carRigidBody.AddForceAtPosition(springDir * force, _tireTransformPosition);
 
-            longitudinalForceVector = Vector3.ProjectOnPlane(_tireTransform.forward, tireRay.normal).normalized;
-            lateralForceVector = Vector3.ProjectOnPlane(_tireTransform.right, tireRay.normal).normalized;
-            contactPoint = tireRay.point;
+            LongitudinalForceDir = Vector3.ProjectOnPlane(_tireTransform.forward, tireRay.normal).normalized;
+            LateralForceDir = Vector3.ProjectOnPlane(_tireTransform.right, tireRay.normal).normalized;
+            ContactPoint = tireRay.point;
 
             Debug.DrawRay(_tireTransformPosition, springDir * force, Color.dodgerBlue);
         }

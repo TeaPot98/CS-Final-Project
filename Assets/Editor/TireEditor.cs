@@ -27,9 +27,11 @@ public class TireEditor : Editor
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
 
                 // TODO: Implement dynamic tire load
-                ChartUtils.DrawEquationPreview(-0.5f, 0.5f, rect,
+                float peakX = ChartUtils.DrawEquationPreview(-0.5f, 0.5f, rect,
                     (x) => Utils.ComputePacejkaMagicFormula(x, asset.referenceTireLoad,
                         asset.GetPacejkaMagicFormulaParams()));
+
+                asset.maxForceSlipRatio = peakX;
             }
 
             if (prop.name == "a_14")
@@ -46,7 +48,7 @@ public class TireEditor : Editor
                     (x) => Utils.ComputeLateralPacejkaMagicFormula(x, asset.referenceTireLoad, 0f,
                         asset.GetPacejkaLateralMagicFormulaParams()));
 
-                asset.maxSlipAngle = peakX;
+                asset.maxForceSlipAngle = peakX;
             }
         }
 

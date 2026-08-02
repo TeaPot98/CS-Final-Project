@@ -4,7 +4,8 @@ using UnityEngine;
 public class TireSO : ScriptableObject
 {
     public float referenceTireLoad = 3.3f;
-    public float maxSlipAngle = 0f;
+    public float maxForceSlipAngle;
+    public float maxForceSlipRatio;
 
     [Header("Longitudinal Parameters")] public float b_0 = 1.65f;
     public float b_1;
@@ -28,7 +29,7 @@ public class TireSO : ScriptableObject
     public float a_5;
     public float a_6 = -0.3589f;
     public float a_7 = 1;
-    public float a_8 = -10f;
+    public float a_8;
     public float a_9 = -6.111f / 1000f;
     public float a_10 = -3.224f / 100f;
     public float a_11;

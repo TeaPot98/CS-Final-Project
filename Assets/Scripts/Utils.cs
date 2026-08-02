@@ -173,6 +173,24 @@ public static class Utils
         return FromAngularVelocityToRpm(wheelAngularVelocity) * gearRatio;
     }
 
+    public static float ComputeSlipRatio(float surfaceSpeed, float groundSpeed)
+    {
+        const float minSlipSpeed = 0.5f;
+
+        if (Mathf.Abs(surfaceSpeed) < 0.02f &&
+            Mathf.Abs(groundSpeed) < 0.02f)
+            return 0f;
+
+        float referenceSpeed = Mathf.Max(
+            Mathf.Max(Mathf.Abs(surfaceSpeed), Mathf.Abs(groundSpeed)),
+            minSlipSpeed);
+
+        return Mathf.Clamp(
+            (surfaceSpeed - groundSpeed) / referenceSpeed,
+            -1f,
+            1f);
+    }
+
     public static float RemapToRange(float input, float min, float max, float newMin, float newMax)
     {
         float t = Mathf.InverseLerp(min, max, input);
@@ -227,7 +245,7 @@ public static class Utils
         float E = p.A_6 * tireLoad + p.A_7;
 
         float S = slipAngle + p.A_8 * camberAngle + p.A_9 * tireLoad + p.A_10;
-        float S_v = tireLoad * ((p.A_11 * tireLoad + p.A_12) * camberAngle + p.A_12) + p.A_13;
+        float S_v = tireLoad * ((p.A_11 * tireLoad + p.A_12) * camberAngle + p.A_13) + p.A_14;
 
         return D * Mathf.Sin(p.A_0 * Mathf.Atan(B * S + E * (Mathf.Atan(B * S) - B * S))) + S_v;
     }
