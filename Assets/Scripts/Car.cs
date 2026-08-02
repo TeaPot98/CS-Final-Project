@@ -68,6 +68,8 @@ public class Car : MonoBehaviour
 
     public float steeringWheelTurningSpeed = 10f;
 
+    private int wheelSimulationSubsteps = 4;
+
     // public float maxSteeringAngle = 30f;
     [Header("Speed-Sensitive Steering")]
     public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
@@ -99,6 +101,7 @@ public class Car : MonoBehaviour
         float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
         float reflectedEngineInertia = engineInertia * gearRatio * gearRatio / drivenWheels.Count;
         float coupledDrivenWheelInertia = drivenWheelInertia + reflectedEngineInertia;
+
 
         foreach (Wheel wheel in _wheels)
         {
@@ -141,234 +144,6 @@ public class Car : MonoBehaviour
         else UpdateFreeEngine(dt);
     }
 
-    // private void FixedUpdate()
-    // {
-    //     float dt = Time.fixedDeltaTime;
-    //
-    //     List<Wheel> drivenWheels = _wheels.Where(wheel => wheel.isDriving && wheel.IsGrounded).ToList();
-    //     List<Wheel> groundedWheels = _wheels.Where(wheel => wheel.IsGrounded).ToList();
-    //
-    //
-    //     bool hasGroundedDrivenWheels = drivenWheels.Count > 0;
-    //
-    //     float maxEngineTorque = engine.GetTorque(_currentEngineRpm);
-    //     float engineTorque = maxEngineTorque * Throttle;
-    //
-    //     if (_gear == 0 || !hasGroundedDrivenWheels)
-    //         UpdateFreeEngine(dt);
-    //     else
-    //         ApplyDrivetrainInertia(drivenWheels, engineTorque, dt);
-    //
-    //
-    //     foreach (Wheel wheel in _wheels)
-    //     {
-    //         Vector3 wheelWorldVelocity = _rb.GetPointVelocity(wheel.transform.position);
-    //         float wheelLinearVelocity = Vector3.Dot(wheel.transform.forward, wheelWorldVelocity);
-    //
-    //         float rollingWheelAngularVelocity = GetRollingWheelAngularVelocity(wheel, wheelLinearVelocity);
-    //
-    //         float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
-    //         float maxWheelAngularVelocity = GetMaxWheelAngularVelocity(gearRatio);
-    //         float brakeTorque = ComputeBrakeTorque(wheel);
-    //         float rollingResistanceTorque = wheelRollingResistance * wheel.AngularVelocity;
-    //         float wheelAngularAcceleration =
-    //             -brakeTorque / Mathf.Max(drivenWheelInertia, 0.001f);
-    //
-    //         if (wheel.IsGrounded && !wheel.isDriving)
-    //         {
-    //             // Debug.Log("wheelAngularAcceleration: " + wheelAngularAcceleration + ";\n rollingResistanceTorque: " +
-    //             //           rollingResistanceTorque);
-    //             // Debug.Log("rollingWheelAngularVelocity: " + rollingWheelAngularVelocity);
-    //
-    //             wheel.AngularVelocity = rollingWheelAngularVelocity >= 0f
-    //                 ? Mathf.Clamp(rollingWheelAngularVelocity + wheelAngularAcceleration * dt,
-    //                     0f, rollingWheelAngularVelocity)
-    //                 : Mathf.Clamp(rollingWheelAngularVelocity + wheelAngularAcceleration * dt,
-    //                     -rollingWheelAngularVelocity, 0f);
-    //             wheel.AngularVelocity =
-    //                 ClampWheelAngularVelocity(wheel.AngularVelocity, maxWheelAngularVelocity);
-    //         }
-    //
-    //         // TODO: Dynamically compute tire load
-    //         float tireLoad = _rb.mass / 4f * 9.81f / 1000f;
-    //
-    //         float loadedTireRadius = wheel.TireRadius;
-    //         float wheelSurfaceSpeed = wheel.AngularVelocity * loadedTireRadius;
-    //
-    //         wheel.SlipRatio = (wheelSurfaceSpeed - wheelLinearVelocity) /
-    //                           Mathf.Max(Mathf.Abs(wheelLinearVelocity), minSlipSpeed);
-    //         wheel.SlipRatio = Mathf.Clamp(wheel.SlipRatio, -1f, 1f);
-    //
-    //         Vector3 steeringDir = wheel.transform.right;
-    //         float steeringVel = Vector3.Dot(steeringDir, wheelWorldVelocity);
-    //
-    //         float speedForSlipAngle = Mathf.Max(Mathf.Abs(wheelLinearVelocity), minSlipSpeed);
-    //         wheel.SlipAngle = Mathf.Atan2(steeringVel, speedForSlipAngle) * Mathf.Rad2Deg;
-    //
-    //
-    //         if (wheel.canSteer)
-    //         {
-    //             float maxSteeringAngle =
-    //                 maxSteeringAngleBySpeed.Evaluate(wheelWorldVelocity.magnitude);
-    //
-    //             float targetAngle = Mathf.Lerp(
-    //                 -maxSteeringAngle,
-    //                 maxSteeringAngle,
-    //                 (Steering + 1f) * 0.5f
-    //             );
-    //
-    //             float currentAngle = wheel.transform.localEulerAngles.y;
-    //
-    //             if (currentAngle > 180f) currentAngle -= 360f;
-    //
-    //
-    //             float smoothAngle = Mathf.SmoothDampAngle(
-    //                 currentAngle,
-    //                 targetAngle,
-    //                 ref steeringWheelTurningSpeed,
-    //                 0.12f
-    //             );
-    //
-    //             // float maxSteeringAngle = maxSteeringAngleBySpeed.Evaluate(wheelWorldVelocity.magnitude);
-    //
-    //             // Calculate the rotation angle based on input
-    //             // float targetSteeringRotationAngle =
-    //             //     Utils.RemapToRange(Steering, -1f, 1f, -maxSteeringAngle, maxSteeringAngle);
-    //             // float steeringRotationAngle = Mathf.MoveTowards(wheel.transform.localRotation.y,
-    //             //     targetSteeringRotationAngle,
-    //             //     steeringWheelTurningSpeed * dt);
-    //
-    //             // Set the steering rotation of the wheel (transform and mesh) around its local up axis
-    //             wheel.transform.localRotation = Quaternion.Euler(0.0f, smoothAngle, 0.0f);
-    //         }
-    //
-    //         if (wheel.IsGrounded)
-    //         {
-    //             const float minCombinedSlip = 1e-4f;
-    //
-    //             float normalizedSlipRatio = wheel.SlipRatio / wheel.tire.maxForceSlipRatio;
-    //             float normalizedSlipAngle = wheel.SlipAngle / wheel.tire.maxForceSlipAngle;
-    //             float combinedSlip = Mathf.Sqrt(normalizedSlipRatio * normalizedSlipRatio +
-    //                                             normalizedSlipAngle * normalizedSlipAngle);
-    //
-    //             float equivalentSlipRatio = wheel.tire.maxForceSlipRatio * combinedSlip;
-    //             float equivalentSlipAngle = wheel.tire.maxForceSlipAngle * combinedSlip;
-    //
-    //             float inverseMagnitude = 1f / Mathf.Max(combinedSlip, minCombinedSlip);
-    //
-    //             float longitudinalForce =
-    //                 normalizedSlipRatio * inverseMagnitude * Utils.ComputePacejkaMagicFormula(equivalentSlipRatio,
-    //                     tireLoad,
-    //                     wheel.tire.GetPacejkaMagicFormulaParams());
-    //
-    //             float lateralForce =
-    //                 normalizedSlipAngle * inverseMagnitude * Utils.ComputeLateralPacejkaMagicFormula(
-    //                     equivalentSlipAngle, tireLoad, 0f,
-    //                     wheel.tire.GetPacejkaLateralMagicFormulaParams());
-    //
-    //
-    //             float speedForBlend = Mathf.Abs(wheelLinearVelocity);
-    //             float lowSpeedFade = Mathf.SmoothStep(0f, 1f,
-    //                 Mathf.InverseLerp(lowSpeedBlendEnd, lowSpeedBlendStart, speedForBlend));
-    //
-    //             lateralForce *= lowSpeedFade;
-    //
-    //             // Debug.Log("Lon Force: " + longitudinalForce);
-    //             // Debug.Log("Lat Force: " + lateralForce);
-    //
-    //             Vector3 totalForce = longitudinalForce * wheel.LongitudinalForceDir -
-    //                                  lateralForce * wheel.LateralForceDir;
-    //
-    //             _rb.AddForceAtPosition(
-    //                 totalForce,
-    //                 wheel.ContactPoint,
-    //                 ForceMode.Force
-    //             );
-    //
-    //             Debug.DrawRay(
-    //                 wheel.ContactPoint,
-    //                 totalForce / 1000f,
-    //                 Color.green
-    //             );
-    //         }
-    //
-    //
-    //         if (Mathf.Approximately(Brake, 0f) && (!wheel.isDriving || !hasGroundedDrivenWheels || _gear == 0) &&
-    //             wheel.IsGrounded)
-    //             wheel.AngularVelocity = Mathf.MoveTowards(
-    //                 wheel.AngularVelocity,
-    //                 rollingWheelAngularVelocity,
-    //                 wheelRollingResistance * dt
-    //             );
-    //
-    //         bool areAllWheelsNotSpinning = groundedWheels.Count > 1 && groundedWheels.TrueForAll(wheel =>
-    //             Mathf.Abs(wheel.AngularVelocity) < 0.2f);
-    //
-    //         if (Brake > 0.1f && areAllWheelsNotSpinning) wheel.AngularVelocity = 0f;
-    //     }
-    // }
-
-    private void ApplyDrivetrainInertia(IReadOnlyList<Wheel> drivenWheels, float engineTorque, float dt)
-    {
-        float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
-        if (Mathf.Approximately(gearRatio, 0f))
-        {
-            UpdateFreeEngine(dt);
-            return;
-        }
-
-        float averageWheelAngularVelocity = 0f;
-        foreach (Wheel wheel in drivenWheels)
-            averageWheelAngularVelocity += wheel.AngularVelocity;
-        averageWheelAngularVelocity /= drivenWheels.Count;
-
-        float crawlSpeedWheelAngularVelocity =
-            Utils.ComputeWheelAngularVelocityAtEngineRpm(engine.idleRpm, _gear, transmission);
-
-        float engineFrictionFade = Mathf.SmoothStep(0f, 1f,
-            Mathf.InverseLerp(engine.idleRpm + 50f, engine.idleRpm + 250f, _currentEngineRpm));
-        float crawlTorqueMultiplier = Mathf.Approximately(Brake, 0f)
-            ? Mathf.SmoothStep(0f, 1f,
-                Mathf.InverseLerp(crawlSpeedWheelAngularVelocity, 0f, averageWheelAngularVelocity))
-            : 0f;
-
-        float crawlTorque = engine.GetTorque(engine.idleRpm) * crawlTorqueMultiplier;
-
-
-        float maxWheelAngularVelocity = GetMaxWheelAngularVelocity(gearRatio);
-        float engineAngularVelocity = Utils.FromRpmToAngularVelocity(_currentEngineRpm);
-        float engineFrictionTorque = engineFriction * engineAngularVelocity * engineFrictionFade;
-        float drivelineTorque = (engineTorque + crawlTorque - engineFrictionTorque) * gearRatio *
-                                transmission.transmissionEfficiency;
-        float torquePerWheel = drivelineTorque / drivenWheels.Count;
-        float reflectedEngineInertia = engineInertia * gearRatio * gearRatio / drivenWheels.Count;
-        float wheelInertia = Mathf.Max(drivenWheelInertia + reflectedEngineInertia, 0.001f);
-
-
-        // Debug.Log("Driveline torque: " + drivelineTorque + "; engineFrictionTorque: " + engineFrictionTorque +
-        // ";\n crawlTorque: " + crawlTorque + "; engineTorque: " + engineTorque);
-
-
-        foreach (Wheel wheel in drivenWheels)
-        {
-            float slipError = wheel.SlipRatio - tscTargetSlip;
-            float torqueScale = Mathf.Clamp01(1f - tscSensitivity * slipError);
-
-            float wheelTorque = torquePerWheel * torqueScale;
-
-            float brakeTorque = ComputeBrakeTorque(wheel);
-            float rollingResistanceTorque = wheelRollingResistance * wheel.AngularVelocity;
-            float wheelAngularAcceleration =
-                (wheelTorque - brakeTorque - rollingResistanceTorque) / wheelInertia;
-
-            wheel.AngularVelocity += wheelAngularAcceleration * dt;
-            wheel.AngularVelocity = ClampWheelAngularVelocity(wheel.AngularVelocity, maxWheelAngularVelocity);
-        }
-
-
-        SyncEngineRpmToDrivenWheels(drivenWheels, gearRatio);
-    }
-
     private void SyncEngineRpmToDrivenWheels(IReadOnlyList<Wheel> drivenWheels, float gearRatio)
     {
         float averageWheelAngularVelocity = 0f;
@@ -377,31 +152,9 @@ public class Car : MonoBehaviour
         averageWheelAngularVelocity /= drivenWheels.Count;
 
         float engineRpmFromWheels = Mathf.Abs(Utils.FromAngularVelocityToRpm(averageWheelAngularVelocity * gearRatio));
-        Debug.Log(engineRpmFromWheels);
+
+        // Debug.Log(engineRpmFromWheels);
         _currentEngineRpm = ClampEngineRpm(engineRpmFromWheels);
-    }
-
-    private float GetMaxWheelAngularVelocity(float gearRatio)
-    {
-        float absoluteGearRatio = Mathf.Abs(gearRatio);
-        if (Mathf.Approximately(absoluteGearRatio, 0f)) return 0f;
-
-        return Utils.FromRpmToAngularVelocity(engine.maxRpm / absoluteGearRatio);
-    }
-
-    private float ClampWheelAngularVelocity(float angularVelocity, float maxAngularVelocity)
-    {
-        if (float.IsNaN(angularVelocity) || float.IsInfinity(angularVelocity)) return 0f;
-
-        return Mathf.Clamp(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-    }
-
-
-    private float GetRollingWheelAngularVelocity(Wheel wheel, float wheelLinearVelocity)
-    {
-        if (wheel.TireRadius <= 0.001f) return 0f;
-
-        return wheelLinearVelocity / wheel.TireRadius;
     }
 
     private string GetWheelRpmLabel(Wheel wheel)
@@ -465,27 +218,40 @@ public class Car : MonoBehaviour
         float normalizedSlipAngle = wheel.SlipAngle / wheel.tire.maxForceSlipAngle;
         float combinedSlip = Mathf.Sqrt(normalizedSlipRatio * normalizedSlipRatio +
                                         normalizedSlipAngle * normalizedSlipAngle);
+        combinedSlip = Mathf.Max(combinedSlip, minCombinedSlip);
 
         float equivalentSlipRatio = wheel.tire.maxForceSlipRatio * combinedSlip;
         float equivalentSlipAngle = wheel.tire.maxForceSlipAngle * combinedSlip;
 
-        float inverseMagnitude = 1f / Mathf.Max(combinedSlip, minCombinedSlip);
+        float maxLongitudinalForce = Utils.ComputePacejkaMagicFormula(equivalentSlipRatio, tireLoad,
+            wheel.tire.GetPacejkaMagicFormulaParams());
+        float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(equivalentSlipAngle, tireLoad, 0f,
+            wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
+        maxLongitudinalForce = Mathf.Abs(normalizedSlipRatio / combinedSlip * maxLongitudinalForce);
+        maxLateralForce = Mathf.Abs(normalizedSlipAngle / combinedSlip * maxLateralForce);
 
-        float longitudinalForce =
-            normalizedSlipRatio * inverseMagnitude * Utils.ComputePacejkaMagicFormula(equivalentSlipRatio,
-                tireLoad,
-                wheel.tire.GetPacejkaMagicFormulaParams());
+        maxLongitudinalForce = Mathf.Max(maxLongitudinalForce, 1f);
+        maxLateralForce = Mathf.Max(maxLateralForce, 1f);
 
-        // Debug.Log("normalizedSlipRatio: " + normalizedSlipRatio);
-        // Debug.Log("combinedSlip: " + combinedSlip);
-        // Debug.Log("equivalentSlipRatio: " + equivalentSlipRatio);
+        float wheelEffectiveMass = wheelInertia / (wheel.TireRadius * wheel.TireRadius);
+        float carEffectiveMass = _rb.mass / 4f;
+        float longitudinalEffectiveMass = 1f / (1f / wheelEffectiveMass + 1f / carEffectiveMass);
+        float lateralEffectiveMass = carEffectiveMass;
 
-        float lateralForce =
-            normalizedSlipAngle * inverseMagnitude * Utils.ComputeLateralPacejkaMagicFormula(
-                equivalentSlipAngle, tireLoad, 0f,
-                wheel.tire.GetPacejkaLateralMagicFormulaParams());
+        float longitudinalSlipVelocity = surfaceSpeed - longitudinalSpeed;
+        float lateralSlipVelocity = steeringVelocity;
 
+        float desiredLongitudinalForce = longitudinalSlipVelocity * longitudinalEffectiveMass / dt;
+        float desiredLateralForce = lateralSlipVelocity * lateralEffectiveMass / dt;
+
+        Vector2 desiredNorm = new(desiredLongitudinalForce / maxLongitudinalForce,
+            desiredLateralForce / maxLateralForce);
+        float desiredMagNorm = desiredNorm.magnitude;
+        float scale = desiredMagNorm > 1f ? 1f / desiredMagNorm : 1f;
+
+        float longitudinalForce = desiredLongitudinalForce * scale;
+        float lateralForce = desiredLateralForce * scale;
 
         float speedForBlend = Mathf.Abs(longitudinalSpeed);
         float lowSpeedFade = Mathf.SmoothStep(0f, 1f,
@@ -512,8 +278,8 @@ public class Car : MonoBehaviour
         float netTorque = wheelDriveTorque - ComputeBrakeTorque(wheel) -
                           wheelRollingResistance * wheel.AngularVelocity - contactTorque;
 
-        Debug.Log(wheelRollingResistance * wheel.AngularVelocity);
-        Debug.Log("contactTorque: " + contactTorque);
+        // Debug.Log(wheelRollingResistance * wheel.AngularVelocity);
+        // Debug.Log("contactTorque: " + contactTorque);
 
         wheel.AngularVelocity += netTorque * dt / Mathf.Max(wheelInertia, 0.001f);
     }
@@ -522,10 +288,12 @@ public class Car : MonoBehaviour
     {
         if (drivenWheels.Count == 0) return 0f;
 
+        float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
+
+        if (Mathf.Approximately(gearRatio, 0f)) return 0f;
+
         float maxEngineTorque = engine.GetTorque(_currentEngineRpm);
         float engineTorque = maxEngineTorque * Throttle;
-
-        float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
 
         float averageWheelAngularVelocity = 0f;
         foreach (Wheel wheel in drivenWheels)

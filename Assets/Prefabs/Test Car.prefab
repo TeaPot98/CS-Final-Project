@@ -633,9 +633,6 @@ MonoBehaviour:
   tireMesh: {fileID: 6931939715692987481}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  longitudinalForceVector: {x: 0, y: 0, z: 0}
-  lateralForceVector: {x: 0, y: 0, z: 0}
-  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &580732881996678210
 GameObject:
@@ -1294,18 +1291,20 @@ MonoBehaviour:
   FRSlipRatio: 0
   RLSlipRatio: 0
   RRSlipRatio: 0
+  TscLabel: 
   Throttle: 0
   Brake: 0
   Steering: 0
-  _brakingForce: 10000
-  tireGripFactor: 0.9
-  tireMass: 100
   engineInertia: 0.35
   drivenWheelInertia: 1.2
+  freeWheelInertia: 1.9
   engineFriction: 0.15
   wheelRollingResistance: 0.08
   wheelBrakeTorque: 2500
   minSlipSpeed: 0.5
+  tscTargetSlip: 0.1
+  tscSensitivity: 5
+  steeringWheelTurningSpeed: 2
   maxSteeringAngleBySpeed:
     serializedVersion: 2
     m_Curve:
@@ -1319,8 +1318,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 17.871792
-      value: 13.924908
+      time: 24.955128
+      value: 14.043957
       inSlope: -0.7560561
       outSlope: -0.7560561
       tangentMode: 0
@@ -1328,14 +1327,14 @@ MonoBehaviour:
       inWeight: 0.20731698
       outWeight: 0.12230724
     - serializedVersion: 3
-      time: 36.096294
-      value: 7.2282457
-      inSlope: -0.109668665
-      outSlope: -0.109668665
+      time: 46.096294
+      value: 7.287755
+      inSlope: -0.09842156
+      outSlope: -0.09842156
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.9772728
-      outWeight: 0.3192643
+      outWeight: 0.29658514
     - serializedVersion: 3
       time: 100
       value: 5
@@ -1356,7 +1355,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960365366696690037}
   serializedVersion: 5
-  m_Mass: 1500
+  m_Mass: 1200
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2205,9 +2204,6 @@ MonoBehaviour:
   tireMesh: {fileID: 3111068617828566383}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  longitudinalForceVector: {x: 0, y: 0, z: 0}
-  lateralForceVector: {x: 0, y: 0, z: 0}
-  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &4414015909044909801
 GameObject:
@@ -3284,9 +3280,6 @@ MonoBehaviour:
   tireMesh: {fileID: 7254937454493399281}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  longitudinalForceVector: {x: 0, y: 0, z: 0}
-  lateralForceVector: {x: 0, y: 0, z: 0}
-  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &5665738776634013119
 GameObject:
@@ -3969,9 +3962,6 @@ MonoBehaviour:
   tireMesh: {fileID: 352805670484849122}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
-  longitudinalForceVector: {x: 0, y: 0, z: 0}
-  lateralForceVector: {x: 0, y: 0, z: 0}
-  contactPoint: {x: 0, y: 0, z: 0}
   TireRadius: 0
 --- !u!1 &7502234972995529011
 GameObject:

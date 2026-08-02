@@ -1019,42 +1019,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Test Car
       objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: tscSensitivity
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: steeringWheelTurningSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].time
-      value: 24.955128
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].time
-      value: 46.096294
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].value
-      value: 14.043957
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].value
-      value: 7.287755
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].inSlope
-      value: -0.09842156
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].outSlope
-      value: -0.09842156
-      objectReference: {fileID: 0}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].outWeight
-      value: 0.29658514
-      objectReference: {fileID: 0}
     - target: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 210.07

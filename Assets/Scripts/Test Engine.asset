@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94afb81ff3b2844d9fcdb25e88b068c, type: 3}
   m_Name: Test Engine
   m_EditorClassIdentifier: Assembly-CSharp::EngineSO
-  maxRpm: 6500
+  maxRpm: 6000
   idleRpm: 1000
-  curveBaselineY: 213
-  peakMagnitude: 100
-  endsSlope: 2.42
-  peakXPosition: 5200
-  endsSlope2: 5514
-  power: 125645.65
-  horsepower: 170.83025
+  curveBaselineY: 430
+  peakMagnitude: 128.0034
+  endsSlope: 2.5
+  peakXPosition: 4000
+  endsSlope2: 9000
+  power: 220650
+  horsepower: 300
