@@ -36,5 +36,6 @@ public class EngineEditor : Editor
 
         asset.power = Utils.ComputePower(peakPowerRpm, Utils.ComputeTorque(peakPowerRpm, asset.GetTorqueCurveParams()));
         asset.horsepower = Utils.ComputeHorsePower(asset.power);
+        asset.peakPowerRpm = (int)peakPowerRpm;
     }
 }
