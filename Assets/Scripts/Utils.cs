@@ -191,11 +191,6 @@ public static class Utils
             1f);
     }
 
-    public static float RemapToRange(float input, float min, float max, float newMin, float newMax)
-    {
-        float t = Mathf.InverseLerp(min, max, input);
-        return Mathf.Lerp(newMin, newMax, t);
-    }
 
     public static float FromAngularVelocityToRpm(float angularVelocity)
     {
@@ -205,19 +200,6 @@ public static class Utils
     public static float FromRpmToAngularVelocity(float rpm)
     {
         return rpm * 2f * (float)Math.PI / 60f;
-    }
-
-    public static float ComputeLongitudinalTireForce(float slipRatio, float a = 9.625f, float b = 31.0f,
-        float p = 2.375f)
-    {
-        // Brian Beckman's Magic Trick
-        return b * slipRatio / (1 + Mathf.Pow(Mathf.Abs(a * slipRatio), p));
-    }
-
-    public static float ComputeLateralTireForce(float slipAngle, float a = 9.625f, float b = 31.0f, float p = 2.375f)
-    {
-        // Brian Beckman's Magic Trick
-        return b * slipAngle / (1 + Mathf.Pow(Mathf.Abs(a * slipAngle), p));
     }
 
     public static float ComputePacejkaMagicFormula(float slipRatio, float tireLoad, PacejkaMagicFormulaParams p)
@@ -248,5 +230,10 @@ public static class Utils
         float S_v = tireLoad * ((p.A_11 * tireLoad + p.A_12) * camberAngle + p.A_13) + p.A_14;
 
         return D * Mathf.Sin(p.A_0 * Mathf.Atan(B * S + E * (Mathf.Atan(B * S) - B * S))) + S_v;
+    }
+
+    public static float FromMetersPerSecondToKmPerHour(float speed)
+    {
+        return speed * 3.6f;
     }
 }

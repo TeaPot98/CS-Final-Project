@@ -62,40 +62,30 @@ public class HUD : MonoBehaviour
         Label steeringText = _userInputContainer.Query<Label>("steering");
 
 
-        BindToLabel(gearText, car, nameof(Car.GearLabel));
-        BindToLabel(gearRatioText, car, nameof(Car.GearRatioLabel));
-        BindToLabel(rpmText, car, nameof(Car.RpmLabel));
-        BindToLabel(speedText, car, nameof(Car.SpeedLabel));
+        UIUtils.BindToLabel(gearText, car, nameof(Car.GearLabel));
+        UIUtils.BindToLabel(gearRatioText, car, nameof(Car.GearRatioLabel));
+        UIUtils.BindToLabel(rpmText, car, nameof(Car.RpmLabel));
+        UIUtils.BindToLabel(speedText, car, nameof(Car.SpeedLabel));
 
-        BindToLabel(flWheelRpmText, car, nameof(Car.FLWheelRpm));
-        BindToLabel(frWheelRpmText, car, nameof(Car.FRWheelRpm));
-        BindToLabel(rlWheelRpmText, car, nameof(Car.RLWheelRpm));
-        BindToLabel(rrWheelRpmText, car, nameof(Car.RRWheelRpm));
+        UIUtils.BindToLabel(flWheelRpmText, car, nameof(Car.FLWheelRpm));
+        UIUtils.BindToLabel(frWheelRpmText, car, nameof(Car.FRWheelRpm));
+        UIUtils.BindToLabel(rlWheelRpmText, car, nameof(Car.RLWheelRpm));
+        UIUtils.BindToLabel(rrWheelRpmText, car, nameof(Car.RRWheelRpm));
 
-        BindToLabel(flWheelSlipAngleText, car, nameof(Car.FLSlipAngle));
-        BindToLabel(frWheelSlipAngleText, car, nameof(Car.FRSlipAngle));
-        BindToLabel(rlWheelSlipAngleText, car, nameof(Car.RLSlipAngle));
-        BindToLabel(rrWheelSlipAngleText, car, nameof(Car.RRSlipAngle));
+        UIUtils.BindToLabel(flWheelSlipAngleText, car, nameof(Car.FLSlipAngle));
+        UIUtils.BindToLabel(frWheelSlipAngleText, car, nameof(Car.FRSlipAngle));
+        UIUtils.BindToLabel(rlWheelSlipAngleText, car, nameof(Car.RLSlipAngle));
+        UIUtils.BindToLabel(rrWheelSlipAngleText, car, nameof(Car.RRSlipAngle));
 
-        BindToLabel(flWheelSlipRatioText, car, nameof(Car.FLSlipRatio));
-        BindToLabel(frWheelSlipRatioText, car, nameof(Car.FRSlipRatio));
-        BindToLabel(rlWheelSlipRatioText, car, nameof(Car.RLSlipRatio));
-        BindToLabel(rrWheelSlipRatioText, car, nameof(Car.RRSlipRatio));
+        UIUtils.BindToLabel(flWheelSlipRatioText, car, nameof(Car.FLSlipRatio));
+        UIUtils.BindToLabel(frWheelSlipRatioText, car, nameof(Car.FRSlipRatio));
+        UIUtils.BindToLabel(rlWheelSlipRatioText, car, nameof(Car.RLSlipRatio));
+        UIUtils.BindToLabel(rrWheelSlipRatioText, car, nameof(Car.RRSlipRatio));
 
-        BindToLabel(throttleText, car, nameof(car.Throttle));
-        BindToLabel(brakeText, car, nameof(car.Brake));
-        BindToLabel(steeringText, car, nameof(car.Steering));
+        UIUtils.BindToLabel(throttleText, car, nameof(car.Throttle));
+        UIUtils.BindToLabel(brakeText, car, nameof(car.Brake));
+        UIUtils.BindToLabel(steeringText, car, nameof(car.Steering));
 
         yield return null;
-    }
-
-    private void BindToLabel(Label label, object source, string propertyPath)
-    {
-        label.dataSource = source;
-        label.SetBinding(nameof(Label.text), new DataBinding
-        {
-            dataSourcePath = new PropertyPath(propertyPath),
-            bindingMode = BindingMode.ToTarget
-        });
     }
 }

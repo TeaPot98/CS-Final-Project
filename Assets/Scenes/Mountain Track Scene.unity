@@ -1019,6 +1019,50 @@ PrefabInstance:
       propertyPath: m_Name
       value: Test Car
       objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].time
+      value: 4.9551277
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].time
+      value: 19.429626
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].value
+      value: 19.996367
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].value
+      value: 9.371086
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].inSlope
+      value: -0.87180173
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].inSlope
+      value: -0.24072868
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].inWeight
+      value: 0.5795601
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].outSlope
+      value: -0.87180173
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].outSlope
+      value: -0.24072868
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[1].outWeight
+      value: 0.12875104
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: maxSteeringAngleBySpeed.m_Curve.Array.data[2].outWeight
+      value: 0.13636576
+      objectReference: {fileID: 0}
     - target: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 210.07

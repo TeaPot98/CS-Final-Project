@@ -132,7 +132,11 @@ public class Car : MonoBehaviour
                 wheel.transform.localRotation = Quaternion.Euler(0.0f, smoothAngle, 0.0f);
             }
 
-            float driveTorque = wheel.isDriving ? driveTorquePerWheel : 0f;
+            float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
+            float torqueScale = Mathf.Clamp01(1f - tscSensitivity * slipError);
+            float scaledWheelTorque = driveTorquePerWheel * torqueScale;
+
+            float driveTorque = wheel.isDriving ? scaledWheelTorque : 0f;
 
             float wheelInertia = wheel.isDriving && wheel.IsGrounded ? coupledDrivenWheelInertia : freeWheelInertia;
 
@@ -389,7 +393,7 @@ public class Car : MonoBehaviour
         _speed = _rb.linearVelocity.magnitude;
 
         RpmLabel = $"{(int)_currentEngineRpm} RPM";
-        SpeedLabel = $"{(int)(_speed * 3.6f)} km/h";
+        SpeedLabel = $"{(int)Utils.FromMetersPerSecondToKmPerHour(_speed)} km/h";
 
         FLSlipAngle = $"SA {wheelFL.SlipAngle:F3}";
         FRSlipAngle = $"SA {wheelFR.SlipAngle:F3}";
