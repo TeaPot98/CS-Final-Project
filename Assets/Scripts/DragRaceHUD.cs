@@ -28,12 +28,12 @@ public class DragRaceHUD : MonoBehaviour
         Label timerText = _dragStatsContainer.Query<Label>("Timer");
         Label stateInfoText = _dragStatsContainer.Query<Label>("StateInfo");
 
-        UIUtils.BindToLabel(hundredTimeText, dragRaceManager, nameof(DragRaceManager.hundredTime));
+        UIUtils.BindToLabel(hundredTimeText, dragRaceManager, nameof(DragRaceManager.hundredTimeLabel));
         UIUtils.BindToLabel(twoHundredTimeText, dragRaceManager, nameof(DragRaceManager.twoHundredTime));
         UIUtils.BindToLabel(hundredToTwoTimeText, dragRaceManager, nameof(DragRaceManager.hundredToTwoTime));
         UIUtils.BindToLabel(eighthTimeText, dragRaceManager, nameof(DragRaceManager.eighthTime));
         UIUtils.BindToLabel(quarterTimeText, dragRaceManager, nameof(DragRaceManager.quarterTime));
-        UIUtils.BindToLabel(timerText, dragRaceManager, nameof(DragRaceManager.time));
+        UIUtils.BindToLabel(timerText, dragRaceManager, nameof(DragRaceManager.timeLabel));
         UIUtils.BindToLabel(stateInfoText, dragRaceManager, nameof(DragRaceManager.stateInfo));
 
         yield return null;

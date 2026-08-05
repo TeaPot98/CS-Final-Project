@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/HUD.uss?fileID=7433441132597879392&amp;guid=bbdbda947039f124a862f4470db57f7c&amp;type=3#HUD"/>
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Label text="1/8 Miles" class="hudText" style="font-size: 160px; -unity-text-outline-width: 7px; -unity-text-outline-color: rgb(41, 112, 128);"/>
+    </ui:VisualElement>
+</ui:UXML>

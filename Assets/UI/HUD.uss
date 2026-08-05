@@ -2,7 +2,7 @@
 }
 
 .hudText {
-    font-size: 18px;
+    font-size: 16px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     -unity-text-outline-width: 1px;

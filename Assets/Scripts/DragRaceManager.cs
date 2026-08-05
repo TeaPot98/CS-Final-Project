@@ -6,16 +6,19 @@ public class DragRaceManager : MonoBehaviour
 {
     [SerializeField] private List<MilestoneCollider> milestoneColliders;
 
-    public float eighthTime;
-    public float quarterTime;
-    public float hundredTime;
-    public float twoHundredTime;
-    public float hundredToTwoTime;
-    public float time;
+    public string eighthTime = "1/8 Miles: N/A";
+    public string quarterTime = "1/4 Miles: N/A";
+    public string hundredTimeLabel = "0-100km/h: N/A";
+    public string twoHundredTime = "0-200km/h: N/A";
+    public string hundredToTwoTime = "100-100km/h: N/A";
+    public string timeLabel = "00.000s";
     public string stateInfo;
 
     public Car car;
     private Rigidbody _carRb;
+    private float _time;
+    private float _hundredTime;
+    private float _twoHundredTime;
 
     private bool _hasStarted;
 
@@ -37,12 +40,12 @@ public class DragRaceManager : MonoBehaviour
             case DragRaceMilestone.Eighth:
                 if (!_hasStarted) break;
 
-                eighthTime = time;
+                eighthTime = "1/8 Miles: " + $"{_time:F3}" + "s";
                 break;
             case DragRaceMilestone.Quarter:
                 if (!_hasStarted) break;
 
-                quarterTime = time;
+                quarterTime = "1/4 Miles: " + $"{_time:F3}" + "s";
                 _hasStarted = false;
                 break;
             default: break;
@@ -51,16 +54,24 @@ public class DragRaceManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_hasStarted) time += Time.fixedDeltaTime;
+        if (_hasStarted)
+        {
+            _time += Time.fixedDeltaTime;
+            timeLabel = _time + "s";
+        }
 
         float carSpeed = Utils.FromMetersPerSecondToKmPerHour(_carRb.linearVelocity.magnitude);
 
-        if (Mathf.Approximately(hundredTime, 0f) && carSpeed >= 100) hundredTime = time;
-
-        if (Mathf.Approximately(twoHundredTime, 0f) && carSpeed >= 200)
+        if (Mathf.Approximately(_hundredTime, 0f) && carSpeed >= 100)
         {
-            twoHundredTime = time;
-            hundredToTwoTime = time - hundredTime;
+            _hundredTime = _time;
+            hundredTimeLabel = "0-100km/h: " + $"{_time:F3}" + "s";
+        }
+
+        if (Mathf.Approximately(_twoHundredTime, 0f) && carSpeed >= 200)
+        {
+            twoHundredTime = "0-200km/h: " + $"{_time:F3}" + "s";
+            hundredToTwoTime = "100-200km/h: " + $"{_time - _hundredTime:F3}" + "s";
         }
     }
 }
