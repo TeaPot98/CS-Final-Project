@@ -231,16 +231,16 @@ public class Car : MonoBehaviour
         float equivalentSlipRatio = wheel.tire.maxForceSlipRatio * combinedSlip;
         float equivalentSlipAngle = wheel.tire.maxForceSlipAngle * combinedSlip;
 
-        float maxLongitudinalForce = Utils.ComputePacejkaMagicFormula(equivalentSlipRatio, tireLoad,
+        float longitudinalForceLimit = Utils.ComputePacejkaMagicFormula(equivalentSlipRatio, tireLoad,
             wheel.tire.GetPacejkaMagicFormulaParams());
-        float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(equivalentSlipAngle, tireLoad, 0f,
+        float lateralForceLimit = Utils.ComputeLateralPacejkaMagicFormula(equivalentSlipAngle, tireLoad, 0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
-        maxLongitudinalForce = Mathf.Abs(normalizedSlipRatio / combinedSlip * maxLongitudinalForce);
-        maxLateralForce = Mathf.Abs(normalizedSlipAngle / combinedSlip * maxLateralForce);
+        longitudinalForceLimit = Mathf.Abs(normalizedSlipRatio / combinedSlip * longitudinalForceLimit);
+        lateralForceLimit = Mathf.Abs(normalizedSlipAngle / combinedSlip * lateralForceLimit);
 
-        maxLongitudinalForce = Mathf.Max(maxLongitudinalForce, 1f);
-        maxLateralForce = Mathf.Max(maxLateralForce, 1f);
+        longitudinalForceLimit = Mathf.Max(longitudinalForceLimit, 1f);
+        lateralForceLimit = Mathf.Max(lateralForceLimit, 1f);
 
         float wheelEffectiveMass = wheelInertia / (wheel.TireRadius * wheel.TireRadius);
         float carEffectiveMass = _rb.mass / 4f;
@@ -253,8 +253,8 @@ public class Car : MonoBehaviour
         float desiredLongitudinalForce = longitudinalSlipVelocity * longitudinalEffectiveMass / dt;
         float desiredLateralForce = lateralSlipVelocity * lateralEffectiveMass / dt;
 
-        Vector2 desiredNorm = new(desiredLongitudinalForce / maxLongitudinalForce,
-            desiredLateralForce / maxLateralForce);
+        Vector2 desiredNorm = new(desiredLongitudinalForce / longitudinalForceLimit,
+            desiredLateralForce / lateralForceLimit);
         float desiredMagNorm = desiredNorm.magnitude;
         float scale = desiredMagNorm > 1f ? 1f / desiredMagNorm : 1f;
 
