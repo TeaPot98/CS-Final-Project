@@ -99,12 +99,16 @@ public class Car : MonoBehaviour
         List<Wheel> drivenWheels = _wheels.Where(wheel => wheel.isDriving && wheel.IsGrounded).ToList();
         float driveTorquePerWheel = ComputeDriveTorquePerWheel(drivenWheels, dt);
         float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
-        float reflectedEngineInertia = engineInertia * gearRatio * gearRatio / drivenWheels.Count;
+        float reflectedEngineInertia =
+            drivenWheels.Count > 0 ? engineInertia * gearRatio * gearRatio / drivenWheels.Count : 0f;
         float coupledDrivenWheelInertia = drivenWheelInertia + reflectedEngineInertia;
 
 
         foreach (Wheel wheel in _wheels)
         {
+            // TODO: Check if here is the appropriate place to call this method
+            wheel.Simulate();
+
             if (wheel.canSteer)
             {
                 Vector3 wheelWorldVelocity = _rb.GetPointVelocity(wheel.transform.position);

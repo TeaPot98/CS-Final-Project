@@ -23,22 +23,6 @@ public class Wheel : MonoBehaviour
     public Vector3 LateralForceDir { get; private set; }
     public Vector3 ContactPoint { get; private set; }
 
-    // private float _suespension.suspensionRestDist = 1f;
-    // private float _suspensionTravel = 0.5f;
-    // private float _springStrength = 7000f;
-    //
-    // private float _springDamper = 250f;
-    // private float _tireGripFactor = 1f;
-    // private float _tireMass = 10f;
-    // private float _carTopSpeed = 1000f;
-    // private float _acceleration = 100f;
-    // private float _maxRotationAngle = 30.0f;
-    // public bool torque;
-
-    // public bool steering;
-
-    // private AnimationCurve _powerCurve;
-    // private AnimationCurve _maxSteeringAngleCurve;
     private Rigidbody _carRigidBody;
 
     private Transform _carTransform;
@@ -51,7 +35,6 @@ public class Wheel : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        // _carManager = GetComponentInParent<CarManager>();
         _carRigidBody = carObject.GetComponent<Rigidbody>();
         _carTransform = carObject.GetComponent<Transform>();
         _car = carObject.GetComponent<Car>();
@@ -63,20 +46,6 @@ public class Wheel : MonoBehaviour
         _tireTransformPosition = _tireTransform.position;
 
         TireRadius = 0.5f * _tireMeshRenderer.bounds.size.y;
-
-        // _tireMass = _carManager.tireMass;
-        // _tireGripFactor = _carManager.tireGripFactor;
-        // _maxRotationAngle = _carManager.maxRotationAngle;
-        //   
-        // _suespension.suspensionRestDist = _carManager.suspensionRestDist;
-        // _suspensionTravel = _carManager.suspensionTravel;
-        // _springStrength = _carManager.springStrength;
-        // _springDamper = _carManager.springDamper;
-        //   
-        // _carTopSpeed = _carManager.carTopSpeed;
-        // _acceleration = _carManager.acceleration;
-        // _powerCurve = _carManager.powerCurve;
-        // _maxSteeringAngleCurve = _carManager.maxSteeringAngleCurve;
     }
 
     // Update is called once per frame
@@ -91,25 +60,8 @@ public class Wheel : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public void Simulate()
     {
-        // ----- Get car's parameters from CarManager -----
-        // _tireMass = _carManager.tireMass;
-        // _tireGripFactor = _carManager.tireGripFactor;
-        // _maxRotationAngle = _carManager.maxRotationAngle;
-        //   
-        // _suespension.suspensionRestDist = _carManager.suspensionRestDist;
-        // _springStrength = _carManager.springStrength;
-        // _springDamper = _carManager.springDamper;
-
-        // ------------------------------------
-
-        // forward speed of the car (in the direction of driving)
-        // float carSpeed = Vector3.Dot(_carTransform.forward, _carRigidBody.linearVelocity);
-
-        // normalized car speed
-        // float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / _carTopSpeed);
-
         Vector3 tireWorldVel = _carRigidBody.GetPointVelocity(_tireTransformPosition);
         _tireTransformPosition = _tireTransform.position;
 
@@ -117,8 +69,6 @@ public class Wheel : MonoBehaviour
         RaycastHit tireRay;
         bool rayDidHit =
             Physics.Raycast(ray, out tireRay, _suspension.suspensionRestDist + _suspension.suspensionTravel);
-
-        // Debug.Log("Ray did hit: " + rayDidHit);
 
         IsGrounded = rayDidHit;
 
