@@ -32,6 +32,8 @@ public class Wheel : MonoBehaviour
     private Vector3 _tireTransformPosition;
     private Renderer _tireMeshRenderer;
 
+    public float steeringWheelTurningSpeed = 10f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -60,7 +62,33 @@ public class Wheel : MonoBehaviour
         }
     }
 
-    public void Simulate()
+    public void HandleSteeringRotation(float steeringValue, float maxSteeringAngle)
+    {
+        if (!canSteer) return;
+
+
+        float targetAngle = Mathf.Lerp(
+            -maxSteeringAngle,
+            maxSteeringAngle,
+            (steeringValue + 1f) * 0.5f
+        );
+
+        float currentAngle = transform.localEulerAngles.y;
+
+        if (currentAngle > 180f) currentAngle -= 360f;
+
+
+        float smoothAngle = Mathf.SmoothDampAngle(
+            currentAngle,
+            targetAngle,
+            ref steeringWheelTurningSpeed,
+            0.12f
+        );
+
+        transform.localRotation = Quaternion.Euler(0.0f, smoothAngle, 0.0f);
+    }
+
+    public void SimulateContactAndSuspension()
     {
         Vector3 tireWorldVel = _carRigidBody.GetPointVelocity(_tireTransformPosition);
         _tireTransformPosition = _tireTransform.position;

@@ -66,11 +66,6 @@ public class Car : MonoBehaviour
     public float tscTargetSlip = 0.1f;
     public float tscSensitivity = 10f;
 
-    public float steeringWheelTurningSpeed = 10f;
-
-    private int wheelSimulationSubsteps = 4;
-
-    // public float maxSteeringAngle = 30f;
     [Header("Speed-Sensitive Steering")]
     public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
 
@@ -106,35 +101,12 @@ public class Car : MonoBehaviour
 
         foreach (Wheel wheel in _wheels)
         {
-            // TODO: Check if here is the appropriate place to call this method
-            wheel.Simulate();
+            Vector3 wheelWorldVelocity = _rb.GetPointVelocity(transform.position);
+            float maxSteeringAngle =
+                maxSteeringAngleBySpeed.Evaluate(wheelWorldVelocity.magnitude);
 
-            if (wheel.canSteer)
-            {
-                Vector3 wheelWorldVelocity = _rb.GetPointVelocity(wheel.transform.position);
-                float maxSteeringAngle =
-                    maxSteeringAngleBySpeed.Evaluate(wheelWorldVelocity.magnitude);
-
-                float targetAngle = Mathf.Lerp(
-                    -maxSteeringAngle,
-                    maxSteeringAngle,
-                    (Steering + 1f) * 0.5f
-                );
-
-                float currentAngle = wheel.transform.localEulerAngles.y;
-
-                if (currentAngle > 180f) currentAngle -= 360f;
-
-
-                float smoothAngle = Mathf.SmoothDampAngle(
-                    currentAngle,
-                    targetAngle,
-                    ref steeringWheelTurningSpeed,
-                    0.12f
-                );
-
-                wheel.transform.localRotation = Quaternion.Euler(0.0f, smoothAngle, 0.0f);
-            }
+            wheel.HandleSteeringRotation(Steering, maxSteeringAngle);
+            wheel.SimulateContactAndSuspension();
 
             float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
             float torqueScale = Mathf.Clamp01(1f - tscSensitivity * slipError);
@@ -144,7 +116,7 @@ public class Car : MonoBehaviour
 
             float wheelInertia = wheel.isDriving && wheel.IsGrounded ? coupledDrivenWheelInertia : freeWheelInertia;
 
-            SimulateWheel(wheel, driveTorque, wheelInertia, dt);
+            SimulateWheelForces(wheel, driveTorque, wheelInertia, dt);
         }
 
         if (_gear != 0 && drivenWheels.Count > 0)
@@ -192,7 +164,7 @@ public class Car : MonoBehaviour
         );
     }
 
-    private void SimulateWheel(Wheel wheel, float wheelDriveTorque, float wheelInertia, float dt)
+    private void SimulateWheelForces(Wheel wheel, float wheelDriveTorque, float wheelInertia, float dt)
     {
         if (!wheel.IsGrounded) return;
 

@@ -35,7 +35,7 @@ public class DragRaceManager : MonoBehaviour
         switch (milestone)
         {
             case DragRaceMilestone.Start:
-                _hasStarted = true;
+                ResetRun();
                 break;
             case DragRaceMilestone.Eighth:
                 if (!_hasStarted) break;
@@ -70,8 +70,25 @@ public class DragRaceManager : MonoBehaviour
 
         if (Mathf.Approximately(_twoHundredTime, 0f) && carSpeed >= 200)
         {
+            _twoHundredTime = _time;
             twoHundredTime = "0-200km/h: " + $"{_time:F3}" + "s";
             hundredToTwoTime = "100-200km/h: " + $"{_time - _hundredTime:F3}" + "s";
         }
+    }
+
+    private void ResetRun()
+    {
+        eighthTime = "1/8 Miles: N/A";
+        quarterTime = "1/4 Miles: N/A";
+        hundredTimeLabel = "0-100km/h: N/A";
+        twoHundredTime = "0-200km/h: N/A";
+        hundredToTwoTime = "100-100km/h: N/A";
+        timeLabel = "00.000s";
+
+        _time = 0;
+        _hundredTime = 0;
+        _twoHundredTime = 0;
+
+        _hasStarted = true;
     }
 }
