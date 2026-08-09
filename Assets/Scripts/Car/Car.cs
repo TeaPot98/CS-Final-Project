@@ -66,6 +66,9 @@ public class Car : MonoBehaviour
     public float tscTargetSlip = 0.1f;
     public float tscSensitivity = 10f;
 
+    public float absTargetSlip = -0.1f;
+    public float absSensitivity = 3f;
+
     [Header("Speed-Sensitive Steering")]
     public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
 
@@ -192,8 +195,7 @@ public class Car : MonoBehaviour
         wheel.SlipAngle = Mathf.Atan2(steeringVelocity, speedForSlipAngle) * Mathf.Rad2Deg;
 
         // Tire load in Kilo Newtons
-        // TODO: dynamically comptue it considering suspension state
-        float tireLoad = _rb.mass / 4f * 9.81f / 1000f;
+        float tireLoad = wheel.NormalLoad / 1000f;
 
         const float minCombinedSlip = 1e-4f;
 
@@ -208,7 +210,8 @@ public class Car : MonoBehaviour
 
         float longitudinalForceLimit = Utils.ComputePacejkaMagicFormula(equivalentSlipRatio, tireLoad,
             wheel.tire.GetPacejkaMagicFormulaParams());
-        float lateralForceLimit = Utils.ComputeLateralPacejkaMagicFormula(equivalentSlipAngle, tireLoad, 0f,
+        float lateralForceLimit = Utils.ComputeLateralPacejkaMagicFormula(equivalentSlipAngle, tireLoad,
+            0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
         longitudinalForceLimit = Mathf.Abs(normalizedSlipRatio / combinedSlip * longitudinalForceLimit);
@@ -218,7 +221,7 @@ public class Car : MonoBehaviour
         lateralForceLimit = Mathf.Max(lateralForceLimit, 1f);
 
         float wheelEffectiveMass = wheelInertia / (wheel.TireRadius * wheel.TireRadius);
-        float carEffectiveMass = _rb.mass / 4f;
+        float carEffectiveMass = wheel.NormalLoad / 9.81f;
         float longitudinalEffectiveMass = 1f / (1f / wheelEffectiveMass + 1f / carEffectiveMass);
         float lateralEffectiveMass = carEffectiveMass;
 
@@ -240,7 +243,7 @@ public class Car : MonoBehaviour
         float lowSpeedFade = Mathf.SmoothStep(0f, 1f,
             Mathf.InverseLerp(lowSpeedBlendEnd, lowSpeedBlendStart, speedForBlend));
 
-        lateralForce *= lowSpeedFade;
+        // lateralForce *= lowSpeedFade;
 
         Vector3 totalForce = longitudinalForce * wheel.LongitudinalForceDir -
                              lateralForce * wheel.LateralForceDir;
@@ -321,11 +324,15 @@ public class Car : MonoBehaviour
 
         float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity) * brakeMultiplier;
 
+        float slipError = Mathf.Abs(wheel.SlipRatio - absTargetSlip);
+        float brakeScale = Mathf.Clamp01(1f - absSensitivity * slipError);
+        float brakeTorqueWithAbs = brakeTorque * brakeScale;
+
         if (Mathf.Approximately(wheel.AngularVelocity, 0f)) return 0f;
 
         // Debug.Log("BrakeTorque: " + brakeTorque);
 
-        return brakeTorque;
+        return brakeTorqueWithAbs;
     }
 
 

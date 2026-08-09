@@ -24,6 +24,7 @@ public class Wheel : MonoBehaviour
     public Vector3 LongitudinalForceDir { get; private set; }
     public Vector3 LateralForceDir { get; private set; }
     public Vector3 ContactPoint { get; private set; }
+    public float NormalLoad { get; private set; }
 
     private Rigidbody _carRigidBody;
 
@@ -115,18 +116,22 @@ public class Wheel : MonoBehaviour
             float vel = Vector3.Dot(springDir, tireWorldVel);
 
             // calculate the magnitude of the dampened spring force
-            float force = offset * _suspension.springStrength - vel * _suspension.springDamper;
-            force = Mathf.Clamp(force, 0f, Mathf.Abs(force));
+            float forceMagnitude = offset * _suspension.springStrength - vel * _suspension.springDamper;
+            forceMagnitude = Mathf.Clamp(forceMagnitude, 0f, Mathf.Abs(forceMagnitude));
+
+            Vector3 force = springDir * forceMagnitude;
+
+            NormalLoad = Mathf.Max(0f, Vector3.Dot(force, tireRay.normal));
 
             // apply the force at the location of this tire
             // in the direction of the suspension
-            _carRigidBody.AddForceAtPosition(springDir * force, _tireTransformPosition);
+            _carRigidBody.AddForceAtPosition(force, _tireTransformPosition);
 
             LongitudinalForceDir = Vector3.ProjectOnPlane(_tireTransform.forward, tireRay.normal).normalized;
             LateralForceDir = Vector3.ProjectOnPlane(_tireTransform.right, tireRay.normal).normalized;
             ContactPoint = tireRay.point;
 
-            Debug.DrawRay(_tireTransformPosition, springDir * force, Color.dodgerBlue);
+            Debug.DrawRay(_tireTransformPosition, force / 1000f, Color.dodgerBlue);
         }
 
         if (rayDidHit)
