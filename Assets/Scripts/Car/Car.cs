@@ -91,14 +91,8 @@ public class Car : MonoBehaviour
     {
         float dt = Time.fixedDeltaTime;
 
-        List<Wheel> drivenWheels = _wheels.Where(wheel => wheel.isDriving && wheel.IsGrounded).ToList();
-        float driveTorquePerWheel = ComputeDriveTorquePerWheel(drivenWheels, dt);
-        float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
-        float reflectedEngineInertia =
-            drivenWheels.Count > 0 ? engineInertia * gearRatio * gearRatio / drivenWheels.Count : 0f;
-        float coupledDrivenWheelInertia = drivenWheelInertia + reflectedEngineInertia;
 
-
+        // 1st Pass: Update steering wheel angle, compute contact point and handle suspension
         foreach (Wheel wheel in _wheels)
         {
             Vector3 wheelWorldVelocity = _rb.GetPointVelocity(transform.position);
@@ -107,7 +101,19 @@ public class Car : MonoBehaviour
 
             wheel.HandleSteeringRotation(Steering, maxSteeringAngle);
             wheel.SimulateContactAndSuspension();
+        }
 
+        // With the up-to-date IsGrounded flag, compute parameters for future applied forces
+        List<Wheel> drivenWheels = _wheels.Where(wheel => wheel.isDriving && wheel.IsGrounded).ToList();
+        float driveTorquePerWheel = ComputeDriveTorquePerWheel(drivenWheels, dt);
+        float gearRatio = Utils.GetTotalGearRatio(_gear, transmission);
+        float reflectedEngineInertia =
+            drivenWheels.Count > 0 ? engineInertia * gearRatio * gearRatio / drivenWheels.Count : 0f;
+        float coupledDrivenWheelInertia = drivenWheelInertia + reflectedEngineInertia;
+
+        // 2nd Pass: Compute and apply wheel forces
+        foreach (Wheel wheel in _wheels)
+        {
             float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
             float torqueScale = Mathf.Clamp01(1f - tscSensitivity * slipError);
             float scaledWheelTorque = driveTorquePerWheel * torqueScale;
@@ -166,21 +172,18 @@ public class Car : MonoBehaviour
 
     private void SimulateWheelForces(Wheel wheel, float wheelDriveTorque, float wheelInertia, float dt)
     {
-        if (!wheel.IsGrounded) return;
+        // if (!wheel.IsGrounded) return;
 
         Vector3 pointVelocity = _rb.GetPointVelocity(wheel.ContactPoint);
         float longitudinalSpeed = Vector3.Dot(pointVelocity, wheel.LongitudinalForceDir);
 
-        if (ShouldLockWheel(Brake, longitudinalSpeed, wheel.AngularVelocity))
-        {
-            wheel.AngularVelocity = 0f;
-            wheel.SlipRatio = 0f;
-            wheel.SlipAngle = 0f;
-            return;
-        }
+        if (ShouldLockWheel(Brake, longitudinalSpeed, wheel.AngularVelocity)) wheel.AngularVelocity = 0f;
 
+        // wheel.SlipRatio = 0f;
+        // wheel.SlipAngle = 0f;
+        // return;
         float surfaceSpeed = wheel.AngularVelocity * wheel.TireRadius;
-        wheel.SlipRatio = Utils.ComputeSlipRatio(surfaceSpeed, longitudinalSpeed);
+        wheel.SlipRatio = Utils.ComputeSlipRatio(surfaceSpeed, longitudinalSpeed, minSlipSpeed);
 
         Vector3 steeringDir = wheel.transform.right;
         float steeringVelocity = Vector3.Dot(steeringDir, pointVelocity);
@@ -242,19 +245,22 @@ public class Car : MonoBehaviour
         Vector3 totalForce = longitudinalForce * wheel.LongitudinalForceDir -
                              lateralForce * wheel.LateralForceDir;
 
-        _rb.AddForceAtPosition(
-            totalForce,
-            wheel.ContactPoint,
-            ForceMode.Force
-        );
+        if (wheel.IsGrounded)
+        {
+            _rb.AddForceAtPosition(
+                totalForce,
+                wheel.ContactPoint,
+                ForceMode.Force
+            );
 
-        Debug.DrawRay(
-            wheel.ContactPoint,
-            totalForce / 1000f,
-            Color.green
-        );
+            Debug.DrawRay(
+                wheel.ContactPoint,
+                totalForce / 1000f,
+                Color.green
+            );
+        }
 
-        float contactTorque = longitudinalForce * wheel.TireRadius;
+        float contactTorque = wheel.IsGrounded ? longitudinalForce * wheel.TireRadius : 0f;
         float netTorque = wheelDriveTorque - ComputeBrakeTorque(wheel) -
                           wheelRollingResistance * wheel.AngularVelocity - contactTorque;
 

@@ -15,6 +15,8 @@ public class Wheel : MonoBehaviour
     public GameObject carObject;
     public TireSO tire;
 
+    [SerializeField] private LayerMask layerMask;
+
     private Car _car;
     private SuspensionSO _suspension;
 
@@ -25,20 +27,17 @@ public class Wheel : MonoBehaviour
 
     private Rigidbody _carRigidBody;
 
-    private Transform _carTransform;
-
-    public float TireRadius;
+    public float TireRadius { get; private set; }
     private Transform _tireTransform;
     private Vector3 _tireTransformPosition;
     private Renderer _tireMeshRenderer;
 
-    public float steeringWheelTurningSpeed = 10f;
+    private float _steeringWheelTurningSpeed = 10f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
         _carRigidBody = carObject.GetComponent<Rigidbody>();
-        _carTransform = carObject.GetComponent<Transform>();
         _car = carObject.GetComponent<Car>();
         _suspension = _car.suspension;
 
@@ -56,7 +55,7 @@ public class Wheel : MonoBehaviour
         if (!Mathf.Approximately(AngularVelocity, 0f))
         {
             Quaternion deltaRotation =
-                Quaternion.AngleAxis(AngularVelocity * Mathf.Rad2Deg, wheelModel.transform.right);
+                Quaternion.AngleAxis(AngularVelocity * Mathf.Rad2Deg * Time.deltaTime, wheelModel.transform.right);
 
             wheelModel.transform.rotation = deltaRotation * wheelModel.transform.rotation;
         }
@@ -81,7 +80,7 @@ public class Wheel : MonoBehaviour
         float smoothAngle = Mathf.SmoothDampAngle(
             currentAngle,
             targetAngle,
-            ref steeringWheelTurningSpeed,
+            ref _steeringWheelTurningSpeed,
             0.12f
         );
 
@@ -90,13 +89,14 @@ public class Wheel : MonoBehaviour
 
     public void SimulateContactAndSuspension()
     {
-        Vector3 tireWorldVel = _carRigidBody.GetPointVelocity(_tireTransformPosition);
         _tireTransformPosition = _tireTransform.position;
+        Vector3 tireWorldVel = _carRigidBody.GetPointVelocity(_tireTransformPosition);
 
         Ray ray = new(_tireTransformPosition, -_tireTransform.up);
         RaycastHit tireRay;
         bool rayDidHit =
-            Physics.Raycast(ray, out tireRay, _suspension.suspensionRestDist + _suspension.suspensionTravel);
+            Physics.Raycast(ray, out tireRay, _suspension.suspensionRestDist + _suspension.suspensionTravel, layerMask,
+                QueryTriggerInteraction.Ignore);
 
         IsGrounded = rayDidHit;
 
@@ -116,6 +116,7 @@ public class Wheel : MonoBehaviour
 
             // calculate the magnitude of the dampened spring force
             float force = offset * _suspension.springStrength - vel * _suspension.springDamper;
+            force = Mathf.Clamp(force, 0f, Mathf.Abs(force));
 
             // apply the force at the location of this tire
             // in the direction of the suspension

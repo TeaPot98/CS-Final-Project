@@ -173,10 +173,8 @@ public static class Utils
         return FromAngularVelocityToRpm(wheelAngularVelocity) * gearRatio;
     }
 
-    public static float ComputeSlipRatio(float surfaceSpeed, float groundSpeed)
+    public static float ComputeSlipRatio(float surfaceSpeed, float groundSpeed, float minSlipSpeed = 0.5f)
     {
-        const float minSlipSpeed = 0.5f;
-
         if (Mathf.Abs(surfaceSpeed) < 0.02f &&
             Mathf.Abs(groundSpeed) < 0.02f)
             return 0f;

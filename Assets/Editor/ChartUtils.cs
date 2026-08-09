@@ -2,7 +2,6 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(EngineSO))]
 public class ChartUtils
 {
     private const int TickCount = 5;

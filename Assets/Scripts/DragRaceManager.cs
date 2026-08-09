@@ -76,6 +76,11 @@ public class DragRaceManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        foreach (MilestoneCollider milestone in milestoneColliders) milestone.OnMilestoneReach -= OnMilestoneReach;
+    }
+
     private void ResetRun()
     {
         eighthTime = "1/8 Miles: N/A";

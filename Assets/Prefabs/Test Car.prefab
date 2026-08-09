@@ -633,7 +633,11 @@ MonoBehaviour:
   tireMesh: {fileID: 6931939715692987481}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
   TireRadius: 0
+  steeringWheelTurningSpeed: 10
 --- !u!1 &580732881996678210
 GameObject:
   m_ObjectHideFlags: 0
@@ -1304,7 +1308,6 @@ MonoBehaviour:
   minSlipSpeed: 0.5
   tscTargetSlip: 0.1
   tscSensitivity: 5
-  steeringWheelTurningSpeed: 2
   maxSteeringAngleBySpeed:
     serializedVersion: 2
     m_Curve:
@@ -2204,7 +2207,11 @@ MonoBehaviour:
   tireMesh: {fileID: 3111068617828566383}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
   TireRadius: 0
+  steeringWheelTurningSpeed: 10
 --- !u!1 &4414015909044909801
 GameObject:
   m_ObjectHideFlags: 0
@@ -3280,7 +3287,11 @@ MonoBehaviour:
   tireMesh: {fileID: 7254937454493399281}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
   TireRadius: 0
+  steeringWheelTurningSpeed: 10
 --- !u!1 &5665738776634013119
 GameObject:
   m_ObjectHideFlags: 0
@@ -3962,7 +3973,11 @@ MonoBehaviour:
   tireMesh: {fileID: 352805670484849122}
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
   TireRadius: 0
+  steeringWheelTurningSpeed: 10
 --- !u!1 &7502234972995529011
 GameObject:
   m_ObjectHideFlags: 0
