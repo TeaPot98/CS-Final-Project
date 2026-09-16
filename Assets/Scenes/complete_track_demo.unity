@@ -204,6 +204,18 @@ PrefabInstance:
       propertyPath: tscEnabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: brakeLights.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: 'brakeLights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 61922652}
+    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: 'brakeLights.Array.data[1]'
+      value: 
+      objectReference: {fileID: 61922651}
     - target: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 146.9
@@ -260,6 +272,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8579921681354570715, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9222909306477589316, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -268,6 +288,16 @@ PrefabInstance:
 --- !u!4 &61922650 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 61922649}
+  m_PrefabAsset: {fileID: 0}
+--- !u!108 &61922651 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 8579921681354570715, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+  m_PrefabInstance: {fileID: 61922649}
+  m_PrefabAsset: {fileID: 0}
+--- !u!108 &61922652 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 9222909306477589316, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
   m_PrefabInstance: {fileID: 61922649}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &863432425

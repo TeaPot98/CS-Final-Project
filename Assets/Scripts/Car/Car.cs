@@ -23,6 +23,8 @@ public class Car : MonoBehaviour
     public TransmissionSO transmission;
     public SuspensionSO suspension;
 
+    public List<Light> brakeLights;
+
     [HideInInspector] public string GearLabel = "N";
     [HideInInspector] public string GearRatioLabel = "Gear Ratio: 0";
     [HideInInspector] public string RpmLabel = "1000 RPM";
@@ -351,6 +353,18 @@ public class Car : MonoBehaviour
     private void OnBrake(InputValue value)
     {
         Brake = value.Get<float>();
+
+        if (Brake > 0)
+            brakeLights.ForEach(l =>
+            {
+                if (!l.enabled) l.enabled = true;
+            });
+
+        if (Brake == 0)
+            brakeLights.ForEach(l =>
+            {
+                if (l.enabled) l.enabled = false;
+            });
     }
 
     private void OnGearShift(InputValue v)

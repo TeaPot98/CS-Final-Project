@@ -15,7 +15,9 @@ public class Wheel : MonoBehaviour
     public GameObject carObject;
     public TireSO tire;
 
-    public TrailRenderer skidmarkRenderer;
+    public GameObject particleEmitter;
+    private ParticleSystem _smokeRenderer;
+    private TrailRenderer _skidmarkRenderer;
 
     public float slipAngleSkidmarkThreshold = 0.5f;
     public float slipRatioSkidmarkThreshold = 0.35f;
@@ -51,6 +53,9 @@ public class Wheel : MonoBehaviour
 
         _tireTransform = GetComponent<Transform>();
         _tireTransformPosition = _tireTransform.position;
+
+        _skidmarkRenderer = particleEmitter.GetComponent<TrailRenderer>();
+        _smokeRenderer = particleEmitter.GetComponent<ParticleSystem>();
 
         TireRadius = 0.5f * _tireMeshRenderer.bounds.size.y;
     }
@@ -155,11 +160,13 @@ public class Wheel : MonoBehaviour
     {
         if (SlipAngle >= slipAngleSkidmarkThreshold || SlipRatio >= slipRatioSkidmarkThreshold)
         {
-            if (!skidmarkRenderer.emitting) skidmarkRenderer.emitting = true;
+            if (!_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = true;
+            if (!_smokeRenderer.isPlaying) _smokeRenderer.Play();
         }
         else
         {
-            if (skidmarkRenderer.emitting) skidmarkRenderer.emitting = false;
+            if (_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = false;
+            if (_smokeRenderer.isPlaying) _smokeRenderer.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
     }
 }
