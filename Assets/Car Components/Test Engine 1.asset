@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c94afb81ff3b2844d9fcdb25e88b068c, type: 3}
-  m_Name: Porsche 911 '87 Engine (300 HP)
+  m_Name: Test Engine 1
   m_EditorClassIdentifier: Assembly-CSharp::EngineSO
   maxRpm: 6000
   idleRpm: 1000
-  curveBaselineY: 444.3233
-  peakMagnitude: 136.86
-  endsSlope: 2.83
+  curveBaselineY: 550
+  peakMagnitude: 133
+  endsSlope: 2.5
   peakXPosition: 4000
   endsSlope2: 9000
-  power: 220650.02
-  horsepower: 300.00003
-  peakPowerRpm: 5430
+  power: 278700.78
+  horsepower: 378.92697
+  peakPowerRpm: 5620

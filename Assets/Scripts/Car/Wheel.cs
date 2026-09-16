@@ -15,6 +15,11 @@ public class Wheel : MonoBehaviour
     public GameObject carObject;
     public TireSO tire;
 
+    public TrailRenderer skidmarkRenderer;
+
+    public float slipAngleSkidmarkThreshold = 0.5f;
+    public float slipRatioSkidmarkThreshold = 0.35f;
+
     [SerializeField] private LayerMask layerMask;
 
     private Car _car;
@@ -60,6 +65,8 @@ public class Wheel : MonoBehaviour
 
             wheelModel.transform.rotation = deltaRotation * wheelModel.transform.rotation;
         }
+
+        RenderSkidmark();
     }
 
     public void HandleSteeringRotation(float steeringValue, float maxSteeringAngle)
@@ -142,5 +149,17 @@ public class Wheel : MonoBehaviour
             // Reset the wheel mesh position to the suspension rest distance
             wheelModel.transform.localPosition =
                 new Vector3(0f, -_suspension.suspensionRestDist + TireRadius, 0f);
+    }
+
+    private void RenderSkidmark()
+    {
+        if (SlipAngle >= slipAngleSkidmarkThreshold || SlipRatio >= slipRatioSkidmarkThreshold)
+        {
+            if (!skidmarkRenderer.emitting) skidmarkRenderer.emitting = true;
+        }
+        else
+        {
+            if (skidmarkRenderer.emitting) skidmarkRenderer.emitting = false;
+        }
     }
 }

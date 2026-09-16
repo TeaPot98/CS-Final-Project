@@ -23,35 +23,35 @@ public class Car : MonoBehaviour
     public TransmissionSO transmission;
     public SuspensionSO suspension;
 
-    public string GearLabel = "N";
-    public string GearRatioLabel = "Gear Ratio: 0";
-    public string RpmLabel = "1000 RPM";
-    public string SpeedLabel = "0 km/h";
+    [HideInInspector] public string GearLabel = "N";
+    [HideInInspector] public string GearRatioLabel = "Gear Ratio: 0";
+    [HideInInspector] public string RpmLabel = "1000 RPM";
+    [HideInInspector] public string SpeedLabel = "0 km/h";
 
-    public string FLWheelRpm = "0";
-    public string FRWheelRpm = "0";
-    public string RLWheelRpm = "0";
-    public string RRWheelRpm = "0";
+    [HideInInspector] public string FLWheelRpm = "0";
+    [HideInInspector] public string FRWheelRpm = "0";
+    [HideInInspector] public string RLWheelRpm = "0";
+    [HideInInspector] public string RRWheelRpm = "0";
 
-    public string FLSlipAngle = "0";
-    public string FRSlipAngle = "0";
-    public string RLSlipAngle = "0";
-    public string RRSlipAngle = "0";
+    [HideInInspector] public string FLSlipAngle = "0";
+    [HideInInspector] public string FRSlipAngle = "0";
+    [HideInInspector] public string RLSlipAngle = "0";
+    [HideInInspector] public string RRSlipAngle = "0";
 
-    public string FLSlipRatio = "0";
-    public string FRSlipRatio = "0";
-    public string RLSlipRatio = "0";
-    public string RRSlipRatio = "0";
+    [HideInInspector] public string FLSlipRatio = "0";
+    [HideInInspector] public string FRSlipRatio = "0";
+    [HideInInspector] public string RLSlipRatio = "0";
+    [HideInInspector] public string RRSlipRatio = "0";
 
-    public string TscLabel = "";
+    [HideInInspector] public string TscLabel = "";
 
     private Rigidbody _rb;
 
     private int _gear = 0;
     private float _speed = 0f;
-    public float Throttle = 0f;
-    public float Brake = 0f;
-    public float Steering = 0f;
+    [HideInInspector] public float Throttle = 0f;
+    [HideInInspector] public float Brake = 0f;
+    [HideInInspector] public float Steering = 0f;
 
     private float _currentEngineRpm = 1000f;
 
@@ -63,9 +63,11 @@ public class Car : MonoBehaviour
     public float wheelBrakeTorque = 100f;
     public float minSlipSpeed = 0.5f;
 
+    public bool tscEnabled = true;
     public float tscTargetSlip = 0.1f;
     public float tscSensitivity = 10f;
 
+    public bool absEnabled = true;
     public float absTargetSlip = -0.1f;
     public float absSensitivity = 3f;
 
@@ -118,7 +120,7 @@ public class Car : MonoBehaviour
         foreach (Wheel wheel in _wheels)
         {
             float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
-            float torqueScale = Mathf.Clamp01(1f - tscSensitivity * slipError);
+            float torqueScale = tscEnabled ? Mathf.Clamp01(1f - tscSensitivity * slipError) : 1f;
             float scaledWheelTorque = driveTorquePerWheel * torqueScale;
 
             float driveTorque = wheel.isDriving ? scaledWheelTorque : 0f;
@@ -325,7 +327,7 @@ public class Car : MonoBehaviour
         float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity) * brakeMultiplier;
 
         float slipError = Mathf.Abs(wheel.SlipRatio - absTargetSlip);
-        float brakeScale = Mathf.Clamp01(1f - absSensitivity * slipError);
+        float brakeScale = absEnabled ? Mathf.Clamp01(1f - absSensitivity * slipError) : 1f;
         float brakeTorqueWithAbs = brakeTorque * brakeScale;
 
         if (Mathf.Approximately(wheel.AngularVelocity, 0f)) return 0f;
