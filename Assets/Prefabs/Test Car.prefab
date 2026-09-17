@@ -2216,7 +2216,7 @@ MonoBehaviour:
   wheelModel: {fileID: 580732881996678210}
   tireMesh: {fileID: 3111068617828566383}
   carObject: {fileID: 1960365366696690037}
-  tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
+  tire: {fileID: 11400000, guid: 87e573a4203963f44a099339af7fb737, type: 2}
   particleEmitter: {fileID: 2864283314593151838}
   slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
@@ -3986,7 +3986,7 @@ MonoBehaviour:
   wheelModel: {fileID: 1447374364536250998}
   tireMesh: {fileID: 352805670484849122}
   carObject: {fileID: 1960365366696690037}
-  tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
+  tire: {fileID: 11400000, guid: 87e573a4203963f44a099339af7fb737, type: 2}
   particleEmitter: {fileID: 5893703525756757116}
   slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35

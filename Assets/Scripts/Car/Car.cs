@@ -83,6 +83,9 @@ public class Car : MonoBehaviour
     private const float LockAngularThreshold = 0.15f; // rad/s
     private const float BrakeLockThreshold = 0.05f;
 
+    private const float COMBINED_SLIP_COEFFICIENT = 4f;
+
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -212,8 +215,9 @@ public class Car : MonoBehaviour
         float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(wheel.tire.maxForceSlipAngle, tireLoad, 0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
-        float combinedSlip = Mathf.Sqrt(Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, 2f) +
-                                        Mathf.Pow(lateralForceMagnitude / maxLateralForce, 2f));
+        float combinedSlip = Mathf.Sqrt(
+            Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, COMBINED_SLIP_COEFFICIENT) +
+            Mathf.Pow(lateralForceMagnitude / maxLateralForce, COMBINED_SLIP_COEFFICIENT));
 
         if (combinedSlip > 1f)
         {
