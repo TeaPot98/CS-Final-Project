@@ -201,56 +201,30 @@ public class Car : MonoBehaviour
         // Tire load in Kilo Newtons
         float tireLoad = wheel.NormalLoad / 1000f;
 
-        const float minCombinedSlip = 1e-4f;
-
-        float normalizedSlipRatio = wheel.SlipRatio / wheel.tire.maxForceSlipRatio;
-        float normalizedSlipAngle = wheel.SlipAngle / wheel.tire.maxForceSlipAngle;
-        float combinedSlip = Mathf.Sqrt(normalizedSlipRatio * normalizedSlipRatio +
-                                        normalizedSlipAngle * normalizedSlipAngle);
-        combinedSlip = Mathf.Max(combinedSlip, minCombinedSlip);
-
-        float equivalentSlipRatio = wheel.tire.maxForceSlipRatio * combinedSlip;
-        float equivalentSlipAngle = wheel.tire.maxForceSlipAngle * combinedSlip;
-
-        float longitudinalForceLimit = Utils.ComputePacejkaMagicFormula(equivalentSlipRatio, tireLoad,
-            wheel.tire.GetPacejkaMagicFormulaParams());
-        float lateralForceLimit = Utils.ComputeLateralPacejkaMagicFormula(equivalentSlipAngle, tireLoad,
-            0f,
+        // Simple elliptical combined slip
+        float longitudinalForceMagnitude =
+            Utils.ComputePacejkaMagicFormula(wheel.SlipRatio, tireLoad, wheel.tire.GetPacejkaMagicFormulaParams());
+        float lateralForceMagnitude = Utils.ComputeLateralPacejkaMagicFormula(wheel.SlipAngle, tireLoad, 0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
-        longitudinalForceLimit = Mathf.Abs(normalizedSlipRatio / combinedSlip * longitudinalForceLimit);
-        lateralForceLimit = Mathf.Abs(normalizedSlipAngle / combinedSlip * lateralForceLimit);
+        float maxLongitudinalForce = Utils.ComputePacejkaMagicFormula(wheel.tire.maxForceSlipRatio, tireLoad,
+            wheel.tire.GetPacejkaMagicFormulaParams());
+        float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(wheel.tire.maxForceSlipAngle, tireLoad, 0f,
+            wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
-        longitudinalForceLimit = Mathf.Max(longitudinalForceLimit, 1f);
-        lateralForceLimit = Mathf.Max(lateralForceLimit, 1f);
+        float combinedSlip = Mathf.Sqrt(Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, 2f) +
+                                        Mathf.Pow(lateralForceMagnitude / maxLateralForce, 2f));
 
-        float wheelEffectiveMass = wheelInertia / (wheel.TireRadius * wheel.TireRadius);
-        float carEffectiveMass = wheel.NormalLoad / 9.81f;
-        float longitudinalEffectiveMass = 1f / (1f / wheelEffectiveMass + 1f / carEffectiveMass);
-        float lateralEffectiveMass = carEffectiveMass;
+        if (combinedSlip > 1f)
+        {
+            longitudinalForceMagnitude /= combinedSlip;
+            lateralForceMagnitude /= combinedSlip;
+        }
 
-        float longitudinalSlipVelocity = surfaceSpeed - longitudinalSpeed;
-        float lateralSlipVelocity = steeringVelocity;
+        Vector3 longitudinalForce = longitudinalForceMagnitude * wheel.LongitudinalForceDir;
+        Vector3 lateralForce = lateralForceMagnitude * wheel.LateralForceDir;
 
-        float desiredLongitudinalForce = longitudinalSlipVelocity * longitudinalEffectiveMass / dt;
-        float desiredLateralForce = lateralSlipVelocity * lateralEffectiveMass / dt;
-
-        Vector2 desiredNorm = new(desiredLongitudinalForce / longitudinalForceLimit,
-            desiredLateralForce / lateralForceLimit);
-        float desiredMagNorm = desiredNorm.magnitude;
-        float scale = desiredMagNorm > 1f ? 1f / desiredMagNorm : 1f;
-
-        float longitudinalForce = desiredLongitudinalForce * scale;
-        float lateralForce = desiredLateralForce * scale;
-
-        float speedForBlend = Mathf.Abs(longitudinalSpeed);
-        float lowSpeedFade = Mathf.SmoothStep(0f, 1f,
-            Mathf.InverseLerp(lowSpeedBlendEnd, lowSpeedBlendStart, speedForBlend));
-
-        // lateralForce *= lowSpeedFade;
-
-        Vector3 totalForce = longitudinalForce * wheel.LongitudinalForceDir -
-                             lateralForce * wheel.LateralForceDir;
+        Vector3 totalForce = longitudinalForce - lateralForce;
 
         if (wheel.IsGrounded)
         {
@@ -263,11 +237,23 @@ public class Car : MonoBehaviour
             Debug.DrawRay(
                 wheel.ContactPoint,
                 totalForce / 1000f,
-                Color.green
+                Color.greenYellow
+            );
+
+            Debug.DrawRay(
+                wheel.ContactPoint,
+                longitudinalForce / 1000f,
+                Color.deepPink
+            );
+
+            Debug.DrawRay(
+                wheel.ContactPoint,
+                lateralForce / 1000f,
+                Color.orange
             );
         }
 
-        float contactTorque = wheel.IsGrounded ? longitudinalForce * wheel.TireRadius : 0f;
+        float contactTorque = wheel.IsGrounded ? longitudinalForceMagnitude * wheel.TireRadius : 0f;
         float netTorque = wheelDriveTorque - ComputeBrakeTorque(wheel) -
                           wheelRollingResistance * wheel.AngularVelocity - contactTorque;
 

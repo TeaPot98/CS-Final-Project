@@ -635,7 +635,7 @@ MonoBehaviour:
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   particleEmitter: {fileID: 7523897004677572224}
-  slipAngleSkidmarkThreshold: 0.5
+  slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
   layerMask:
     serializedVersion: 2
@@ -2218,7 +2218,7 @@ MonoBehaviour:
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   particleEmitter: {fileID: 2864283314593151838}
-  slipAngleSkidmarkThreshold: 0.5
+  slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
   layerMask:
     serializedVersion: 2
@@ -3300,7 +3300,7 @@ MonoBehaviour:
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   particleEmitter: {fileID: 4498297996189742570}
-  slipAngleSkidmarkThreshold: 0.5
+  slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
   layerMask:
     serializedVersion: 2
@@ -3988,7 +3988,7 @@ MonoBehaviour:
   carObject: {fileID: 1960365366696690037}
   tire: {fileID: 11400000, guid: 5f9b2a585c4864d4b920898393a1a30a, type: 2}
   particleEmitter: {fileID: 5893703525756757116}
-  slipAngleSkidmarkThreshold: 0.5
+  slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
   layerMask:
     serializedVersion: 2

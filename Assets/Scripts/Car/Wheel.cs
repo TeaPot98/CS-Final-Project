@@ -19,7 +19,7 @@ public class Wheel : MonoBehaviour
     private ParticleSystem _smokeRenderer;
     private TrailRenderer _skidmarkRenderer;
 
-    public float slipAngleSkidmarkThreshold = 0.5f;
+    public float slipAngleSkidmarkThreshold = 25f;
     public float slipRatioSkidmarkThreshold = 0.35f;
 
     [SerializeField] private LayerMask layerMask;
@@ -158,7 +158,8 @@ public class Wheel : MonoBehaviour
 
     private void RenderSkidmark()
     {
-        if (SlipAngle >= slipAngleSkidmarkThreshold || SlipRatio >= slipRatioSkidmarkThreshold)
+        if (IsGrounded && (Mathf.Abs(SlipAngle) >= slipAngleSkidmarkThreshold ||
+                           Mathf.Abs(SlipRatio) >= slipRatioSkidmarkThreshold))
         {
             if (!_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = true;
             if (!_smokeRenderer.isPlaying) _smokeRenderer.Play();
