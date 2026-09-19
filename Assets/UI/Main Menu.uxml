@@ -1,0 +1,23 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Main%20Menu.uss?fileID=7433441132597879392&amp;guid=2f56ba7ed95914242876be77968e998e&amp;type=3#Main Menu"/>
+    <ui:VisualElement name="wrapper" style="flex-grow: 1;">
+        <ui:VisualElement name="header" style="flex-grow: 0.3; justify-content: space-between; padding-top: 50px; padding-left: 50px; padding-right: 50px;">
+            <ui:Label text="RaceCar: A Unity Toolkit for Racing Game Developers (Demo)" name="title" style="color: rgb(255, 255, 255); font-size: 41px; white-space: normal; -unity-text-align: upper-center; -unity-font-definition: url(&quot;project://database/Assets/Fonts/Nunito-VariableFont_wght.ttf?fileID=12800000&amp;guid=d47ba0c5d91fd714aafb7dc6e31a9c3d&amp;type=3#Nunito-VariableFont_wght&quot;);"/>
+            <ui:Label text="Select an option below to get started" name="subtitle" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 21px; -unity-font-definition: url(&quot;project://database/Assets/Fonts/Nunito-VariableFont_wght.ttf?fileID=12800000&amp;guid=d47ba0c5d91fd714aafb7dc6e31a9c3d&amp;type=3#Nunito-VariableFont_wght&quot;);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="container" style="flex-grow: 1; align-items: stretch; flex-direction: row; justify-content: space-around; padding-top: 30px; padding-right: 50px; padding-bottom: 50px; padding-left: 50px; max-height: 400px; flex-wrap: nowrap;">
+            <ui:Button text="" name="race-track-simulation-button" class="tile-button">
+                <ui:Label text="RACE TRACK (SIMULATION)" class="button-label"/>
+                <ui:VisualElement class="button-image" style="background-image: url(&quot;project://database/Assets/Sprites/race_track_top.png?fileID=2800000&amp;guid=77d7203fbcbd4f942a96bdd88fe50e4a&amp;type=3#race_track_top&quot;);"/>
+            </ui:Button>
+            <ui:Button text="" name="race-track-sim-cade-button" class="tile-button">
+                <ui:Label text="RACE TRACK (SIM-CADE)" class="button-label"/>
+                <ui:VisualElement class="button-image" style="background-image: url(&quot;project://database/Assets/Sprites/race_track_top.png?fileID=2800000&amp;guid=77d7203fbcbd4f942a96bdd88fe50e4a&amp;type=3#race_track_top&quot;);"/>
+            </ui:Button>
+            <ui:Button text="" name="drift-track-arcade-button" class="tile-button">
+                <ui:Label text="DRIFT TRACK (ARCADE)" class="button-label"/>
+                <ui:VisualElement class="button-image" style="background-image: url(&quot;project://database/Assets/Sprites/drift_track_top.png?fileID=2800000&amp;guid=6930d200dba59d74a8471b31193b458a&amp;type=3#drift_track_top&quot;);"/>
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

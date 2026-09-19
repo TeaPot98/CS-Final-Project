@@ -1281,7 +1281,9 @@ MonoBehaviour:
   engine: {fileID: 11400000, guid: b83a7e6c7f11b35459852acc4a5e2ea1, type: 2}
   transmission: {fileID: 11400000, guid: 8a5a82f3955f5694686a2ec67a072ff0, type: 2}
   suspension: {fileID: 11400000, guid: 278af3e4c4328d7459d0d98f79e384f3, type: 2}
-  brakeLights: []
+  brakeLights:
+  - {fileID: 9222909306477589316}
+  - {fileID: 8579921681354570715}
   GearLabel: N
   GearRatioLabel: 'Gear Ratio: 0'
   RpmLabel: 1000 RPM
@@ -1309,7 +1311,7 @@ MonoBehaviour:
   wheelRollingResistance: 0.08
   wheelBrakeTorque: 2500
   minSlipSpeed: 0.5
-  tscEnabled: 1
+  tscEnabled: 0
   tscTargetSlip: 0.1
   tscSensitivity: 5
   absEnabled: 1
@@ -2211,7 +2213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
-  isDriving: 0
+  isDriving: 1
   canSteer: 1
   wheelModel: {fileID: 580732881996678210}
   tireMesh: {fileID: 3111068617828566383}
@@ -3981,7 +3983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
-  isDriving: 0
+  isDriving: 1
   canSteer: 1
   wheelModel: {fileID: 1447374364536250998}
   tireMesh: {fileID: 352805670484849122}
@@ -4743,7 +4745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4528620514558546466, guid: e7d4c6758f5874b4bb2709678409d445, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4528620514558546466, guid: e7d4c6758f5874b4bb2709678409d445, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -4759,7 +4761,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7774579293769765340, guid: e7d4c6758f5874b4bb2709678409d445, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.24324417
+      value: 0.24323797
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4851,6 +4853,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2585940748676742394}
     m_Modifications:
+    - target: {fileID: 2072637217633363038, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3081658329022021722, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.452
@@ -4905,6 +4911,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3081658329022021722, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
   m_PrefabInstance: {fileID: 7150915451365087002}
   m_PrefabAsset: {fileID: 0}
+--- !u!108 &9222909306477589316 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 2072637217633363038, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
+  m_PrefabInstance: {fileID: 7150915451365087002}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7769129228393897861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4915,7 +4926,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2072637217633363038, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081658329022021722, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4969,5 +4980,10 @@ PrefabInstance:
 --- !u!4 &4689727372260188127 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3081658329022021722, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
+  m_PrefabInstance: {fileID: 7769129228393897861}
+  m_PrefabAsset: {fileID: 0}
+--- !u!108 &8579921681354570715 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 2072637217633363038, guid: 7cd114fa14fed4d448ded21cfca08a65, type: 3}
   m_PrefabInstance: {fileID: 7769129228393897861}
   m_PrefabAsset: {fileID: 0}

@@ -1,0 +1,58 @@
+:root {
+}
+
+.tile-button {
+    align-self: stretch;
+    flex-grow: 1;
+    opacity: 1;
+    color: rgb(255, 255, 255);
+    -unity-text-align: upper-center;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    text-overflow: ellipsis;
+    flex-basis: 100px;
+}
+
+.tile-button:hover {
+    background-color: rgba(0, 0, 0, 0.24);
+    -unity-text-outline-width: 1;
+    -unity-text-outline-color: white;
+}
+
+.tile-button:active {
+    opacity: 0.75;
+}
+
+.button-label {
+    font-size: 20px;
+    -unity-text-align: upper-center;
+    -unity-font-definition: url("project://database/Assets/Fonts/Nunito-VariableFont_wght.ttf?fileID=12800000&guid=d47ba0c5d91fd714aafb7dc6e31a9c3d&type=3#Nunito-VariableFont_wght");
+    -unity-font-style: normal;
+    text-overflow: ellipsis;
+    flex-wrap: wrap;
+    white-space: normal;
+}
+
+.button-image {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-and-crop;
+    border-radius: 8px;
+    background-size: cover;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgba(255, 255, 255, 0.77);
+    border-right-color: rgba(255, 255, 255, 0.77);
+    border-top-color: rgba(255, 255, 255, 0.77);
+    border-bottom-color: rgba(255, 255, 255, 0.77);
+}
