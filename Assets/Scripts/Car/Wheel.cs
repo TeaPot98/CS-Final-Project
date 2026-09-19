@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Wheel : MonoBehaviour
@@ -21,6 +22,7 @@ public class Wheel : MonoBehaviour
 
     public float slipAngleSkidmarkThreshold = 25f;
     public float slipRatioSkidmarkThreshold = 0.35f;
+    public float minSpeedSmoke = 1.5f;
 
     [SerializeField] private LayerMask layerMask;
 
@@ -32,6 +34,13 @@ public class Wheel : MonoBehaviour
     public Vector3 LateralForceDir { get; private set; }
     public Vector3 ContactPoint { get; private set; }
     public float NormalLoad { get; private set; }
+    public float MaxForceSlipRatio { get; private set; }
+    public float MaxForceSlipAngle { get; private set; }
+
+    private Dictionary<float, float> _maxForceSlipRatioCache = new();
+    private Dictionary<float, float> _maxForceSlipAngleCache = new();
+
+    private const float NormalLoadCacheResolution = 25f;
 
     private Rigidbody _carRigidBody;
 
@@ -134,6 +143,8 @@ public class Wheel : MonoBehaviour
             Vector3 force = springDir * forceMagnitude;
 
             NormalLoad = Mathf.Max(0f, Vector3.Dot(force, tireRay.normal));
+            MaxForceSlipRatio = ComputeMaxForceSlipRatio();
+            MaxForceSlipAngle = ComputeMaxForceSlipAngle();
 
             // apply the force at the location of this tire
             // in the direction of the suspension
@@ -162,12 +173,50 @@ public class Wheel : MonoBehaviour
                            Mathf.Abs(SlipRatio) >= slipRatioSkidmarkThreshold))
         {
             if (!_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = true;
-            if (!_smokeRenderer.isPlaying) _smokeRenderer.Play();
+            if (!_smokeRenderer.isPlaying && _car.Speed > minSpeedSmoke) _smokeRenderer.Play();
         }
         else
         {
             if (_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = false;
             if (_smokeRenderer.isPlaying) _smokeRenderer.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
+    }
+
+    private float ComputeMaxForceSlipRatio()
+    {
+        int loadKey =
+            Mathf.RoundToInt(NormalLoad / NormalLoadCacheResolution);
+
+        if (!_maxForceSlipRatioCache.TryGetValue(loadKey, out float value))
+        {
+            float quantizedLoad =
+                loadKey * NormalLoadCacheResolution;
+
+            value = Utils.ComputeFunctionMaximum(
+                (r) => Utils.ComputePacejkaMagicFormula(r, quantizedLoad / 1000f, tire.GetPacejkaMagicFormulaParams()),
+                -0.3f, 0.3f, 0.02f);
+            _maxForceSlipRatioCache.Add(loadKey, value);
+        }
+
+        return value;
+    }
+
+    private float ComputeMaxForceSlipAngle()
+    {
+        int loadKey =
+            Mathf.RoundToInt(NormalLoad / NormalLoadCacheResolution);
+
+        if (!_maxForceSlipAngleCache.TryGetValue(loadKey, out float value))
+        {
+            float quantizedLoad =
+                loadKey * NormalLoadCacheResolution;
+
+            value = Utils.ComputeFunctionMaximum(
+                (r) => Utils.ComputeLateralPacejkaMagicFormula(r, quantizedLoad / 1000f, 0f,
+                    tire.GetPacejkaLateralMagicFormulaParams()), -0.3f, 0.3f, 0.02f);
+            _maxForceSlipAngleCache.Add(loadKey, value);
+        }
+
+        return value;
     }
 }

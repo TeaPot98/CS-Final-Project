@@ -50,7 +50,8 @@ public class Car : MonoBehaviour
     private Rigidbody _rb;
 
     private int _gear = 0;
-    private float _speed = 0f;
+    private bool _handbrake;
+    public float Speed { get; private set; } = 0f;
     [HideInInspector] public float Throttle = 0f;
     [HideInInspector] public float Brake = 0f;
     [HideInInspector] public float Steering = 0f;
@@ -83,7 +84,9 @@ public class Car : MonoBehaviour
     private const float LockAngularThreshold = 0.15f; // rad/s
     private const float BrakeLockThreshold = 0.05f;
 
-    private const float COMBINED_SLIP_COEFFICIENT = 4f;
+    private const float CombinedSlipCoefficient = 4f;
+    private const float LateralVelocityHoldThreshold = 2f;
+    private const float BrakeHoldVelocityThreshold = 0.5f;
 
 
     private void Start()
@@ -100,6 +103,7 @@ public class Car : MonoBehaviour
     private void FixedUpdate()
     {
         float dt = Time.fixedDeltaTime;
+        bool shouldHoldCar = Brake >= 0.99 && Speed <= BrakeHoldVelocityThreshold;
 
 
         // 1st Pass: Update steering wheel angle, compute contact point and handle suspension
@@ -132,8 +136,12 @@ public class Car : MonoBehaviour
 
             float wheelInertia = wheel.isDriving && wheel.IsGrounded ? coupledDrivenWheelInertia : freeWheelInertia;
 
-            SimulateWheelForces(wheel, driveTorque, wheelInertia, dt);
+            if (!shouldHoldCar) SimulateWheelForces(wheel, driveTorque, wheelInertia, dt);
         }
+
+        if (shouldHoldCar) HoldCar();
+
+        // if (_rb.linearVelocity.x <= LateralVelocityHoldThreshold) HoldCarLaterally();
 
         if (_gear != 0 && drivenWheels.Count > 0)
             SyncEngineRpmToDrivenWheels(drivenWheels, Utils.GetTotalGearRatio(_gear, transmission));
@@ -182,16 +190,13 @@ public class Car : MonoBehaviour
 
     private void SimulateWheelForces(Wheel wheel, float wheelDriveTorque, float wheelInertia, float dt)
     {
-        // if (!wheel.IsGrounded) return;
+        if (_handbrake) wheel.AngularVelocity = 0;
 
         Vector3 pointVelocity = _rb.GetPointVelocity(wheel.ContactPoint);
         float longitudinalSpeed = Vector3.Dot(pointVelocity, wheel.LongitudinalForceDir);
 
         if (ShouldLockWheel(Brake, longitudinalSpeed, wheel.AngularVelocity)) wheel.AngularVelocity = 0f;
 
-        // wheel.SlipRatio = 0f;
-        // wheel.SlipAngle = 0f;
-        // return;
         float surfaceSpeed = wheel.AngularVelocity * wheel.TireRadius;
         wheel.SlipRatio = Utils.ComputeSlipRatio(surfaceSpeed, longitudinalSpeed, minSlipSpeed);
 
@@ -210,14 +215,14 @@ public class Car : MonoBehaviour
         float lateralForceMagnitude = Utils.ComputeLateralPacejkaMagicFormula(wheel.SlipAngle, tireLoad, 0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
-        float maxLongitudinalForce = Utils.ComputePacejkaMagicFormula(wheel.tire.maxForceSlipRatio, tireLoad,
+        float maxLongitudinalForce = Utils.ComputePacejkaMagicFormula(wheel.MaxForceSlipRatio, tireLoad,
             wheel.tire.GetPacejkaMagicFormulaParams());
-        float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(wheel.tire.maxForceSlipAngle, tireLoad, 0f,
+        float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(wheel.MaxForceSlipAngle, tireLoad, 0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
         float combinedSlip = Mathf.Sqrt(
-            Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, COMBINED_SLIP_COEFFICIENT) +
-            Mathf.Pow(lateralForceMagnitude / maxLateralForce, COMBINED_SLIP_COEFFICIENT));
+            Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, CombinedSlipCoefficient) +
+            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient));
 
         if (combinedSlip > 1f)
         {
@@ -228,7 +233,13 @@ public class Car : MonoBehaviour
         Vector3 longitudinalForce = longitudinalForceMagnitude * wheel.LongitudinalForceDir;
         Vector3 lateralForce = lateralForceMagnitude * wheel.LateralForceDir;
 
-        Vector3 totalForce = longitudinalForce - lateralForce;
+        float lateralForceMultiplier =
+            Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, LateralVelocityHoldThreshold, Speed));
+
+        // if (_rb.linearVelocity.x <= LateralVelocityHoldThreshold)
+        //     lateralForce = new Vector3(0f, lateralForce.y, lateralForce.z);
+
+        Vector3 totalForce = longitudinalForce - lateralForce * lateralForceMultiplier;
 
         if (wheel.IsGrounded)
         {
@@ -252,7 +263,7 @@ public class Car : MonoBehaviour
 
             Debug.DrawRay(
                 wheel.ContactPoint,
-                lateralForce / 1000f,
+                -lateralForce / 1000f,
                 Color.orange
             );
         }
@@ -260,9 +271,6 @@ public class Car : MonoBehaviour
         float contactTorque = wheel.IsGrounded ? longitudinalForceMagnitude * wheel.TireRadius : 0f;
         float netTorque = wheelDriveTorque - ComputeBrakeTorque(wheel) -
                           wheelRollingResistance * wheel.AngularVelocity - contactTorque;
-
-        // Debug.Log(wheelRollingResistance * wheel.AngularVelocity);
-        // Debug.Log("contactTorque: " + contactTorque);
 
         wheel.AngularVelocity += netTorque * dt / Mathf.Max(wheelInertia, 0.001f);
     }
@@ -313,7 +321,7 @@ public class Car : MonoBehaviour
 
     private float ComputeBrakeTorque(Wheel wheel)
     {
-        float brakeMultiplier = Mathf.SmoothStep(0.01f, 1f,
+        float brakeMultiplier = Mathf.SmoothStep(0.4f, 1f,
             Mathf.InverseLerp(0f, 20f, Mathf.Abs(wheel.AngularVelocity)));
 
         float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity) * brakeMultiplier;
@@ -323,8 +331,6 @@ public class Car : MonoBehaviour
         float brakeTorqueWithAbs = brakeTorque * brakeScale;
 
         if (Mathf.Approximately(wheel.AngularVelocity, 0f)) return 0f;
-
-        // Debug.Log("BrakeTorque: " + brakeTorque);
 
         return brakeTorqueWithAbs;
     }
@@ -378,6 +384,12 @@ public class Car : MonoBehaviour
         Debug.Log("Gear Shift: " + _gear);
     }
 
+    private void OnHandbrake(InputValue v)
+    {
+        _handbrake = v.isPressed;
+        Debug.Log("Handbrake");
+    }
+
     private void UpdateLabels()
     {
         FLWheelRpm = GetWheelRpmLabel(wheelFL);
@@ -385,10 +397,10 @@ public class Car : MonoBehaviour
         RLWheelRpm = GetWheelRpmLabel(wheelRL);
         RRWheelRpm = GetWheelRpmLabel(wheelRR);
 
-        _speed = _rb.linearVelocity.magnitude;
+        Speed = _rb.linearVelocity.magnitude;
 
         RpmLabel = $"{(int)_currentEngineRpm} RPM";
-        SpeedLabel = $"{(int)Utils.FromMetersPerSecondToKmPerHour(_speed)} km/h";
+        SpeedLabel = $"{(int)Utils.FromMetersPerSecondToKmPerHour(Speed)} km/h";
 
         FLSlipAngle = $"SA {wheelFL.SlipAngle:F3}";
         FRSlipAngle = $"SA {wheelFR.SlipAngle:F3}";
@@ -399,5 +411,16 @@ public class Car : MonoBehaviour
         FRSlipRatio = $"SR {wheelFR.SlipRatio:F1}";
         RLSlipRatio = $"SR {wheelRL.SlipRatio:F1}";
         RRSlipRatio = $"SR {wheelRR.SlipRatio:F1}";
+    }
+
+    private void HoldCar()
+    {
+        _rb.linearVelocity = Vector3.Project(_rb.linearVelocity, transform.up);
+        _rb.angularVelocity -= Vector3.Project(_rb.angularVelocity, transform.up);
+    }
+
+    private void HoldCarLaterally()
+    {
+        _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, _rb.linearVelocity.z);
     }
 }

@@ -217,6 +217,8 @@ public static class Utils
     public static float ComputeLateralPacejkaMagicFormula(float slipAngle, float tireLoad, float camberAngle,
         PacejkaLateralMagicFormulaParams p)
     {
+        if (tireLoad <= 0) return 0;
+
         float mu_yp = p.A_1 * tireLoad + p.A_2;
 
         float D = mu_yp * tireLoad;
@@ -233,5 +235,21 @@ public static class Utils
     public static float FromMetersPerSecondToKmPerHour(float speed)
     {
         return speed * 3.6f;
+    }
+
+    public static float ComputeFunctionMaximum(Func<float, float> fn, float minX, float maxX, float step)
+    {
+        float maxValue = fn(minX);
+        float currentX = minX;
+
+        while (currentX <= maxX)
+        {
+            float value = fn(currentX);
+            if (value > maxValue) maxValue = value;
+
+            currentX += step;
+        }
+
+        return maxValue;
     }
 }
