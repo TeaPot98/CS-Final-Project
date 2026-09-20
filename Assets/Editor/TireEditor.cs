@@ -44,7 +44,7 @@ public class TireEditor : Editor
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
 
                 // TODO: Implement dynamic tire load
-                float peakX = ChartUtils.DrawEquationPreview(-20f, 20f, rect,
+                float peakX = ChartUtils.DrawEquationPreview(-90f, 90f, rect,
                     (x) => Utils.ComputeLateralPacejkaMagicFormula(x, asset.referenceTireLoad, 0f,
                         asset.GetPacejkaLateralMagicFormulaParams()));
 
