@@ -637,6 +637,7 @@ MonoBehaviour:
   particleEmitter: {fileID: 7523897004677572224}
   slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
+  minSpeedSmoke: 1.5
   layerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -1303,6 +1304,8 @@ MonoBehaviour:
   TscLabel: 
   Throttle: 0
   Brake: 0
+  AppliedThrottle: 0
+  AppliedBrake: 0
   Steering: 0
   engineInertia: 0.35
   drivenWheelInertia: 1.2
@@ -1315,7 +1318,7 @@ MonoBehaviour:
   tscTargetSlip: 0.1
   tscSensitivity: 5
   absEnabled: 1
-  absTargetSlip: -0.1
+  absTargetSlip: 0.1
   absSensitivity: 3
   maxSteeringAngleBySpeed:
     serializedVersion: 2
@@ -2222,6 +2225,7 @@ MonoBehaviour:
   particleEmitter: {fileID: 2864283314593151838}
   slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
+  minSpeedSmoke: 1.5
   layerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -3304,6 +3308,7 @@ MonoBehaviour:
   particleEmitter: {fileID: 4498297996189742570}
   slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
+  minSpeedSmoke: 1.5
   layerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -3992,6 +3997,7 @@ MonoBehaviour:
   particleEmitter: {fileID: 5893703525756757116}
   slipAngleSkidmarkThreshold: 25
   slipRatioSkidmarkThreshold: 0.35
+  minSpeedSmoke: 1.5
   layerMask:
     serializedVersion: 2
     m_Bits: 8

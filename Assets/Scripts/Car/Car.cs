@@ -54,6 +54,8 @@ public class Car : MonoBehaviour
     public float Speed { get; private set; } = 0f;
     [HideInInspector] public float Throttle = 0f;
     [HideInInspector] public float Brake = 0f;
+    [HideInInspector] public float AppliedThrottle = 0f;
+    [HideInInspector] public float AppliedBrake = 0f;
     [HideInInspector] public float Steering = 0f;
 
     private float _currentEngineRpm = 1000f;
@@ -74,6 +76,8 @@ public class Car : MonoBehaviour
     public float absTargetSlip = -0.1f;
     public float absSensitivity = 3f;
 
+    public bool automaticTransmission = true;
+
     [Header("Speed-Sensitive Steering")]
     public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
 
@@ -84,7 +88,7 @@ public class Car : MonoBehaviour
     private const float LockAngularThreshold = 0.15f; // rad/s
     private const float BrakeLockThreshold = 0.05f;
 
-    private const float CombinedSlipCoefficient = 4f;
+    private const float CombinedSlipCoefficient = 2f;
     private const float LateralVelocityHoldThreshold = 2f;
     private const float BrakeHoldVelocityThreshold = 0.5f;
 
@@ -129,8 +133,9 @@ public class Car : MonoBehaviour
         foreach (Wheel wheel in _wheels)
         {
             float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
-            float torqueScale = tscEnabled ? Mathf.Clamp01(1f - tscSensitivity * slipError) : 1f;
-            float scaledWheelTorque = driveTorquePerWheel * torqueScale;
+            float torqueMultiplier = tscEnabled ? Mathf.Clamp01(1f - tscSensitivity * slipError) : 1f;
+            AppliedThrottle = torqueMultiplier * Throttle;
+            float scaledWheelTorque = driveTorquePerWheel * torqueMultiplier;
 
             float driveTorque = wheel.isDriving ? scaledWheelTorque : 0f;
 
@@ -146,6 +151,10 @@ public class Car : MonoBehaviour
         if (_gear != 0 && drivenWheels.Count > 0)
             SyncEngineRpmToDrivenWheels(drivenWheels, Utils.GetTotalGearRatio(_gear, transmission));
         else UpdateFreeEngine(dt);
+
+        Speed = _rb.linearVelocity.magnitude;
+
+        if (automaticTransmission) HandleAutoGearShift();
     }
 
     private void SyncEngineRpmToDrivenWheels(IReadOnlyList<Wheel> drivenWheels, float gearRatio)
@@ -220,9 +229,9 @@ public class Car : MonoBehaviour
         float maxLateralForce = Utils.ComputeLateralPacejkaMagicFormula(wheel.MaxForceSlipAngle, tireLoad, 0f,
             wheel.tire.GetPacejkaLateralMagicFormulaParams());
 
-        float combinedSlip = Mathf.Sqrt(
+        float combinedSlip = Mathf.Pow(
             Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, CombinedSlipCoefficient) +
-            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient));
+            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient), 1 / CombinedSlipCoefficient);
 
         if (combinedSlip > 1f)
         {
@@ -323,10 +332,11 @@ public class Car : MonoBehaviour
     {
         float brakeMultiplier = Mathf.SmoothStep(0.4f, 1f,
             Mathf.InverseLerp(0f, 20f, Mathf.Abs(wheel.AngularVelocity)));
+        AppliedBrake = Brake * brakeMultiplier;
 
         float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity) * brakeMultiplier;
 
-        float slipError = Mathf.Abs(wheel.SlipRatio - absTargetSlip);
+        float slipError = Mathf.Abs(wheel.SlipRatio)- absTargetSlip;
         float brakeScale = absEnabled ? Mathf.Clamp01(1f - absSensitivity * slipError) : 1f;
         float brakeTorqueWithAbs = brakeTorque * brakeScale;
 
@@ -372,14 +382,6 @@ public class Car : MonoBehaviour
 
         _gear += value;
 
-        if (_gear == -1)
-            GearLabel = "R";
-        else if (_gear == 0)
-            GearLabel = "N";
-        else
-            GearLabel = _gear.ToString();
-
-        GearRatioLabel = $"Gear Ratio: {Utils.GetTotalGearRatio(_gear, transmission):F3}";
 
         Debug.Log("Gear Shift: " + _gear);
     }
@@ -397,20 +399,28 @@ public class Car : MonoBehaviour
         RLWheelRpm = GetWheelRpmLabel(wheelRL);
         RRWheelRpm = GetWheelRpmLabel(wheelRR);
 
-        Speed = _rb.linearVelocity.magnitude;
 
         RpmLabel = $"{(int)_currentEngineRpm} RPM";
         SpeedLabel = $"{(int)Utils.FromMetersPerSecondToKmPerHour(Speed)} km/h";
 
-        FLSlipAngle = $"SA {wheelFL.SlipAngle:F3}";
-        FRSlipAngle = $"SA {wheelFR.SlipAngle:F3}";
-        RLSlipAngle = $"SA {wheelRL.SlipAngle:F3}";
-        RRSlipAngle = $"SA {wheelRR.SlipAngle:F3}";
+        FLSlipAngle = $"SA {wheelFL.SlipAngle:F1}";
+        FRSlipAngle = $"SA {wheelFR.SlipAngle:F1}";
+        RLSlipAngle = $"SA {wheelRL.SlipAngle:F1}";
+        RRSlipAngle = $"SA {wheelRR.SlipAngle:F1}";
 
         FLSlipRatio = $"SR {wheelFL.SlipRatio:F1}";
         FRSlipRatio = $"SR {wheelFR.SlipRatio:F1}";
         RLSlipRatio = $"SR {wheelRL.SlipRatio:F1}";
         RRSlipRatio = $"SR {wheelRR.SlipRatio:F1}";
+
+        if (_gear == -1)
+            GearLabel = "R";
+        else if (_gear == 0)
+            GearLabel = "N";
+        else
+            GearLabel = _gear.ToString();
+
+        GearRatioLabel = $"Gear Ratio: {Utils.GetTotalGearRatio(_gear, transmission):F3}";
     }
 
     private void HoldCar()
@@ -422,5 +432,13 @@ public class Car : MonoBehaviour
     private void HoldCarLaterally()
     {
         _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, _rb.linearVelocity.z);
+    }
+
+    private void HandleAutoGearShift()
+    {
+        if (_gear == 0) return;
+
+        if (_gear < transmission.gears.Count - 1 && _currentEngineRpm >= engine.maxRpm - engine.maxRpm * .03) _gear++;
+        if (_gear > 1 && _currentEngineRpm <= engine.idleRpm + engine.maxRpm * .25) _gear--;
     }
 }

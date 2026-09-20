@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sim-Cade Tire (Rear)
   m_EditorClassIdentifier: Assembly-CSharp::TireSO
   referenceTireLoad: 3
-  maxForceSlipAngle: 12.911391
+  maxForceSlipAngle: 9.873419
   maxForceSlipRatio: 0.10759491
   b_0: 1.65
   b_1: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   a_3: 2510
   a_4: 39.3
   a_5: 0.57
-  a_6: -1.7
+  a_6: -3.87
   a_7: 1
   a_8: 0
   a_9: 0

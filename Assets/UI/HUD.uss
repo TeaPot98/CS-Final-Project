@@ -6,7 +6,8 @@
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     -unity-text-outline-width: 1px;
-    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Fonts/Nunito-VariableFont_wght.ttf?fileID=12800000&guid=d47ba0c5d91fd714aafb7dc6e31a9c3d&type=3#Nunito-VariableFont_wght");
 }
 
 .wheel-stats-grid {

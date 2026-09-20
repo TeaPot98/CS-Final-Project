@@ -240,16 +240,27 @@ public static class Utils
     public static float ComputeFunctionMaximum(Func<float, float> fn, float minX, float maxX, float step)
     {
         float maxValue = fn(minX);
+        float maxValueX = minX;
         float currentX = minX;
 
         while (currentX <= maxX)
         {
             float value = fn(currentX);
-            if (value > maxValue) maxValue = value;
+            if (value > maxValue)
+            {
+                maxValue = value;
+                maxValueX = currentX;
+            }
 
             currentX += step;
         }
 
-        return maxValue;
+        return maxValueX;
+    }
+
+    public static float MapToNewRange(float value, float fromMin, float fromMax, float toMin, float toMax)
+    {
+        float t = Mathf.InverseLerp(fromMin, fromMax, value);
+        return Mathf.Lerp(toMin, toMax, t);
     }
 }

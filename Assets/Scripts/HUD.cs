@@ -14,6 +14,11 @@ public class HUD : MonoBehaviour
     private VisualElement _wheelStatsContainer;
     private VisualElement _userInputContainer;
 
+    private VisualElement _throttleTransparent;
+    private VisualElement _throttleOpaque;
+    private VisualElement _brakeTransparent;
+    private VisualElement _brakeOpaque;
+
     private void Start()
     {
         StartCoroutine(InitializeView());
@@ -22,6 +27,15 @@ public class HUD : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        float rawThrottleScale = Utils.MapToNewRange(car.Throttle, 0f, 1f, 0.1f, 1f);
+        float appliedThrottleScale = Utils.MapToNewRange(car.AppliedThrottle, 0f, 1f, 0.1f, 1f);
+        float rawBrakeScale = Utils.MapToNewRange(car.Brake, 0f, 1f, 0.1f, 1f);
+        float appliedBrakeScale = Utils.MapToNewRange(car.AppliedBrake, 0f, 1f, 0.1f, 1f);
+
+        _throttleTransparent.style.scale = new Scale(new Vector2(rawThrottleScale, rawThrottleScale));
+        _throttleOpaque.style.scale = new Scale(new Vector2(appliedThrottleScale, appliedThrottleScale));
+        _brakeTransparent.style.scale = new Scale(new Vector2(rawBrakeScale, rawBrakeScale));
+        _brakeOpaque.style.scale = new Scale(new Vector2(appliedBrakeScale, appliedBrakeScale));
     }
 
     public IEnumerator InitializeView()
@@ -38,7 +52,6 @@ public class HUD : MonoBehaviour
         VisualElement rrWheelContainer = _wheelStatsContainer.Query<VisualElement>("RR");
 
         Label gearText = _carStatsContainer.Query<Label>("Gear");
-        Label gearRatioText = _carStatsContainer.Query<Label>("GearRatio");
         Label rpmText = _carStatsContainer.Query<Label>("RPM");
         Label speedText = _carStatsContainer.Query<Label>("Speed");
 
@@ -57,13 +70,20 @@ public class HUD : MonoBehaviour
         Label rlWheelSlipRatioText = rlWheelContainer.Query<Label>("SlipRatio");
         Label rrWheelSlipRatioText = rrWheelContainer.Query<Label>("SlipRatio");
 
-        Label throttleText = _userInputContainer.Query<Label>("throttle");
-        Label brakeText = _userInputContainer.Query<Label>("braking");
-        Label steeringText = _userInputContainer.Query<Label>("steering");
+        VisualElement throttleContainer = _userInputContainer.Query<VisualElement>("throttle");
+        VisualElement brakeContainer = _userInputContainer.Query<VisualElement>("brake");
 
+        _throttleTransparent = throttleContainer.Query<VisualElement>(
+            "semi-transparent");
+        _throttleOpaque = throttleContainer.Query<VisualElement>(
+            "opaque");
+
+        _brakeTransparent = brakeContainer.Query<VisualElement>(
+            "semi-transparent");
+        _brakeOpaque = brakeContainer.Query<VisualElement>(
+            "opaque");
 
         UIUtils.BindToLabel(gearText, car, nameof(Car.GearLabel));
-        UIUtils.BindToLabel(gearRatioText, car, nameof(Car.GearRatioLabel));
         UIUtils.BindToLabel(rpmText, car, nameof(Car.RpmLabel));
         UIUtils.BindToLabel(speedText, car, nameof(Car.SpeedLabel));
 
@@ -81,10 +101,6 @@ public class HUD : MonoBehaviour
         UIUtils.BindToLabel(frWheelSlipRatioText, car, nameof(Car.FRSlipRatio));
         UIUtils.BindToLabel(rlWheelSlipRatioText, car, nameof(Car.RLSlipRatio));
         UIUtils.BindToLabel(rrWheelSlipRatioText, car, nameof(Car.RRSlipRatio));
-
-        UIUtils.BindToLabel(throttleText, car, nameof(car.Throttle));
-        UIUtils.BindToLabel(brakeText, car, nameof(car.Brake));
-        UIUtils.BindToLabel(steeringText, car, nameof(car.Steering));
 
         yield return null;
     }

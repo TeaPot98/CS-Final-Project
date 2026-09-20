@@ -213,7 +213,7 @@ public class Wheel : MonoBehaviour
 
             value = Utils.ComputeFunctionMaximum(
                 (r) => Utils.ComputeLateralPacejkaMagicFormula(r, quantizedLoad / 1000f, 0f,
-                    tire.GetPacejkaLateralMagicFormulaParams()), -0.3f, 0.3f, 0.02f);
+                    tire.GetPacejkaLateralMagicFormulaParams()), -30f, 30f, 2f);
             _maxForceSlipAngleCache.Add(loadKey, value);
         }
 
