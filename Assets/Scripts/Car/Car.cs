@@ -12,6 +12,13 @@ internal class WheelData
     public Wheel Wheel;
 }
 
+public enum SimulationType
+{
+    Simulation,
+    SimCade,
+    Drift
+}
+
 public class Car : MonoBehaviour
 {
     private List<Wheel> _wheels;
@@ -24,6 +31,13 @@ public class Car : MonoBehaviour
     public SuspensionSO suspension;
 
     public List<Light> brakeLights;
+
+    public SimulationType simulationType = SimulationType.SimCade;
+
+    public float simulationSteeringSpeed = 170f;
+    public float simCadeSteeringSpeed = 300f;
+    public float driftSteeringSpeed = 600f;
+
 
     [HideInInspector] public string GearLabel = "N";
     [HideInInspector] public string GearRatioLabel = "Gear Ratio: 0";
@@ -88,7 +102,7 @@ public class Car : MonoBehaviour
     private const float LockAngularThreshold = 0.15f; // rad/s
     private const float BrakeLockThreshold = 0.05f;
 
-    private const float CombinedSlipCoefficient = 2f;
+    private const float CombinedSlipCoefficient = 4f;
     private const float LateralVelocityHoldThreshold = 2f;
     private const float BrakeHoldVelocityThreshold = 0.5f;
 
@@ -114,6 +128,7 @@ public class Car : MonoBehaviour
         foreach (Wheel wheel in _wheels)
         {
             Vector3 wheelWorldVelocity = _rb.GetPointVelocity(transform.position);
+
             float maxSteeringAngle =
                 maxSteeringAngleBySpeed.Evaluate(wheelWorldVelocity.magnitude);
 
@@ -128,6 +143,12 @@ public class Car : MonoBehaviour
         float reflectedEngineInertia =
             drivenWheels.Count > 0 ? engineInertia * gearRatio * gearRatio / drivenWheels.Count : 0f;
         float coupledDrivenWheelInertia = drivenWheelInertia + reflectedEngineInertia;
+
+        if (_handbrake)
+        {
+            wheelRL.AngularVelocity = 0;
+            wheelRR.AngularVelocity = 0;
+        }
 
         // 2nd Pass: Compute and apply wheel forces
         foreach (Wheel wheel in _wheels)
@@ -199,8 +220,6 @@ public class Car : MonoBehaviour
 
     private void SimulateWheelForces(Wheel wheel, float wheelDriveTorque, float wheelInertia, float dt)
     {
-        if (_handbrake) wheel.AngularVelocity = 0;
-
         Vector3 pointVelocity = _rb.GetPointVelocity(wheel.ContactPoint);
         float longitudinalSpeed = Vector3.Dot(pointVelocity, wheel.LongitudinalForceDir);
 
@@ -231,7 +250,7 @@ public class Car : MonoBehaviour
 
         float combinedSlip = Mathf.Pow(
             Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, CombinedSlipCoefficient) +
-            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient), 1 / CombinedSlipCoefficient);
+            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient), CombinedSlipCoefficient);
 
         if (combinedSlip > 1f)
         {
@@ -336,7 +355,7 @@ public class Car : MonoBehaviour
 
         float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity) * brakeMultiplier;
 
-        float slipError = Mathf.Abs(wheel.SlipRatio)- absTargetSlip;
+        float slipError = Mathf.Abs(wheel.SlipRatio) - absTargetSlip;
         float brakeScale = absEnabled ? Mathf.Clamp01(1f - absSensitivity * slipError) : 1f;
         float brakeTorqueWithAbs = brakeTorque * brakeScale;
 
@@ -438,7 +457,7 @@ public class Car : MonoBehaviour
     {
         if (_gear == 0) return;
 
-        if (_gear < transmission.gears.Count - 1 && _currentEngineRpm >= engine.maxRpm - engine.maxRpm * .03) _gear++;
+        if (_gear < transmission.gears.Count && _currentEngineRpm >= engine.maxRpm - engine.maxRpm * .03) _gear++;
         if (_gear > 1 && _currentEngineRpm <= engine.idleRpm + engine.maxRpm * .25) _gear--;
     }
 }
