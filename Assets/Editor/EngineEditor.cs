@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(EngineSO))]
@@ -22,7 +23,11 @@ public class EngineEditor : Editor
 
 
         ChartUtils.DrawEquationPreview(asset.idleRpm, asset.maxRpm, rect,
-            (x) => Utils.ComputeTorque(x, asset.GetTorqueCurveParams()));
+            new List<ChartFunction>
+            {
+                new((x) => Utils.ComputeTorque(x, asset.GetTorqueCurveParams()), Color.cornflowerBlue)
+            }
+        );
 
         EditorGUILayout.Space(10);
         EditorGUILayout.LabelField("Power Curve", EditorStyles.boldLabel);
@@ -32,7 +37,11 @@ public class EngineEditor : Editor
 
 
         float peakPowerRpm = ChartUtils.DrawEquationPreview(asset.idleRpm, asset.maxRpm, powerRect,
-            (x) => Utils.ComputePower(x, Utils.ComputeTorque(x, asset.GetTorqueCurveParams())));
+            new List<ChartFunction>
+            {
+                new((x) =>
+                    Utils.ComputePower(x, Utils.ComputeTorque(x, asset.GetTorqueCurveParams())), Color.salmon)
+            });
 
         asset.power = Utils.ComputePower(peakPowerRpm, Utils.ComputeTorque(peakPowerRpm, asset.GetTorqueCurveParams()));
         asset.horsepower = Utils.ComputeHorsePower(asset.power);

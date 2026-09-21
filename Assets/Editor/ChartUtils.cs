@@ -1,13 +1,27 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
+
+public class ChartFunction
+{
+    public Func<float, Nullable<float>> Fn { get; private set; }
+    public Color Color { get; private set; }
+
+    public ChartFunction(Func<float, Nullable<float>> f, Color c)
+    {
+        Fn = f;
+        Color = c;
+    }
+}
 
 public class ChartUtils
 {
     private const int TickCount = 5;
     private const int SamplesCount = 80;
 
-    public static float DrawEquationPreview(float minX, float maxX, Rect rect, Func<float, float> fn)
+    public static float DrawEquationPreview(float minX, float maxX, Rect rect, List<ChartFunction> functions)
     {
         Rect graphRect = new(
             rect.x + 60,
@@ -16,19 +30,51 @@ public class ChartUtils
             rect.height - 28
         );
 
-        Vector3[] points = new Vector3[SamplesCount];
-
         float minY = float.PositiveInfinity;
         float maxY = float.NegativeInfinity;
         float peakX = minX;
 
-        float[] ys = new float[SamplesCount];
+        List<Nullable<Vector3>[]> pointsList = new();
+
+        functions.ForEach(func =>
+        {
+            Vector3[] points = ComputeFunctionPoints(graphRect, func.Fn, minX, maxX, ref minY, ref maxY, ref peakX);
+            pointsList.Add(points);
+        });
+
+        DrawTicks(graphRect, minX, maxX, minY, maxY);
+
+        Handles.BeginGUI();
+
+        for (int i = 0; i < pointsList.Count; i++)
+        {
+            Handles.color = functions[i].Color;
+            Handles.DrawAAPolyLine(2f,
+                pointsList[i].Select(p => p is not Vector3 _p ? new Color(0f, 0f, 0f, 0f) : Color.goldenRod).ToArray(),
+                pointsList[i]
+            );
+        }
+
+        Handles.EndGUI();
+
+        return peakX;
+    }
+
+    private static Vector3[] ComputeFunctionPoints(Rect graphRect, Func<float, Nullable<float>> fn, float minX,
+        float maxX,
+        ref float minY, ref float maxY, ref float peakX)
+    {
+        Vector3[] points = new Vector3[SamplesCount];
+
+        Nullable<float>[] ys = new Nullable<float>[SamplesCount];
 
         for (int i = 0; i < SamplesCount; i++)
         {
             float t = i / (float)(SamplesCount - 1);
             float x = Mathf.Lerp(minX, maxX, t);
-            float y = fn(x);
+
+            if (fn(x) is not float y)
+                continue;
 
             ys[i] = y;
             minY = Mathf.Min(minY, y);
@@ -45,6 +91,9 @@ public class ChartUtils
         for (int i = 0; i < SamplesCount; i++)
         {
             float t = i / (float)(SamplesCount - 1);
+
+            if (ys[i] is null) continue;
+
             float normalizedY = Mathf.InverseLerp(minY, maxY, ys[i]);
 
             float px = Mathf.Lerp(graphRect.xMin, graphRect.xMax, t);
@@ -53,14 +102,7 @@ public class ChartUtils
             points[i] = new Vector3(px, py, 0f);
         }
 
-        DrawTicks(graphRect, minX, maxX, minY, maxY);
-
-        Handles.BeginGUI();
-        Handles.color = Color.cyan;
-        Handles.DrawAAPolyLine(2f, points);
-        Handles.EndGUI();
-
-        return peakX;
+        return points;
     }
 
     private static void DrawTicks(

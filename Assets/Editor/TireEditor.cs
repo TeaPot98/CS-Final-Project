@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -27,9 +28,11 @@ public class TireEditor : Editor
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
 
                 // TODO: Implement dynamic tire load
-                float peakX = ChartUtils.DrawEquationPreview(-0.5f, 0.5f, rect,
-                    (x) => Utils.ComputePacejkaMagicFormula(x, asset.referenceTireLoad,
-                        asset.GetPacejkaMagicFormulaParams()));
+                float peakX = ChartUtils.DrawEquationPreview(-0.5f, 0.5f, rect, new List<ChartFunction>
+                {
+                    new((x) => Utils.ComputePacejkaMagicFormula(x, asset.referenceTireLoad,
+                        asset.GetPacejkaMagicFormulaParams()), Color.cyan)
+                });
 
                 asset.maxForceSlipRatio = peakX;
             }
@@ -44,9 +47,12 @@ public class TireEditor : Editor
                 EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f));
 
                 // TODO: Implement dynamic tire load
-                float peakX = ChartUtils.DrawEquationPreview(-90f, 90f, rect,
-                    (x) => Utils.ComputeLateralPacejkaMagicFormula(x, asset.referenceTireLoad, 0f,
-                        asset.GetPacejkaLateralMagicFormulaParams()));
+                float peakX = ChartUtils.DrawEquationPreview(-90f, 90f, rect, new List<ChartFunction>
+                    {
+                        new((x) => Utils.ComputeLateralPacejkaMagicFormula(x, asset.referenceTireLoad, 0f,
+                            asset.GetPacejkaLateralMagicFormulaParams()), Color.cyan)
+                    }
+                );
 
                 asset.maxForceSlipAngle = peakX;
             }

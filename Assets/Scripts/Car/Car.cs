@@ -38,7 +38,6 @@ public class Car : MonoBehaviour
     public float simCadeSteeringSpeed = 300f;
     public float driftSteeringSpeed = 600f;
 
-
     [HideInInspector] public string GearLabel = "N";
     [HideInInspector] public string GearRatioLabel = "Gear Ratio: 0";
     [HideInInspector] public string RpmLabel = "1000 RPM";

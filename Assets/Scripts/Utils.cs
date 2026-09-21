@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -147,6 +148,57 @@ public static class Utils
         return FromRpmToAngularVelocity(engineRpm / gearRatio);
     }
 
+    public static float ComputeWheelRpm(float engineRpm, int gear, TransmissionSO transmission)
+    {
+        float gearRatio = GetTotalGearRatio(gear, transmission);
+        if (Mathf.Approximately(gearRatio, 0f)) return 0f;
+
+        return engineRpm / gearRatio;
+    }
+
+    public static float ComputeCarSpeedAtWheelRpm(float wheelRpm, float wheelRadius)
+    {
+        return wheelRpm * 2 * Mathf.PI * wheelRadius / 60f;
+    }
+
+    public static float ComputeWheelRpmAtCarSpeed(float carSpeed, float wheelRadius)
+    {
+        return 60f * carSpeed / (2 * Mathf.PI * wheelRadius);
+    }
+
+    public static float GetCarMinSpeed(EngineSO engine, TransmissionSO transmission, float wheelRadius)
+    {
+        return ComputeCarSpeedAtWheelRpm(ComputeWheelRpm(engine.idleRpm, 1, transmission), wheelRadius);
+    }
+
+    public static float GetCarMaxSpeed(EngineSO engine, TransmissionSO transmission, float wheelRadius)
+    {
+        return ComputeCarSpeedAtWheelRpm(ComputeWheelRpm(engine.maxRpm, transmission.gears.Count, transmission),
+            wheelRadius);
+    }
+
+    public static (float, float) GetGearSpeedInterval(int gear, EngineSO engine, TransmissionSO transmission,
+        float wheelRadius)
+    {
+        float minSpeed = ComputeCarSpeedAtWheelRpm(ComputeWheelRpm(engine.idleRpm, gear, transmission),
+            wheelRadius);
+        float maxSpeed = ComputeCarSpeedAtWheelRpm(ComputeWheelRpm(engine.maxRpm, gear, transmission),
+            wheelRadius);
+
+        return (minSpeed, maxSpeed);
+    }
+
+    public static List<(float, float)> GetGearsSpeedIntervals(EngineSO engine, TransmissionSO transmission,
+        float wheelRadius)
+    {
+        List<(float, float)> output = new();
+
+        for (int i = 0; i < transmission.gears.Count; i++)
+            output.Add(GetGearSpeedInterval(i, engine, transmission, wheelRadius));
+
+        return output;
+    }
+
     public static float ComputeEngineDeltaRpm(float torqueCurveMtp, float torqueCurveOut, float throttleInput,
         float engineBrakingForceMtp,
         float engineFrictionMtp, float expectedRpm, float currentRpm)
@@ -171,6 +223,16 @@ public static class Utils
         if (Mathf.Approximately(gearRatio, 0f)) return 0f;
 
         return FromAngularVelocityToRpm(wheelAngularVelocity) * gearRatio;
+    }
+
+    public static float ComputeExpectedRpmAtWheelRpm(float wheelRpm,
+        TransmissionSO transmission,
+        int gear)
+    {
+        float gearRatio = GetTotalGearRatio(gear, transmission);
+        if (Mathf.Approximately(gearRatio, 0f)) return 0f;
+
+        return wheelRpm * gearRatio;
     }
 
     public static float ComputeSlipRatio(float surfaceSpeed, float groundSpeed, float minSlipSpeed = 0.5f)
