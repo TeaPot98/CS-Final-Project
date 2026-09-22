@@ -94,6 +94,8 @@ public class Car : MonoBehaviour
     [Header("Speed-Sensitive Steering")]
     public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
 
+    public float topSpeed;
+
     private float lowSpeedBlendStart = 4.0f; // m/s
     private float lowSpeedBlendEnd = 0.5f; // m/s
 
@@ -202,7 +204,9 @@ public class Car : MonoBehaviour
     {
         if (float.IsNaN(rpm) || float.IsInfinity(rpm)) return engine.idleRpm;
 
-        return Mathf.Clamp(rpm, engine.idleRpm, engine.maxRpm);
+        return rpm < engine.idleRpm ? engine.idleRpm : rpm;
+
+        // return Mathf.Clamp(rpm, engine.idleRpm, engine.maxRpm);
     }
 
     private void UpdateFreeEngine(float dt)
@@ -310,8 +314,12 @@ public class Car : MonoBehaviour
 
         if (Mathf.Approximately(gearRatio, 0f)) return 0f;
 
+        float refOvershootCoefficient = _currentEngineRpm >= engine.maxRpm
+            ? Mathf.InverseLerp(0f, 100f, _currentEngineRpm - engine.maxRpm)
+            : 0f;
+
         float maxEngineTorque = engine.GetTorque(_currentEngineRpm);
-        float engineTorque = maxEngineTorque * Throttle;
+        float engineTorque = maxEngineTorque * Throttle * (1f - refOvershootCoefficient);
 
         float averageWheelAngularVelocity = 0f;
         foreach (Wheel wheel in drivenWheels)

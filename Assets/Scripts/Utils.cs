@@ -189,12 +189,25 @@ public static class Utils
     }
 
     public static List<(float, float)> GetGearsSpeedIntervals(EngineSO engine, TransmissionSO transmission,
-        float wheelRadius)
+        float wheelRadius, bool allowOverlap = false)
     {
         List<(float, float)> output = new();
+        float currentMinSpeed = 0f;
 
-        for (int i = 0; i < transmission.gears.Count; i++)
-            output.Add(GetGearSpeedInterval(i, engine, transmission, wheelRadius));
+        for (int gear = 1; gear <= transmission.gears.Count; gear++)
+        {
+            (float, float) speedInterval = GetGearSpeedInterval(gear, engine, transmission, wheelRadius);
+            if (allowOverlap)
+            {
+                output.Add(speedInterval);
+                continue;
+            }
+
+            if (currentMinSpeed == 0f) currentMinSpeed = speedInterval.Item1;
+            output.Add((currentMinSpeed, speedInterval.Item2));
+
+            currentMinSpeed = speedInterval.Item2;
+        }
 
         return output;
     }
