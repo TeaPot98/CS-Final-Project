@@ -87,7 +87,7 @@ public class DragRaceManager : MonoBehaviour
         quarterTime = "1/4 Miles: N/A";
         hundredTimeLabel = "0-100km/h: N/A";
         twoHundredTime = "0-200km/h: N/A";
-        hundredToTwoTime = "100-100km/h: N/A";
+        hundredToTwoTime = "100-200km/h: N/A";
         timeLabel = "00.000s";
 
         _time = 0;

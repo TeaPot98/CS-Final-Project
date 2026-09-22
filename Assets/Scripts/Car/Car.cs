@@ -5,24 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-internal class WheelData
-{
-    public float Rpm;
-    public float AngularVelocity;
-    public Wheel Wheel;
-}
-
-public enum SimulationType
-{
-    Simulation,
-    SimCade,
-    Drift
-}
-
 public class Car : MonoBehaviour
 {
-    private List<Wheel> _wheels;
-    public Wheel wheelFL;
+    [Header("Car Components")] public Wheel wheelFL;
     public Wheel wheelFR;
     public Wheel wheelRL;
     public Wheel wheelRR;
@@ -32,14 +17,35 @@ public class Car : MonoBehaviour
 
     public List<Light> brakeLights;
 
-    public SimulationType simulationType = SimulationType.SimCade;
+    [Header("Engine and wheel inertia")] public float engineInertia = 0.35f;
+    public float drivenWheelInertia = 1.2f;
+    public float freeWheelInertia = 1.9f;
 
-    public float simulationSteeringSpeed = 170f;
-    public float simCadeSteeringSpeed = 300f;
-    public float driftSteeringSpeed = 600f;
+    [Header("Engine and wheel resisting forces")]
+    public float engineFriction = 0.15f;
+
+    public float wheelRollingResistance = 0.08f;
+
+    [Header("TSC (Traction Stability Control)")] [InspectorName("TSC Enabled")]
+    public bool tscEnabled = true;
+
+    [InspectorName("TSC Target Slip")] public float tscTargetSlip = 0.1f;
+    [InspectorName("TSC Sensitivity")] public float tscSensitivity = 10f;
+
+    [Header("ABS (Anti Block System)")] [InspectorName("ABS Enabled")]
+    public bool absEnabled = true;
+
+    [InspectorName("ABS Target Slip")] public float absTargetSlip = 0.1f;
+    [InspectorName("ABS Sensitivity")] public float absSensitivity = 3f;
+
+    [Header("Speed-Sensitive Steering")]
+    public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
+
+    [Header("Other")] public bool automaticTransmission = true;
+    public float wheelBrakeTorque = 100f;
+    public float minSlipSpeed = 0.5f;
 
     [HideInInspector] public string GearLabel = "N";
-    [HideInInspector] public string GearRatioLabel = "Gear Ratio: 0";
     [HideInInspector] public string RpmLabel = "1000 RPM";
     [HideInInspector] public string SpeedLabel = "0 km/h";
 
@@ -58,46 +64,20 @@ public class Car : MonoBehaviour
     [HideInInspector] public string RLSlipRatio = "0";
     [HideInInspector] public string RRSlipRatio = "0";
 
-    [HideInInspector] public string TscLabel = "";
+    [HideInInspector] public float Throttle;
+    [HideInInspector] public float Brake;
+    [HideInInspector] public float AppliedThrottle;
+    [HideInInspector] public float AppliedBrake;
+    [HideInInspector] public float Steering;
 
     private Rigidbody _rb;
+    private List<Wheel> _wheels;
 
-    private int _gear = 0;
+    private int _gear;
     private bool _handbrake;
-    public float Speed { get; private set; } = 0f;
-    [HideInInspector] public float Throttle = 0f;
-    [HideInInspector] public float Brake = 0f;
-    [HideInInspector] public float AppliedThrottle = 0f;
-    [HideInInspector] public float AppliedBrake = 0f;
-    [HideInInspector] public float Steering = 0f;
-
     private float _currentEngineRpm = 1000f;
 
-    public float engineInertia = 0.35f;
-    public float drivenWheelInertia = 1.2f;
-    public float freeWheelInertia = 1.9f;
-    public float engineFriction = 0.15f;
-    public float wheelRollingResistance = 0.08f;
-    public float wheelBrakeTorque = 100f;
-    public float minSlipSpeed = 0.5f;
-
-    public bool tscEnabled = true;
-    public float tscTargetSlip = 0.1f;
-    public float tscSensitivity = 10f;
-
-    public bool absEnabled = true;
-    public float absTargetSlip = -0.1f;
-    public float absSensitivity = 3f;
-
-    public bool automaticTransmission = true;
-
-    [Header("Speed-Sensitive Steering")]
-    public AnimationCurve maxSteeringAngleBySpeed = AnimationCurve.Linear(0f, 30f, 100f, 5f);
-
-    public float topSpeed;
-
-    private float lowSpeedBlendStart = 4.0f; // m/s
-    private float lowSpeedBlendEnd = 0.5f; // m/s
+    public float Speed { get; private set; }
 
     private const float LockSpeedThreshold = 0.05f; // m/s
     private const float LockAngularThreshold = 0.15f; // rad/s
@@ -106,7 +86,6 @@ public class Car : MonoBehaviour
     private const float CombinedSlipCoefficient = 4f;
     private const float LateralVelocityHoldThreshold = 2f;
     private const float BrakeHoldVelocityThreshold = 0.5f;
-
 
     private void Start()
     {
@@ -253,7 +232,7 @@ public class Car : MonoBehaviour
 
         float combinedSlip = Mathf.Pow(
             Mathf.Pow(longitudinalForceMagnitude / maxLongitudinalForce, CombinedSlipCoefficient) +
-            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient), CombinedSlipCoefficient);
+            Mathf.Pow(lateralForceMagnitude / maxLateralForce, CombinedSlipCoefficient), 1 / CombinedSlipCoefficient);
 
         if (combinedSlip > 1f)
         {
@@ -445,8 +424,6 @@ public class Car : MonoBehaviour
             GearLabel = "N";
         else
             GearLabel = _gear.ToString();
-
-        GearRatioLabel = $"Gear Ratio: {Utils.GetTotalGearRatio(_gear, transmission):F3}";
     }
 
     private void HoldCar()
