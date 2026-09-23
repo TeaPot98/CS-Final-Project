@@ -154,7 +154,7 @@ public class Wheel : MonoBehaviour
             LateralForceDir = Vector3.ProjectOnPlane(_tireTransform.right, tireRay.normal).normalized;
             ContactPoint = tireRay.point;
 
-            Debug.DrawRay(_tireTransformPosition, force / 1000f, Color.dodgerBlue);
+            Debug.DrawRay(_tireTransformPosition, force / 1000f, Color.mintCream);
         }
 
         if (rayDidHit)

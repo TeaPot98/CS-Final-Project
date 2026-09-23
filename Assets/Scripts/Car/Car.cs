@@ -69,6 +69,7 @@ public class Car : MonoBehaviour
     [HideInInspector] public float AppliedThrottle;
     [HideInInspector] public float AppliedBrake;
     [HideInInspector] public float Steering;
+    [HideInInspector] public float YawAngle;
 
     private Rigidbody _rb;
     private List<Wheel> _wheels;
@@ -102,7 +103,6 @@ public class Car : MonoBehaviour
     {
         float dt = Time.fixedDeltaTime;
         bool shouldHoldCar = Brake >= 0.99 && Speed <= BrakeHoldVelocityThreshold;
-
 
         // 1st Pass: Update steering wheel angle, compute contact point and handle suspension
         foreach (Wheel wheel in _wheels)
@@ -262,19 +262,19 @@ public class Car : MonoBehaviour
             Debug.DrawRay(
                 wheel.ContactPoint,
                 totalForce / 1000f,
-                Color.greenYellow
+                Color.darkGray
             );
 
             Debug.DrawRay(
                 wheel.ContactPoint,
                 longitudinalForce / 1000f,
-                Color.deepPink
+                longitudinalForceMagnitude > 0 ? Color.deepSkyBlue : Color.deepPink
             );
 
             Debug.DrawRay(
                 wheel.ContactPoint,
                 -lateralForce / 1000f,
-                Color.orange
+                Color.yellowNice
             );
         }
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6103808210515702905}
   m_Layer: 0
   m_Name: Chassis
-  m_TagString: Untagged
+  m_TagString: PlayerCar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1212,7 +1212,7 @@ GameObject:
   - component: {fileID: 5864273460818158975}
   m_Layer: 0
   m_Name: Test Car
-  m_TagString: PlayerCar
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1285,35 +1285,11 @@ MonoBehaviour:
   brakeLights:
   - {fileID: 9222909306477589316}
   - {fileID: 8579921681354570715}
-  GearLabel: N
-  GearRatioLabel: 'Gear Ratio: 0'
-  RpmLabel: 1000 RPM
-  SpeedLabel: 0 km/h
-  FLWheelRpm: 0
-  FRWheelRpm: 0
-  RLWheelRpm: 0
-  RRWheelRpm: 0
-  FLSlipAngle: 0
-  FRSlipAngle: 0
-  RLSlipAngle: 0
-  RRSlipAngle: 0
-  FLSlipRatio: 0
-  FRSlipRatio: 0
-  RLSlipRatio: 0
-  RRSlipRatio: 0
-  TscLabel: 
-  Throttle: 0
-  Brake: 0
-  AppliedThrottle: 0
-  AppliedBrake: 0
-  Steering: 0
   engineInertia: 0.35
   drivenWheelInertia: 1.2
   freeWheelInertia: 1.9
   engineFriction: 0.15
   wheelRollingResistance: 0.08
-  wheelBrakeTorque: 2500
-  minSlipSpeed: 0.5
   tscEnabled: 0
   tscTargetSlip: 0.1
   tscSensitivity: 5
@@ -1362,6 +1338,29 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  automaticTransmission: 1
+  wheelBrakeTorque: 2500
+  minSlipSpeed: 0.5
+  GearLabel: N
+  RpmLabel: 1000 RPM
+  SpeedLabel: 0 km/h
+  FLWheelRpm: 0
+  FRWheelRpm: 0
+  RLWheelRpm: 0
+  RRWheelRpm: 0
+  FLSlipAngle: 0
+  FRSlipAngle: 0
+  RLSlipAngle: 0
+  RRSlipAngle: 0
+  FLSlipRatio: 0
+  FRSlipRatio: 0
+  RLSlipRatio: 0
+  RRSlipRatio: 0
+  Throttle: 0
+  Brake: 0
+  AppliedThrottle: 0
+  AppliedBrake: 0
+  Steering: 0
 --- !u!54 &5864273460818158975
 Rigidbody:
   m_ObjectHideFlags: 0

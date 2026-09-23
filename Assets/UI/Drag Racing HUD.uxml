@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/HUD.uss?fileID=7433441132597879392&amp;guid=bbdbda947039f124a862f4470db57f7c&amp;type=3#HUD"/>
-    <ui:VisualElement name="DragStats" style="flex-grow: 1; bottom: 0; right: 0; position: absolute;">
+    <ui:VisualElement name="DragStats" style="flex-grow: 1; bottom: auto; right: auto; position: absolute; top: 0; left: 0;">
         <ui:Label text="Drag Stats" name="StateInfo" class="hudText"/>
         <ui:Label text="00.000s" name="Timer" class="hudText"/>
         <ui:Label text="1/8 Miles: N/A" name="1-8" class="hudText"/>
