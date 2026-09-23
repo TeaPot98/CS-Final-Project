@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Tests
 {
-    public class TireModelTests
+    public class SlipAngleTests
     {
         private TireSO InitializeTire()
         {
@@ -21,7 +21,7 @@ namespace Tests
             float lateralForce = Utils.ComputeLateralPacejkaMagicFormula(slipAngle, tireLoad, 0f,
                 tire.GetPacejkaLateralMagicFormulaParams());
 
-            Assert.AreEqual(lateralForce, 0f);
+            Assert.AreEqual(0f, lateralForce);
         }
 
         [Test]
@@ -40,7 +40,6 @@ namespace Tests
                 tire.GetPacejkaLateralMagicFormulaParams());
             float zeroSlipAngleLateralForce = Utils.ComputeLateralPacejkaMagicFormula(zeroSlipAngle, tireLoad, 0f,
                 tire.GetPacejkaLateralMagicFormulaParams());
-
 
             Assert.Less(largeSlipAngleLateralForce, 5000f);
             Assert.Greater(largeSlipAngleLateralForce, -5000f);

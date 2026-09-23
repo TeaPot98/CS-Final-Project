@@ -27,6 +27,16 @@ namespace Tests
         }
 
         [Test]
+        public void ReverseGear_ProducesNegativeOutput()
+        {
+            TransmissionSO transmission = InitializeTransmission();
+
+            float resultingTorque = Utils.ComputeTransmissionTorque(500f, -1, transmission);
+
+            Assert.Less(resultingTorque, 0f);
+        }
+
+        [Test]
         public void OutputTorque_IncludesEfficiencyAndDifferential()
         {
             const float inputTorque = 100f;
@@ -35,12 +45,8 @@ namespace Tests
             TransmissionSO transmission = InitializeTransmission();
 
             float resultingTorque = Utils.ComputeTransmissionTorque(inputTorque, gear, transmission);
-            float pureGearRatioTorque = inputTorque * transmission.gears[gear - 1];
 
-            float torqueWithEffiencyAndDifferential = pureGearRatioTorque * transmission.differentialRatio *
-                                                      transmission.transmissionEfficiency;
-
-            Assert.AreEqual(resultingTorque, torqueWithEffiencyAndDifferential);
+            Assert.AreEqual(71.75f, resultingTorque);
         }
 
         [Test]

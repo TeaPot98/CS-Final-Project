@@ -11,7 +11,7 @@ namespace Tests
         {
             float slipRatio = Utils.ComputeSlipRatio(0f, 0f);
 
-            Assert.AreEqual(slipRatio, 0f);
+            Assert.AreEqual(0f, slipRatio);
         }
 
         [Test]
@@ -19,7 +19,7 @@ namespace Tests
         {
             float slipRatio = Utils.ComputeSlipRatio(15f, 15f);
 
-            Assert.AreEqual(slipRatio, 0f);
+            Assert.AreEqual(0f, slipRatio);
         }
 
         [Test]
@@ -38,13 +38,14 @@ namespace Tests
             Assert.Less(slipRatio, 0f);
         }
 
-        [Test]
-        public void SLipRatio_IsClampedBetweenMinusOneAndOne()
+        [TestCase(10f, 0f, 1f)]
+        [TestCase(0f, 10f, -1f)]
+        public void SLipRatio_IsClampedBetweenMinusOneAndOne(float surfaceSpeed, float groundSpeed,
+            float expectedSlipRatio)
         {
-            float slipRatio = Utils.ComputeSlipRatio(10f, 0f, 0.5f);
+            float slipRatio = Utils.ComputeSlipRatio(surfaceSpeed, groundSpeed);
 
-            Assert.LessOrEqual(slipRatio, 1f);
-            Assert.GreaterOrEqual(slipRatio, -1f);
+            Assert.That(slipRatio, Is.EqualTo(expectedSlipRatio).Within(0.001f));
         }
     }
 }
