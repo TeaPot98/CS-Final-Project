@@ -19,6 +19,9 @@ public class HUD : MonoBehaviour
     private VisualElement _brakeTransparent;
     private VisualElement _brakeOpaque;
 
+    private Image _absIndicator;
+    private Image _tscIndicator;
+
     private void Start()
     {
         StartCoroutine(InitializeView());
@@ -36,6 +39,13 @@ public class HUD : MonoBehaviour
         _throttleOpaque.style.scale = new Scale(new Vector2(appliedThrottleScale, appliedThrottleScale));
         _brakeTransparent.style.scale = new Scale(new Vector2(rawBrakeScale, rawBrakeScale));
         _brakeOpaque.style.scale = new Scale(new Vector2(appliedBrakeScale, appliedBrakeScale));
+
+        if (car.AppliedThrottle < car.Throttle && !_tscIndicator.visible) _tscIndicator.visible = true;
+        if (car.AppliedBrake < car.Brake && !_absIndicator.visible) _absIndicator.visible = true;
+
+        if (Mathf.Approximately(car.AppliedThrottle, car.Throttle) && _tscIndicator.visible)
+            _tscIndicator.visible = false;
+        if (Mathf.Approximately(car.AppliedBrake, car.Brake) && _absIndicator.visible) _absIndicator.visible = false;
     }
 
     public IEnumerator InitializeView()
@@ -82,6 +92,9 @@ public class HUD : MonoBehaviour
             "semi-transparent");
         _brakeOpaque = brakeContainer.Query<VisualElement>(
             "opaque");
+
+        _tscIndicator = throttleContainer.Query<Image>("tsc-indicator");
+        _absIndicator = brakeContainer.Query<Image>("abs-indicator");
 
         UIUtils.BindToLabel(gearText, car, nameof(Car.GearLabel));
         UIUtils.BindToLabel(rpmText, car, nameof(Car.RpmLabel));
