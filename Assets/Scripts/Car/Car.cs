@@ -86,7 +86,7 @@ public class Car : MonoBehaviour
     private const float LockAngularThreshold = 0.15f; // rad/s
     private const float BrakeLockThreshold = 0.05f;
 
-    private const float CombinedSlipCoefficient = 4f;
+    private const float CombinedSlipCoefficient = 2f;
     private const float LateralVelocityHoldThreshold = 2f;
     private const float BrakeHoldVelocityThreshold = 0.5f;
 

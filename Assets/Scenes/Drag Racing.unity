@@ -4639,10 +4639,6 @@ PrefabInstance:
       value: Test Car
       objectReference: {fileID: 0}
     - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
-      propertyPath: engine
-      value: 
-      objectReference: {fileID: 11400000, guid: e700945491c8ab14894eddda3b812eb2, type: 2}
-    - target: {fileID: 3247902603152261936, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: tscEnabled
       value: 0
       objectReference: {fileID: 0}

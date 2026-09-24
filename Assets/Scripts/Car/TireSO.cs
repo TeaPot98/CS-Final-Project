@@ -4,31 +4,31 @@ using UnityEngine;
 public class TireSO : ScriptableObject
 {
     public float referenceTireLoad = 3.3f;
-    public float maxForceSlipAngle;
-    public float maxForceSlipRatio;
 
-    [Header("Longitudinal Parameters")] public float b_0 = 1.65f;
-    public float b_1;
-    public float b_2 = 1688f;
-    public float b_3;
-    public float b_4 = 229f;
+    [Header("Longitudinal Parameters")] [Range(-3.5f, 3.5f)]
+    public float b_0 = 1.65f;
+
+    [Range(-1000f, 1000f)] public float b_1;
+    [Range(-2200f, 2200f)] public float b_2 = 1688f;
+    [Range(-50f, 50f)] public float b_3;
+    [Range(-0f, 500f)] public float b_4 = 229f;
     public float b_5;
-    public float b_6;
-    public float b_7;
+    [Range(-5f, 0f)] public float b_6;
+    [Range(-3f, 1.5f)] public float b_7;
     public float b_8 = -10f;
     public float b_9;
     public float b_10;
 
-    [Space(10)] [Header("Lateral Parameters")]
+    [Space(10)] [Header("Lateral Parameters")] [Range(-3.5f, 3.5f)]
     public float a_0 = 1.799f;
 
-    public float a_1;
-    public float a_2 = 1688f;
-    public float a_3 = 4140f;
-    public float a_4 = 6.026f;
+    [Range(-1000f, 1000f)] public float a_1;
+    [Range(-2200f, 2200f)] public float a_2 = 1688f;
+    [Range(0f, 6000f)] public float a_3 = 4140f;
+    [Range(-0f, 100f)] public float a_4 = 6.026f;
     public float a_5;
-    public float a_6 = -0.3589f;
-    public float a_7 = 1;
+    [Range(-5f, 0f)] public float a_6 = -0.3589f;
+    [Range(0f, 3f)] public float a_7 = 1;
     public float a_8;
     public float a_9 = -6.111f / 1000f;
     public float a_10 = -3.224f / 100f;

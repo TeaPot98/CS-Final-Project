@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec398c17aabbab44c925cc38d5db5708, type: 3}
-  m_Name: Test Transmission
+  m_Name: Transmission - Porsche 911 '87
   m_EditorClassIdentifier: Assembly-CSharp::TransmissionSO
   transmissionEfficiency: 0.85
   differentialRatio: 3.5

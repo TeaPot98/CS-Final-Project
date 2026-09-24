@@ -1292,10 +1292,10 @@ MonoBehaviour:
   wheelRollingResistance: 0.08
   tscEnabled: 1
   tscTargetSlip: 0.1
-  tscSensitivity: 5
+  tscSensitivity: 3
   absEnabled: 1
   absTargetSlip: 0.1
-  absSensitivity: 3
+  absSensitivity: 10
   maxSteeringAngleBySpeed:
     serializedVersion: 2
     m_Curve:
@@ -1338,7 +1338,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  automaticTransmission: 1
+  automaticTransmission: 0
   wheelBrakeTorque: 1000
   minSlipSpeed: 0.5
   GearLabel: N
@@ -2216,7 +2216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
-  isDriving: 1
+  isDriving: 0
   canSteer: 1
   wheelModel: {fileID: 580732881996678210}
   tireMesh: {fileID: 3111068617828566383}
@@ -3988,7 +3988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262b171fabb5dca4e9f2f0d628f5a165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wheel
-  isDriving: 1
+  isDriving: 0
   canSteer: 1
   wheelModel: {fileID: 1447374364536250998}
   tireMesh: {fileID: 352805670484849122}

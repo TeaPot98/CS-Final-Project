@@ -10,30 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffee2b7242a9baa44a49a0429d0c24b1, type: 3}
-  m_Name: Test Tire 1
+  m_Name: Tire - Sim-Cade (Front)
   m_EditorClassIdentifier: Assembly-CSharp::TireSO
-  referenceTireLoad: 3.3
-  maxForceSlipAngle: 3.2911396
-  maxForceSlipRatio: 0.08227849
+  referenceTireLoad: 3
   b_0: 1.65
   b_1: 0
-  b_2: 1688
-  b_3: 0
-  b_4: 229
+  b_2: 1200
+  b_3: -25.5
+  b_4: 228
   b_5: 0
   b_6: 0
-  b_7: 0
-  b_8: -10
+  b_7: -1.57
+  b_8: 0
   b_9: 0
   b_10: 0
-  a_0: 1.799
+  a_0: 1.99
   a_1: 0
-  a_2: 1688
-  a_3: 4140
-  a_4: 6.026
+  a_2: 1200
+  a_3: 3034
+  a_4: 36.5
   a_5: 0
-  a_6: -0.3589
-  a_7: 1
+  a_6: -0.47
+  a_7: 1.01
   a_8: 0
   a_9: 0
   a_10: 0
