@@ -16,8 +16,10 @@ public class HUD : MonoBehaviour
 
     private VisualElement _throttleTransparent;
     private VisualElement _throttleOpaque;
+    private Label _throttlePercentage;
     private VisualElement _brakeTransparent;
     private VisualElement _brakeOpaque;
+    private Label _brakePercentage;
 
     private Image _absIndicator;
     private Image _tscIndicator;
@@ -45,6 +47,9 @@ public class HUD : MonoBehaviour
         _throttleOpaque.style.scale = new Scale(new Vector2(appliedThrottleScale, appliedThrottleScale));
         _brakeTransparent.style.scale = new Scale(new Vector2(rawBrakeScale, rawBrakeScale));
         _brakeOpaque.style.scale = new Scale(new Vector2(appliedBrakeScale, appliedBrakeScale));
+
+        _throttlePercentage.text = car.AppliedThrottle.ToString("0.# %");
+        _brakePercentage.text = car.AppliedBrake.ToString("0.# %");
 
         if (car.AppliedThrottle < car.Throttle && !_tscIndicator.visible) _tscIndicator.visible = true;
         if (car.AppliedBrake < car.Brake && !_absIndicator.visible) _absIndicator.visible = true;
@@ -95,11 +100,15 @@ public class HUD : MonoBehaviour
             "semi-transparent");
         _throttleOpaque = throttleContainer.Query<VisualElement>(
             "opaque");
+        _throttlePercentage = throttleContainer.Query<Label>(
+            "percentage");
 
         _brakeTransparent = brakeContainer.Query<VisualElement>(
             "semi-transparent");
         _brakeOpaque = brakeContainer.Query<VisualElement>(
             "opaque");
+        _brakePercentage = brakeContainer.Query<Label>(
+            "percentage");
 
         _tscIndicator = throttleContainer.Query<Image>("tsc-indicator");
         _absIndicator = brakeContainer.Query<Image>("abs-indicator");

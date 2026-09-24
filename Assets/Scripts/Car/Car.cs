@@ -78,6 +78,8 @@ public class Car : MonoBehaviour
     private bool _handbrake;
     private float _currentEngineRpm = 1000f;
 
+    private float _tscTorqueMultiplier = 1f;
+
     public float Speed { get; private set; }
 
     private const float LockSpeedThreshold = 0.05f; // m/s
@@ -130,14 +132,14 @@ public class Car : MonoBehaviour
             wheelRR.AngularVelocity = 0;
         }
 
+        _tscTorqueMultiplier = ComputeTscTorqueMultiplier(drivenWheels);
+
         // 2nd Pass: Compute and apply wheel forces
         foreach (Wheel wheel in _wheels)
         {
-            float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
-            float torqueMultiplier = tscEnabled ? Mathf.Clamp01(1f - tscSensitivity * slipError) : 1f;
-            AppliedThrottle = torqueMultiplier * Throttle;
+            AppliedThrottle = _tscTorqueMultiplier * Throttle;
 
-            float scaledWheelTorque = driveTorquePerWheel * torqueMultiplier;
+            float scaledWheelTorque = driveTorquePerWheel * _tscTorqueMultiplier;
 
             float driveTorque = wheel.isDriving ? scaledWheelTorque : 0f;
 
@@ -448,5 +450,30 @@ public class Car : MonoBehaviour
 
         if (_gear < transmission.gears.Count && _currentEngineRpm >= engine.maxRpm - engine.maxRpm * .05) _gear++;
         if (_gear > 1 && _currentEngineRpm <= engine.idleRpm + engine.maxRpm * .3) _gear--;
+    }
+
+    private float ComputeTscTorqueMultiplier(List<Wheel> drivenWheels)
+    {
+        if (!tscEnabled ||
+            Throttle <= 0f ||
+            drivenWheels.Count == 0)
+            return 1f;
+
+        float maxDrivenWheelSlip = 0f;
+
+        foreach (Wheel wheel in drivenWheels)
+            maxDrivenWheelSlip = Mathf.Max(
+                maxDrivenWheelSlip,
+                wheel.SlipRatio
+            );
+
+        float excessSlip = Mathf.Max(
+            0f,
+            maxDrivenWheelSlip - tscTargetSlip
+        );
+
+        return Mathf.Clamp01(
+            1f - tscSensitivity * excessSlip
+        );
     }
 }

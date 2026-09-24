@@ -189,6 +189,10 @@ PrefabInstance:
       value: Test Car
       objectReference: {fileID: 0}
     - target: {fileID: 1965430313140975023, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: tire
+      value: 
+      objectReference: {fileID: 11400000, guid: f15113e25a0cf484bb51ca3ab4d066fe, type: 2}
+    - target: {fileID: 1965430313140975023, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: isDriving
       value: 0
       objectReference: {fileID: 0}
@@ -220,6 +224,10 @@ PrefabInstance:
       propertyPath: automaticTransmission
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4368703503615979410, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: tire
+      value: 
+      objectReference: {fileID: 11400000, guid: f15113e25a0cf484bb51ca3ab4d066fe, type: 2}
     - target: {fileID: 4847368587837458467, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 146.9
@@ -260,6 +268,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6523215174151876486, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: tire
+      value: 
+      objectReference: {fileID: 11400000, guid: f15113e25a0cf484bb51ca3ab4d066fe, type: 2}
+    - target: {fileID: 7433315412377764535, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
+      propertyPath: tire
+      value: 
+      objectReference: {fileID: 11400000, guid: f15113e25a0cf484bb51ca3ab4d066fe, type: 2}
     - target: {fileID: 7433315412377764535, guid: 11132c312eb1b52488ff9a52b7bc5d80, type: 3}
       propertyPath: isDriving
       value: 0

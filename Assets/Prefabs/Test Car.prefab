@@ -1290,7 +1290,7 @@ MonoBehaviour:
   freeWheelInertia: 1.9
   engineFriction: 0.15
   wheelRollingResistance: 0.08
-  tscEnabled: 0
+  tscEnabled: 1
   tscTargetSlip: 0.1
   tscSensitivity: 5
   absEnabled: 1
@@ -1339,7 +1339,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   automaticTransmission: 1
-  wheelBrakeTorque: 2500
+  wheelBrakeTorque: 1000
   minSlipSpeed: 0.5
   GearLabel: N
   RpmLabel: 1000 RPM
@@ -1361,6 +1361,7 @@ MonoBehaviour:
   AppliedThrottle: 0
   AppliedBrake: 0
   Steering: 0
+  SideslipAngle: 
 --- !u!54 &5864273460818158975
 Rigidbody:
   m_ObjectHideFlags: 0
