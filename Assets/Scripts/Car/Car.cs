@@ -69,7 +69,7 @@ public class Car : MonoBehaviour
     [HideInInspector] public float AppliedThrottle;
     [HideInInspector] public float AppliedBrake;
     [HideInInspector] public float Steering;
-    [HideInInspector] public float YawAngle;
+    [HideInInspector] public string SideslipAngle;
 
     private Rigidbody _rb;
     private List<Wheel> _wheels;
@@ -136,6 +136,7 @@ public class Car : MonoBehaviour
             float slipError = wheel.SlipRatio - tscTargetSlip; // ~0.08–0.12
             float torqueMultiplier = tscEnabled ? Mathf.Clamp01(1f - tscSensitivity * slipError) : 1f;
             AppliedThrottle = torqueMultiplier * Throttle;
+
             float scaledWheelTorque = driveTorquePerWheel * torqueMultiplier;
 
             float driveTorque = wheel.isDriving ? scaledWheelTorque : 0f;
@@ -195,9 +196,9 @@ public class Car : MonoBehaviour
         float engineAngularAcceleration = engineTorque / Mathf.Max(engineInertia, 0.001f) -
                                           engineFriction * engineAngularVelocity;
 
-        _currentEngineRpm = ClampEngineRpm(
+        _currentEngineRpm = Mathf.Clamp(ClampEngineRpm(
             Utils.FromAngularVelocityToRpm(engineAngularVelocity + engineAngularAcceleration * dt)
-        );
+        ), engine.idleRpm, engine.maxRpm);
     }
 
     private void SimulateWheelForces(Wheel wheel, float wheelDriveTorque, float wheelInertia, float dt)
@@ -337,12 +338,14 @@ public class Car : MonoBehaviour
     {
         float brakeMultiplier = Mathf.SmoothStep(0.4f, 1f,
             Mathf.InverseLerp(0f, 20f, Mathf.Abs(wheel.AngularVelocity)));
-        AppliedBrake = Brake * brakeMultiplier;
 
         float brakeTorque = wheelBrakeTorque * Brake * Mathf.Sign(wheel.AngularVelocity) * brakeMultiplier;
 
         float slipError = Mathf.Abs(wheel.SlipRatio) - absTargetSlip;
         float brakeScale = absEnabled ? Mathf.Clamp01(1f - absSensitivity * slipError) : 1f;
+
+        AppliedBrake = Brake * brakeScale;
+
         float brakeTorqueWithAbs = brakeTorque * brakeScale;
 
         if (Mathf.Approximately(wheel.AngularVelocity, 0f)) return 0f;
@@ -404,6 +407,8 @@ public class Car : MonoBehaviour
         RLWheelRpm = GetWheelRpmLabel(wheelRL);
         RRWheelRpm = GetWheelRpmLabel(wheelRR);
 
+        SideslipAngle = "Sideslip Angle: " + Utils.ComputeVehicleSideslipAngle(_rb.linearVelocity, transform)
+            .ToString("0.#°");
 
         RpmLabel = $"{(int)_currentEngineRpm} RPM";
         SpeedLabel = $"{(int)Utils.FromMetersPerSecondToKmPerHour(Speed)} km/h";
@@ -441,7 +446,7 @@ public class Car : MonoBehaviour
     {
         if (_gear == 0) return;
 
-        if (_gear < transmission.gears.Count && _currentEngineRpm >= engine.maxRpm - engine.maxRpm * .03) _gear++;
-        if (_gear > 1 && _currentEngineRpm <= engine.idleRpm + engine.maxRpm * .25) _gear--;
+        if (_gear < transmission.gears.Count && _currentEngineRpm >= engine.maxRpm - engine.maxRpm * .05) _gear++;
+        if (_gear > 1 && _currentEngineRpm <= engine.idleRpm + engine.maxRpm * .3) _gear--;
     }
 }

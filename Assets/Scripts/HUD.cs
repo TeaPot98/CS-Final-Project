@@ -65,6 +65,8 @@ public class HUD : MonoBehaviour
         Label rpmText = _carStatsContainer.Query<Label>("RPM");
         Label speedText = _carStatsContainer.Query<Label>("Speed");
 
+        Label sideslipAngleText = _container.Query<Label>("sideslip-angle");
+
         Label flWheelRpmText = flWheelContainer.Query<Label>("RPM");
         Label frWheelRpmText = frWheelContainer.Query<Label>("RPM");
         Label rlWheelRpmText = rlWheelContainer.Query<Label>("RPM");
@@ -99,6 +101,7 @@ public class HUD : MonoBehaviour
         UIUtils.BindToLabel(gearText, car, nameof(Car.GearLabel));
         UIUtils.BindToLabel(rpmText, car, nameof(Car.RpmLabel));
         UIUtils.BindToLabel(speedText, car, nameof(Car.SpeedLabel));
+        UIUtils.BindToLabel(sideslipAngleText, car, nameof(Car.SideslipAngle));
 
         UIUtils.BindToLabel(flWheelRpmText, car, nameof(Car.FLWheelRpm));
         UIUtils.BindToLabel(frWheelRpmText, car, nameof(Car.FRWheelRpm));

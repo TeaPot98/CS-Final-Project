@@ -338,4 +338,20 @@ public static class Utils
         float t = Mathf.InverseLerp(fromMin, fromMax, value);
         return Mathf.Lerp(toMin, toMax, t);
     }
+
+    public static float ComputeVehicleSideslipAngle(Vector3 velocity,
+        Transform carTransform,
+        float minimumSpeed = 0.1f)
+    {
+        if (velocity.sqrMagnitude < minimumSpeed * minimumSpeed)
+            return 0f;
+
+        Vector3 localVelocity =
+            carTransform.InverseTransformDirection(velocity);
+
+        return Mathf.Atan2(
+            localVelocity.x,
+            localVelocity.z
+        ) * Mathf.Rad2Deg;
+    }
 }
