@@ -30,6 +30,12 @@ public class HUD : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!car)
+        {
+            enabled = false;
+            return;
+        }
+
         float rawThrottleScale = Utils.MapToNewRange(car.Throttle, 0f, 1f, 0.1f, 1f);
         float appliedThrottleScale = Utils.MapToNewRange(car.AppliedThrottle, 0f, 1f, 0.1f, 1f);
         float rawBrakeScale = Utils.MapToNewRange(car.Brake, 0f, 1f, 0.1f, 1f);

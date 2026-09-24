@@ -13,9 +13,6 @@ public class EngineSO : ScriptableObject
     public float endsSlope = 1.2f;
     public float peakXPosition = 6000f;
     public float endsSlope2 = 4000f;
-    [Space(10)] public float power;
-    public float horsepower;
-    public int peakPowerRpm;
 
     private TorqueCurveParams _curveParams;
 

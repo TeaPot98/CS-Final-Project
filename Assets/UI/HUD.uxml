@@ -13,7 +13,7 @@
             </ui:VisualElement>
             <ui:Label text="1000 RPM" name="RPM" style="font-size: 20px; -unity-font-definition: url(&quot;project://database/Assets/Fonts/Nunito-VariableFont_wght.ttf?fileID=12800000&amp;guid=d47ba0c5d91fd714aafb7dc6e31a9c3d&amp;type=3#Nunito-VariableFont_wght&quot;); -unity-text-outline-color: rgb(255, 255, 255); padding-top: 0; padding-bottom: 0; color: rgb(255, 255, 255); -unity-text-outline-width: 1px; -unity-font-style: bold;"/>
         </ui:VisualElement>
-        <ui:VisualElement name="wheel-debug-container" style="flex-grow: 1; top: 0; right: 0; position: absolute; flex-direction: row; flex-wrap: wrap; display: flex;">
+        <ui:VisualElement name="wheel-debug-container" style="flex-grow: 1; top: 0; right: 0; position: absolute; flex-direction: row; flex-wrap: wrap; display: flex; padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 8px; background-color: rgba(49, 74, 101, 0.42);">
             <ui:VisualElement name="FL" style="flex-grow: 1;">
                 <ui:Label text="FL" name="Label" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
                 <ui:Label text="3000" name="RPM" class="hudText wheel-stats-grid" style="position: relative; left: auto; bottom: auto;"/>
