@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Tire - Drift (Rear)
   m_EditorClassIdentifier: Assembly-CSharp::TireSO
   referenceTireLoad: 3.01
-  b_0: 1.73
+  b_0: 1.6
   b_1: 0
-  b_2: 1200
+  b_2: 1350
   b_3: -15.9
   b_4: 186
   b_5: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
   a_0: 1.47
   a_1: 34
   a_2: 949
-  a_3: 4224
+  a_3: 2792
   a_4: 70.3
   a_5: 0
   a_6: -0.3589

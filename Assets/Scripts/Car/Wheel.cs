@@ -103,7 +103,12 @@ public class Wheel : MonoBehaviour
             currentAngle,
             targetAngle,
             ref _steeringWheelTurningSpeed,
-            0.12f
+
+            // Drift value
+            0.07f
+
+            // Regular value
+            // 0.12f
         );
 
         transform.localRotation = Quaternion.Euler(0.0f, smoothAngle, 0.0f);
