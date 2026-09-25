@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Tire - Brian Beckman
   m_EditorClassIdentifier: Assembly-CSharp::TireSO
   referenceTireLoad: 3.3
-  maxForceSlipAngle: 3.4177244
-  maxForceSlipRatio: 0.056962013
   b_0: 1.65
   b_1: 0
   b_2: 1200

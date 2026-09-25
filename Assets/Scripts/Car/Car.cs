@@ -70,6 +70,7 @@ public class Car : MonoBehaviour
     [HideInInspector] public float AppliedBrake;
     [HideInInspector] public float Steering;
     [HideInInspector] public string SideslipAngle;
+    [HideInInspector] public bool ShouldPlaySkidSound;
 
     private Rigidbody _rb;
     private List<Wheel> _wheels;
@@ -77,6 +78,8 @@ public class Car : MonoBehaviour
     private int _gear;
     private bool _handbrake;
     private float _currentEngineRpm = 1000f;
+
+    public float EngineRpm => _currentEngineRpm;
 
     private float _tscTorqueMultiplier = 1f;
 
@@ -99,6 +102,8 @@ public class Car : MonoBehaviour
     private void Update()
     {
         UpdateLabels();
+
+        ShouldPlaySkidSound = _wheels.Any(w => w.IsEmittingSmoke);
     }
 
     private void FixedUpdate()

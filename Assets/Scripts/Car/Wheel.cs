@@ -10,6 +10,7 @@ public class Wheel : MonoBehaviour
     public float AngularVelocity { get; set; }
     public float SlipAngle { get; set; }
     public float SlipRatio { get; set; }
+    public bool IsEmittingSmoke { get; private set; }
 
     public GameObject wheelModel;
     public GameObject tireMesh;
@@ -178,12 +179,22 @@ public class Wheel : MonoBehaviour
                            Mathf.Abs(SlipRatio) >= slipRatioSkidmarkThreshold))
         {
             if (!_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = true;
-            if (!_smokeRenderer.isPlaying && _car.Speed > minSpeedSmoke) _smokeRenderer.Play();
+            if (!_smokeRenderer.isPlaying && _car.Speed > minSpeedSmoke)
+            {
+                IsEmittingSmoke = true;
+                _smokeRenderer.Play();
+            }
+
+            ;
         }
         else
         {
             if (_skidmarkRenderer.emitting) _skidmarkRenderer.emitting = false;
-            if (_smokeRenderer.isPlaying) _smokeRenderer.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            if (_smokeRenderer.isPlaying)
+            {
+                IsEmittingSmoke = false;
+                _smokeRenderer.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            }
         }
     }
 

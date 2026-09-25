@@ -1210,6 +1210,8 @@ GameObject:
   - component: {fileID: 464471232261176227}
   - component: {fileID: 3247902603152261936}
   - component: {fileID: 5864273460818158975}
+  - component: {fileID: 6819644958098251046}
+  - component: {fileID: 75644481962152236}
   m_Layer: 0
   m_Name: Test Car
   m_TagString: Untagged
@@ -1362,6 +1364,7 @@ MonoBehaviour:
   AppliedBrake: 0
   Steering: 0
   SideslipAngle: 
+  ShouldPlaySkidSound: 0
 --- !u!54 &5864273460818158975
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1389,6 +1392,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6819644958098251046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960365366696690037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c529fdd34a47adb4d9626e40a6ea09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EngineSound
+  idleClip: {fileID: 8300000, guid: c502041826854664683f9914f63427b0, type: 3}
+  loadedClip: {fileID: 8300000, guid: 22cd46996da3b624bb08935264560d8c, type: 3}
+  unloadedClip: {fileID: 8300000, guid: 30ab19edabbfdea499f3db426001e120, type: 3}
+  minPitch: 0.65
+  maxPitch: 1.75
+  responseSpeed: 8
+--- !u!114 &75644481962152236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960365366696690037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa7839051db47deb0a4500a7c7ecf2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkidSound
+  skidSound: {fileID: 8300000, guid: 1f4891c6ebef75e4a9211777f6548eda, type: 3}
 --- !u!1 &2424846839571204955
 GameObject:
   m_ObjectHideFlags: 0
